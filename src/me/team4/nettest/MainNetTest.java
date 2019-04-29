@@ -28,12 +28,15 @@ import java.time.LocalDateTime;
 import java.util.Map.Entry;
 
 import me.team4.nettest.tests.NetworkTestLocalHost;
+import me.team4.nettest.tests.NetworkTestWeb;
 
-public class Main {
+
+public class MainNetTest {
 
 	public static void main(String[] args) {
 		NetworkTest[] tests = new NetworkTest[] {
-				new NetworkTestLocalHost()
+				new NetworkTestLocalHost(), 
+				new NetworkTestWeb()
 		};
 
 		try {
