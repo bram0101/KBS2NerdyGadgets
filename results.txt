@@ -1,0 +1,7 @@
+====== Starting test at 2019-04-29T13:49:10.844 ======
+== TEST: LocalHost ==
+  ping 127.0.0.1                  : PASSED
+
+PASSED: 100%
+
+
