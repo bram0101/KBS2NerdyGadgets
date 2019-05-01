@@ -25,6 +25,9 @@ package me.team4.nettest;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class NetworkUtils {
 
@@ -34,7 +37,7 @@ public class NetworkUtils {
 			if (inet.isReachable(5000))
 				return true;
 		} catch (Exception ex) {
-			System.out.println("Exception:" + ex.getMessage());
+			ex.printStackTrace();
 		}
 		return false;
 	}
@@ -47,11 +50,26 @@ public class NetworkUtils {
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
 			con.setInstanceFollowRedirects(true);
-			
+
 			int status = con.getResponseCode();
-			
-			if(status == 200)
+
+			if (status == 200)
 				return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean sql(String ip, String database, String user, String pass) {
+		try {
+			String DB_URL = "jdbc:mysql://" + ip + "/" + database + "?useLegacyDatetimeCode=false&serverTimezone=UTC";
+			Connection connection = DriverManager.getConnection(DB_URL, user, pass);
+			Statement stmt = connection.createStatement();
+			stmt.executeQuery("SHOW VARIABLES LIKE \"%version%\";");
+			connection.close();
+			
+			return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

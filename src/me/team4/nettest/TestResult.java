@@ -23,6 +23,7 @@ SOFTWARE.
 package me.team4.nettest;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 public class TestResult {
@@ -30,7 +31,7 @@ public class TestResult {
 	private HashMap<String, Boolean> results;
 	
 	public TestResult() {
-		results = new HashMap<String, Boolean>();
+		results = new LinkedHashMap<String, Boolean>();
 	}
 	
 	public void addResult(String name, boolean passed) {

@@ -1,7 +1,14 @@
-====== Starting test at 2019-04-29T13:49:10.844 ======
+====== Starting test at 2019-05-01T10:59:57.824 ======
 == TEST: LocalHost ==
   ping 127.0.0.1                  : PASSED
 
-PASSED: 100%
+== TEST: DB Loadbalancer ==
+  ping IPv4                       : PASSED
+  ping IPv6                       : FAILED
+  SQL query IPv4                  : PASSED
+  SQL query IPv6                  : FAILED
+
+
+PASSED: 75%
 
 

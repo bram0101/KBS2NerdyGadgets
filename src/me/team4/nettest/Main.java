@@ -27,13 +27,15 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Map.Entry;
 
+import me.team4.nettest.tests.NetworkTestLoadBalancer;
 import me.team4.nettest.tests.NetworkTestLocalHost;
 
 public class Main {
 
 	public static void main(String[] args) {
 		NetworkTest[] tests = new NetworkTest[] {
-				new NetworkTestLocalHost()
+				new NetworkTestLocalHost(),
+				new NetworkTestLoadBalancer()
 		};
 
 		try {
@@ -44,7 +46,7 @@ public class Main {
 
 			pw.println("====== Starting test at " + LocalDateTime.now() + " ======");
 			for (int i = 0; i < tests.length; i++) {
-				System.out.println(((int) (((float) i) / ((float) tests.length)) * 100F) + "%");
+				System.out.println(((int) (((float) i) / ((float) tests.length) * 100F)) + "%");
 				pw.println("== TEST: " + tests[i].getName() + " ==");
 				
 				TestResult result = new TestResult();
@@ -61,6 +63,7 @@ public class Main {
 					pw.print(": " + (e.getValue() ? "PASSED" : "FAILED"));
 					pw.println();
 				}
+				pw.println();
 			}
 			
 			pw.println();
