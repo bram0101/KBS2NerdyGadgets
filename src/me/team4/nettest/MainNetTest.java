@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Map.Entry;
 
+import me.team4.nettest.tests.NetworkTestLoadBalancer;
 import me.team4.nettest.tests.NetworkTestLocalHost;
 import me.team4.nettest.tests.NetworkTestWeb;
 
@@ -35,28 +36,29 @@ public class MainNetTest {
 
 	public static void main(String[] args) {
 		NetworkTest[] tests = new NetworkTest[] {
-				new NetworkTestLocalHost(), 
-				new NetworkTestWeb()
+				new NetworkTestLocalHost(),
+				new NetworkTestWeb(),
+				new NetworkTestLoadBalancer()
 		};
 
 		try {
 			float ratio = 0F;
 			float amt = 0F;
-			
+
 			PrintWriter pw = new PrintWriter(new File("./results.txt"));
 
 			pw.println("====== Starting test at " + LocalDateTime.now() + " ======");
 			for (int i = 0; i < tests.length; i++) {
-				System.out.println(((int) (((float) i) / ((float) tests.length)) * 100F) + "%");
+				System.out.println(((int) (((float) i) / ((float) tests.length) * 100F)) + "%");
 				pw.println("== TEST: " + tests[i].getName() + " ==");
-				
+
 				TestResult result = new TestResult();
-				
+
 				tests[i].run(result);
-				
+
 				ratio += result.passRatio();
 				amt += 1.0F;
-				
+
 				for(Entry<String, Boolean> e : result.getResults().entrySet()) {
 					pw.print("  " + e.getKey());
 					for(int j = 0; j < 32 - e.getKey().length(); j++)
@@ -64,15 +66,16 @@ public class MainNetTest {
 					pw.print(": " + (e.getValue() ? "PASSED" : "FAILED"));
 					pw.println();
 				}
+				pw.println();
 			}
-			
+
 			pw.println();
 			pw.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%");
 			pw.println();
 			pw.println();
 			pw.flush();
 			pw.close();
-			
+
 			System.out.println("100.0%");
 			System.out.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%");
 
