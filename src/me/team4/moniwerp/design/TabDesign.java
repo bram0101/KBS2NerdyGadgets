@@ -20,23 +20,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+package me.team4.moniwerp.design;
 
-package me.team4.moniwerp;
+import javax.swing.JPanel;
 
-import javax.swing.UIManager;
+import me.team4.moniwerp.Tab;
 
-public class Main {
+/**
+ * Het tabblad voor de ontwerp kant van de applicatie
+ *
+ */
+public class TabDesign extends JPanel implements Tab {
 
-	public static void main(String[] args) {
-		// Zorg dat het programma eruit ziet alsof het native is.
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		// Maak een venster aan en geef het weer.
-		Window window = new Window();
-		window.setVisible(true);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void onMenuButton(int buttonID) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onResizeTab(int width, int height) {
+		
 	}
 
 }

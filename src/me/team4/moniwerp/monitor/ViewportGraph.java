@@ -20,23 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+package me.team4.moniwerp.monitor;
 
-package me.team4.moniwerp;
+import java.awt.Color;
 
-import javax.swing.UIManager;
+import javax.swing.JPanel;
 
-public class Main {
+/**
+ * De grafiek die de geschiedenis weergeeft van de waardes van een
+ * netwerkcomponent.
+ *
+ */
+public class ViewportGraph extends JPanel {
 
-	public static void main(String[] args) {
-		// Zorg dat het programma eruit ziet alsof het native is.
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		// Maak een venster aan en geef het weer.
-		Window window = new Window();
-		window.setVisible(true);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * De hoeveelheid seconden aan geschiedenis dat wordt weergegeven.
+	 */
+	private int timeRange = 60 * 60 * 24; // 1 dag
+	
+	public ViewportGraph() {
+		setBackground(Color.blue);
+	}
+	
+	/**
+	 * Deze methode wordt geroepen als er een update moet plaatsvinden. Deze wordt
+	 * elke seconde geroepen door TabMonitor
+	 */
+	public void update() {
+		// TODO: implement
 	}
 
 }

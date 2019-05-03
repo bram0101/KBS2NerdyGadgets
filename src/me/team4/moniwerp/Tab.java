@@ -20,23 +20,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 package me.team4.moniwerp;
 
-import javax.swing.UIManager;
+/**
+ * Een tabblad dat kan worden gebruikt in een venster
+ *
+ */
+public interface Tab {
 
-public class Main {
+	/**
+	 * Deze methode wordt geroepen wanneer een menu knop wordt ingedrukt. buttonID
+	 * geeft aan welke knop is ingedrukt.
+	 * 
+	 * @param buttonID Id van de menu knop die is ingedrukt. Komt overeen met
+	 *                 Window.BUTTON_*
+	 */
+	public void onMenuButton(int buttonID);
 
-	public static void main(String[] args) {
-		// Zorg dat het programma eruit ziet alsof het native is.
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		// Maak een venster aan en geef het weer.
-		Window window = new Window();
-		window.setVisible(true);
-	}
+	/**
+	 * Deze methode wordt geroepen wanneer het venster van grootte aanpast, waardoor
+	 * alle groottes opnieuw moet worden berekent.
+	 * 
+	 * @param width De nieuwe breedte
+	 * @param height De nieuwe hoogte
+	 */
+	public void onResizeTab(int width, int height);
 
 }
