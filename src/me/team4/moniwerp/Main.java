@@ -26,6 +26,8 @@ package me.team4.moniwerp;
 import javax.swing.UIManager;
 
 public class Main {
+	
+	private static Window window;
 
 	public static void main(String[] args) {
 		// Zorg dat het programma eruit ziet alsof het native is.
@@ -35,8 +37,15 @@ public class Main {
 			ex.printStackTrace();
 		}
 		// Maak een venster aan en geef het weer.
-		Window window = new Window();
+		window = new Window();
 		window.setVisible(true);
+	}
+	
+	/**
+	 * @return Het hoofdvenster van deze applicatie.
+	 */
+	public static Window getWindow() {
+		return window;
 	}
 
 }

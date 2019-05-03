@@ -23,13 +23,13 @@ SOFTWARE.
 package me.team4.moniwerp;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import me.team4.moniwerp.design.TabDesign;
 import me.team4.moniwerp.monitor.TabMonitor;
 
 /**
@@ -114,6 +114,20 @@ public class Window extends JFrame implements ComponentListener {
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
+	}
+	
+	/**
+	 * @return De TabMonitor instantie die wordt gebruikt in dit venster.
+	 */
+	public TabMonitor getMonitorTab() {
+		return monTab;
+	}
+	
+	/**
+	 * @return De TabDesign instantie die wordt gebruikt in dit venster.
+	 */
+	public TabDesign getDesignTab() {
+		return null;
 	}
 
 }

@@ -78,6 +78,18 @@ public class TabMonitor extends JPanel implements Tab{
 		viewportNetwork.setPreferredSize(new Dimension(width-width/3,height-height/3));
 		viewportGraph.setPreferredSize(new Dimension(width-width/3,height/3));
 	}
+	
+	public InfoList getInfoList() {
+		return infoList;
+	}
+	
+	public ViewportGraph getViewportGraph() {
+		return viewportGraph;
+	}
+	
+	public ViewportNetwork getViewportNetwork() {
+		return viewportNetwork;
+	}
 
 	// TODO: Zorg dat het elke seconde update.
 
