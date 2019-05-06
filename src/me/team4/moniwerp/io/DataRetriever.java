@@ -29,6 +29,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 
 /**
  * Deze klas haalt de monitor data op uit de database.
@@ -51,13 +52,14 @@ public class DataRetriever {
 	private Connection connection;
 
 	private HashMap<Integer, String> naamConversie = new HashMap<Integer, String>();
-	
+
 	private long lastTimestamp;
 
 	private DataRetriever() {
 		// initialiseer de beide hashmaps
 		cache = new HashMap<String, LinkedList<MonitorData>>();
 		statusCache = new HashMap<String, Boolean>();
+		lastTimestamp = System.currentTimeMillis() / 1000L - 604800;
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class DataRetriever {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
 						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
 				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
-				
+
 				// Maakt een SQL statement mogelijk
 				Statement stmt = connection.createStatement();
 				// Een ResultSet geeft het resultaat van een Select statement
@@ -83,8 +85,8 @@ public class DataRetriever {
 				}
 			}
 			Statement statement = connection.createStatement();
-			long timestamp = System.currentTimeMillis() / 1000L -1;
-			//initialiseer de variablen uit de database
+			long timestamp = System.currentTimeMillis() / 1000L - 1;
+			// initialiseer de variablen uit de database
 			int uptime = 0;
 			float cpu = 0;
 			float ramUsed = 0;
@@ -94,10 +96,11 @@ public class DataRetriever {
 			int diskBusyTime = 0;
 			int bytesSent = 0;
 			int bytesReceived = 0;
-			
-			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > "+lastTimestamp+"  order by timestamp;");	
+
+			ResultSet rs = statement
+					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
 			while (rs.next()) {
-			//haal de gegevens uit de database op	
+				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
 				uptime = rs.getInt("uptime");
 				cpu = rs.getFloat("cpu");
@@ -108,10 +111,24 @@ public class DataRetriever {
 				diskBusyTime = rs.getInt("schijf busytime");
 				bytesSent = rs.getInt("bytes sent");
 				bytesReceived = rs.getInt("bytes received");
-				
-				cache.get(naamConversie.get(rs.getInt("ComponentID"))).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
-				if (lastTimestamp > timestamp ){
-					 lastTimestamp = timestamp;
+
+				cache.get(naamConversie.get(rs.getInt("ComponentID"))).addFirst(new MonitorData(timestamp, uptime, cpu,
+						ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
+				if (lastTimestamp < timestamp) {
+					lastTimestamp = timestamp;
+				}
+				System.out.println(timestamp + ": " + naamConversie.get(rs.getInt("ComponentID")));
+
+			}
+			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
+				if (!e.getValue().isEmpty()) {
+					if (e.getValue().getFirst().getTimestamp() >= lastTimestamp - 1) {
+						statusCache.put(e.getKey(), true);
+					} else { System.out.println(e.getKey());
+						statusCache.put(e.getKey(), false);
+					}
+				} else {
+					statusCache.put(e.getKey(), false);
 				}
 			}
 		} catch (Exception ex) {

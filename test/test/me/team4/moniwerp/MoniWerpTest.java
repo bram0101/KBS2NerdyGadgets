@@ -29,6 +29,36 @@ public class MoniWerpTest {
 	public static void main(String[] args) {
 		
 		DataRetriever.getInstance().poll();
+		System.out.println();
+		System.out.println();
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DataRetriever.getInstance().poll();
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DataRetriever.getInstance().poll();
+		System.out.println();
+		System.out.println();
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DataRetriever.getInstance().poll();
+
 	}
 	
 }
