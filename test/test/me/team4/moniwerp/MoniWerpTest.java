@@ -22,10 +22,13 @@ SOFTWARE.
 */
 package test.me.team4.moniwerp;
 
+import me.team4.moniwerp.io.DataRetriever;
+
 public class MoniWerpTest {
 	
 	public static void main(String[] args) {
 		
+		DataRetriever.getInstance().poll();
 	}
 	
 }

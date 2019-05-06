@@ -22,6 +22,10 @@ SOFTWARE.
 */
 package me.team4.moniwerp.io;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,6 +34,7 @@ import java.util.LinkedList;
  * Deze klas haalt de monitor data op uit de database.
  *
  */
+
 public class DataRetriever {
 
 	/**
@@ -42,22 +47,44 @@ public class DataRetriever {
 	 * boolean dat aangeeft of het netwerkcomponent aan staat of niet.
 	 */
 	private HashMap<String, Boolean> statusCache;
-	
+
+	private Connection connection;
+
+	private HashMap<Integer, String> naamConversie = new HashMap<Integer, String>();
+
 	private DataRetriever() {
 	}
-	
+
 	/**
 	 * Initializeer de klas
 	 */
+
 	public void initialize() {
 		// TODO: implement
 	}
-	
+
 	/**
 	 * Haal de laatste data op.
 	 */
 	public void poll() {
 		// TODO: implement
+		try {
+			if (connection == null) {
+				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
+						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
+				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
+				Statement stmt = connection.createStatement();
+
+				ResultSet rs = stmt.executeQuery("select * from Netwerkcomponent;");
+				while (rs.next()) {
+					naamConversie.put(rs.getInt("ComponentID"), rs.getString("naam"));
+				}
+			}
+			
+			System.out.println(naamConversie);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	/**
@@ -101,16 +128,16 @@ public class DataRetriever {
 	public boolean getStatusForComponent(String name) {
 		return name.equals("W1") ? false : true;
 	}
-	
 
 	/**
 	 * Er hoeft maar één instantie te zijn voor DataRetriever, dus die slaan wij
 	 * hier op.
 	 */
 	private static DataRetriever instance = new DataRetriever();
-	
+
 	/**
 	 * Voor deze klas hebben wij maar één instantie.
+	 * 
 	 * @return De instantie van DataRetriever
 	 */
 	public static DataRetriever getInstance() {
