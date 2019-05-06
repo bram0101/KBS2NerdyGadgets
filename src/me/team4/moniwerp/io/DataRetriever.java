@@ -55,19 +55,25 @@ public class DataRetriever {
 	
 
 	private DataRetriever() {
+		// initialiseer de beide hashmaps
+		cache = new HashMap<String, LinkedList<MonitorData>>();
+		statusCache = new HashMap<String, Boolean>();
 	}
 
 	/**
 	 * Haal de laatste data op.
 	 */
 	public void poll() {
+		// maak een connectie met de SQL database
 		try {
 			if (connection == null) {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
 						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
 				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
+				
+				// Maakt een SQL statement mogelijk
 				Statement stmt = connection.createStatement();
-
+				
 				ResultSet rs = stmt.executeQuery("select * from Netwerkcomponent;");
 				while (rs.next()) {
 					naamConversie.put(rs.getInt("ComponentID"), rs.getString("naam"));
@@ -86,11 +92,10 @@ public class DataRetriever {
 			int bytesSent = 0;
 			int bytesReceived = 0;
 			
-			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp == 0 order by timestamp;");	
+			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp = 0 order by timestamp;");	
 			while (rs.next()) {
-				cache.get(rs.getInt("ComponentID")).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));;
+				cache.get(naamConversie.get("ComponentID")).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
 			}
-			System.out.println(naamConversie);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
