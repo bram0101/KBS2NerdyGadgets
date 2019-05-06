@@ -52,7 +52,7 @@ public class DataRetriever {
 
 	private HashMap<Integer, String> naamConversie = new HashMap<Integer, String>();
 	
-	
+	private long lastTimestamp;
 
 	private DataRetriever() {
 		// initialiseer de beide hashmaps
@@ -73,15 +73,18 @@ public class DataRetriever {
 				
 				// Maakt een SQL statement mogelijk
 				Statement stmt = connection.createStatement();
-				
+				// Een ResultSet geeft het resultaat van een Select statement
 				ResultSet rs = stmt.executeQuery("select * from Netwerkcomponent;");
+				// Geeft elke regel weer
 				while (rs.next()) {
 					naamConversie.put(rs.getInt("ComponentID"), rs.getString("naam"));
 					cache.put(rs.getString("naam"), new LinkedList<MonitorData>());
+					// pakt elke ID + Naam samen en gooit ze in een LinkedList
 				}
 			}
 			Statement statement = connection.createStatement();
-			long timestamp = System.currentTimeMillis() / 1000L;
+			long timestamp = System.currentTimeMillis() / 1000L -1;
+			//initialiseer de variablen uit de database
 			int uptime = 0;
 			float cpu = 0;
 			float ramUsed = 0;
@@ -92,7 +95,7 @@ public class DataRetriever {
 			int bytesSent = 0;
 			int bytesReceived = 0;
 			
-			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp = 0 order by timestamp;");	
+			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > 0  order by timestamp;");	
 			while (rs.next()) {
 				cache.get(naamConversie.get("ComponentID")).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
 			}
