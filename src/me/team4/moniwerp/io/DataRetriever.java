@@ -192,5 +192,4 @@ public class DataRetriever {
 	public static DataRetriever getInstance() {
 		return instance;
 	}
-
 }
