@@ -95,10 +95,10 @@ public class DataRetriever {
 			float diskTotal = 0;
 			int diskBusyTime = 0;
 			int bytesSent = 0;
-			int bytesReceived = 0;
 
-			ResultSet rs = statement
-					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
+			int bytesReceived = 0; 
+			
+			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > "+lastTimestamp+"  order by timestamp;");	
 			while (rs.next()) {
 				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
