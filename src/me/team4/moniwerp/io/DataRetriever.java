@@ -95,9 +95,24 @@ public class DataRetriever {
 			int bytesSent = 0;
 			int bytesReceived = 0;
 			
-			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > 0  order by timestamp;");	
+			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > "+lastTimestamp+"  order by timestamp;");	
 			while (rs.next()) {
-				cache.get(naamConversie.get("ComponentID")).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
+			//haal de gegevens uit de database op	
+				timestamp = rs.getLong("timestamp");
+				uptime = rs.getInt("uptime");
+				cpu = rs.getFloat("cpu");
+				ramUsed = rs.getFloat("ram gebruikt");
+				ramTotal = rs.getFloat("ram totaal");
+				diskUsed = rs.getFloat("schijfruimte gebruikt");
+				diskTotal = rs.getFloat("schijfruimte totaal");
+				diskBusyTime = rs.getInt("schijf busytime");
+				bytesSent = rs.getInt("bytes sent");
+				bytesReceived = rs.getInt("bytes received");
+				
+				cache.get(naamConversie.get(rs.getInt("ComponentID"))).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
+				if (lastTimestamp > timestamp ){
+					 lastTimestamp = timestamp;
+				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
