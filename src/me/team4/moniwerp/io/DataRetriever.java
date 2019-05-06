@@ -51,23 +51,16 @@ public class DataRetriever {
 	private Connection connection;
 
 	private HashMap<Integer, String> naamConversie = new HashMap<Integer, String>();
+	
+	
 
 	private DataRetriever() {
-	}
-
-	/**
-	 * Initializeer de klas
-	 */
-
-	public void initialize() {
-		// TODO: implement
 	}
 
 	/**
 	 * Haal de laatste data op.
 	 */
 	public void poll() {
-		// TODO: implement
 		try {
 			if (connection == null) {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
@@ -78,9 +71,25 @@ public class DataRetriever {
 				ResultSet rs = stmt.executeQuery("select * from Netwerkcomponent;");
 				while (rs.next()) {
 					naamConversie.put(rs.getInt("ComponentID"), rs.getString("naam"));
+					cache.put(rs.getString("naam"), new LinkedList<MonitorData>());
 				}
 			}
+			Statement statement = connection.createStatement();
+			long timestamp = System.currentTimeMillis() / 1000L;
+			int uptime = 0;
+			float cpu = 0;
+			float ramUsed = 0;
+			float ramTotal = 0;
+			float diskUsed = 0;
+			float diskTotal = 0;
+			int diskBusyTime = 0;
+			int bytesSent = 0;
+			int bytesReceived = 0;
 			
+			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp == 0 order by timestamp;");	
+			while (rs.next()) {
+				cache.get(rs.getInt("ComponentID")).addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));;
+			}
 			System.out.println(naamConversie);
 		} catch (Exception ex) {
 			ex.printStackTrace();
