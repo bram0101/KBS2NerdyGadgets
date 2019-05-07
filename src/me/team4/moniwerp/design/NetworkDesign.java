@@ -24,6 +24,7 @@ package me.team4.moniwerp.design;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,8 @@ public class NetworkDesign {
 	 * De grootste y waarde van het gebied van de canvas dat wordt gebruikt
 	 */
 	private int maxY;
-
+	
+	
 	/**
 	 * De lijst met netwerkcomponenten die in dit ontwerp zitten
 	 */
@@ -95,7 +97,7 @@ public class NetworkDesign {
 			}
 		}
 	}
-
+	private int length = components.size();
 	/**
 	 * Sla dit ontwerp op naar de DataOutputStream
 	 * 
@@ -103,6 +105,32 @@ public class NetworkDesign {
 	 */
 	public void save(DataOutputStream dos) {
 		// TODO: implement
+		try{
+			dos.writeInt(0x4d574400);
+			dos.writeByte(0x01);
+			dos.writeInt(minX);
+			dos.writeInt(minY);
+			dos.writeInt(maxX);
+			dos.writeInt(maxY);
+			dos.writeInt(length);
+			
+			for (int i = 0; i < length; i++) {
+				dos.writeInt(compID);
+				dos.writeUTF(compName);
+				dos.writeUTF(compType);
+				dos.writeInt(compCosts);
+				dos.writeFloat(compUptime);
+				dos.writeInt(compXloc);
+				dos.writeInt(compYloc);
+				
+			}
+	
+			
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+				
 	}
 
 	/**
