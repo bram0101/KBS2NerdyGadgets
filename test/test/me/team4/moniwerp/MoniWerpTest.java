@@ -30,7 +30,7 @@ public class MoniWerpTest {
 		DataRetriever.getInstance().poll();
 		
 		
-		System.out.println(DataRetriever.getInstance().getDataForComponent("W1").getFirst().getUptime());
+		System.out.println(DataRetriever.getInstance().getDataForComponent("W1").peekFirst().getUptime());
 	}
 	
 }

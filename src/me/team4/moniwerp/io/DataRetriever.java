@@ -26,7 +26,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -96,7 +95,7 @@ public class DataRetriever {
 			int diskBusyTime = 0;
 			int bytesSent = 0;
 			int bytesReceived = 0;
-
+			// aanroepen welke tabel gebruik wordt
 			ResultSet rs = statement
 					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
 			while (rs.next()) {
@@ -111,15 +110,15 @@ public class DataRetriever {
 				diskBusyTime = rs.getInt("schijf busytime");
 				bytesSent = rs.getInt("bytes sent");
 				bytesReceived = rs.getInt("bytes received");
-
+				// zet de ComponentID bij de opgehaalde MonitorData in de linkedlist van cache
 				cache.get(naamConversie.get(rs.getInt("ComponentID"))).addFirst(new MonitorData(timestamp, uptime, cpu,
 						ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
+				// vervang de oude timestamp als er iets nieuws is
 				if (lastTimestamp < timestamp) {
 					lastTimestamp = timestamp;
 				}
-//				System.out.println(timestamp + ": " + naamConversie.get(rs.getInt("ComponentID")));
-
 			}
+			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
 					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
@@ -154,7 +153,6 @@ public class DataRetriever {
 	 * @return Monitor data
 	 */
 	public MonitorData getLatestDataForComponent(String name) {
-		// TODO: implement
 		return cache.get(name).peekFirst();
 	}
 
