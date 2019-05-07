@@ -122,7 +122,7 @@ public class DataRetriever {
 			}
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
-					if (e.getValue().getFirst().getTimestamp() >= lastTimestamp - 1) {
+					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
 						statusCache.put(e.getKey(), true);
 					} else {
 						System.out.println(e.getKey());
@@ -155,7 +155,7 @@ public class DataRetriever {
 	 */
 	public MonitorData getLatestDataForComponent(String name) {
 		// TODO: implement
-		return new MonitorData(System.currentTimeMillis() / 1000L, 30, 0.36F, 0.4F, 1.0F, 2F, 4F, 100, 1024, 512);
+		return cache.get(name).peekFirst();
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class DataRetriever {
 	 * @return True als het netwerkcomponent aan staat.
 	 */
 	public boolean getStatusForComponent(String name) {
-		return name.equals("W1") ? false : true;
+		return statusCache.get(name);
 	}
 
 	/**
