@@ -78,6 +78,7 @@ public class Window extends JFrame implements ComponentListener {
 	 */
 	private Tab selectedTab;
 	private TabMonitor monTab;
+	private TabDesign designTab;
 	private JPanel root;
 	private JPanel tabPanel;
 	private JButton butMonitor;
@@ -93,6 +94,7 @@ public class Window extends JFrame implements ComponentListener {
 
 		// Maak onze panels aan.
 		monTab = new TabMonitor();
+		designTab = new TabDesign();
 		selectedTab = monTab;
 		tabPanel = new JPanel();
 
@@ -204,27 +206,57 @@ public class Window extends JFrame implements ComponentListener {
 			protected void paintComponent(Graphics g) {
 				g.setFont(new Font("Arial", Font.BOLD, 20));
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Monitor", g);
-				//center text door h/2, b/2 
-				// 
-				g.setColor(Color.cyan);
+				g.setColor(new Color(114,134,165));
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
-                g.setColor(Color.pink);
+                g.setColor(Color.black);
+                
 				// hoogte/2, breedte /2. center -x, y  
-				g.drawString("Monitor", 0, 22);
+                int h = butMonitor.getHeight()/2; 
+                int b = butMonitor.getWidth()/2;
+				g.drawString("Monitor", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
 			}
+			
+			
 		};
+		
+		butMonitor.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedTab = monTab;
+				tabPanel.removeAll();
+				tabPanel.add(monTab);
+				tabPanel.revalidate();
+			}
+		});
+		
 		butOntwerpen = new JButton("Ontwerpen") {
 			@Override
 			protected void paintComponent(Graphics g) {
 				g.setFont(new Font("Arial", Font.BOLD, 20));
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Ontwerpen", g);
-				g.setColor(Color.magenta);
+				g.setColor(new Color(147, 188, 255));
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
-				g.setColor(Color.orange);
+				g.setColor(Color.black);
 				
-				g.drawString("Ontwerpen", 0, 22);
+				// hoogte/2, breedte /2. center -x, y  
+                int h = butOntwerpen.getHeight()/2; 
+                int b = butOntwerpen.getWidth()/2;
+				g.drawString("Ontwerpen", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
 		    }
 		}; 
+		
+		butOntwerpen.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedTab = designTab;
+				tabPanel.removeAll();
+				tabPanel.add(designTab);
+				tabPanel.revalidate();
+			}
+
+		});
 		
 		//
 		root.add(butMonitor, BorderLayout.WEST);
