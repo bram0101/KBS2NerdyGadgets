@@ -31,7 +31,6 @@ import java.util.List;
  *
  */
 public class NetworkDesign {
-
 	/**
 	 * De kleinste x waarde van het gebied van de canvas dat wordt gebruikt
 	 */
@@ -58,14 +57,20 @@ public class NetworkDesign {
 	 * De lijst met verbindingen tussen netwerkcomponenten
 	 */
 	private List<NetworkConnection> connections;
-
+	public NetworkDesign(int minX, int minY, int maxX, int maxY) {
+		this.minX = minX;
+		this.minY = minY;
+		this.maxX = maxX;
+		this.maxY = maxY;
+	}
+	
 	/**
 	 * Krijg het gebied van de canvas dat door het ontwerp wordt gebruikt
 	 * 
 	 * @return de bounds [minX, minY, maxX, maxY]
 	 */
 	public int[] getBounds() {
-		return new int[] { 0, 0, 100, 100 };
+		return new int[] { minX, minY, maxX, maxY };
 	}
 
 	/**
