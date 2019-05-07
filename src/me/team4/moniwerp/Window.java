@@ -23,13 +23,16 @@ SOFTWARE.
 package me.team4.moniwerp;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -199,20 +202,43 @@ public class Window extends JFrame implements ComponentListener {
 		butMonitor = new JButton("Monitor") {
 			@Override
 			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
+				g.setFont(new Font("Arial", Font.BOLD, 20));
+				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Monitor", g);
+				//center text door h/2, b/2 
+				// 
+				g.setColor(Color.cyan);
+				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
+                g.setColor(Color.pink);
+				// hoogte/2, breedte /2. center -x, y  
+				g.drawString("Monitor", 0, 22);
 			}
 		};
-		butOntwerpen = new JButton("Ontwerpen");
+		butOntwerpen = new JButton("Ontwerpen") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				g.setFont(new Font("Arial", Font.BOLD, 20));
+				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Ontwerpen", g);
+				g.setColor(Color.magenta);
+				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
+				g.setColor(Color.orange);
+				
+				g.drawString("Ontwerpen", 0, 22);
+		    }
+		}; 
+		
+		//
 		root.add(butMonitor, BorderLayout.WEST);
 		root.add(butOntwerpen, BorderLayout.EAST);
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		butMonitor.setPreferredSize(new Dimension(root.getWidth()/2,96));
-		butOntwerpen.setPreferredSize(new Dimension(root.getWidth()/2,96));
+		
+		butMonitor.setPreferredSize(new Dimension(root.getWidth()/2,60));
+		butOntwerpen.setPreferredSize(new Dimension(root.getWidth()/2,60));
+		
 		// Zeg tegen het tabblad dat de layout opnieuw moet worden gedaan.
-		monTab.onResizeTab(root.getWidth(), root.getHeight()-96);
+		monTab.onResizeTab(root.getWidth(), root.getHeight()-60);
 		// Zeg tegen AWT/Swing dat de layout is aangepast en forceer een update.
 		tabPanel.revalidate();
 	}
