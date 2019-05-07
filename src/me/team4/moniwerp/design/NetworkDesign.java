@@ -24,6 +24,7 @@ package me.team4.moniwerp.design;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,13 +58,16 @@ public class NetworkDesign {
 	 * De lijst met verbindingen tussen netwerkcomponenten
 	 */
 	private List<NetworkConnection> connections;
-	public NetworkDesign(int minX, int minY, int maxX, int maxY) {
-		this.minX = minX;
-		this.minY = minY;
-		this.maxX = maxX;
-		this.maxY = maxY;
+
+	public NetworkDesign() {
+		this.minX = 0;
+		this.minY = 0;
+		this.maxX = 0;
+		this.maxY = 0;
+		components = new ArrayList<NetworkComponent>();
+		connections = new ArrayList<NetworkConnection>();
 	}
-	
+
 	/**
 	 * Krijg het gebied van de canvas dat door het ontwerp wordt gebruikt
 	 * 
@@ -79,38 +83,52 @@ public class NetworkDesign {
 	 * niet. Daar is deze methode voor.
 	 */
 	public void calcBounds() {
-		// TODO: implement
+		for (int i = 0; i < components.size(); i++) {
+			if (components.get(i).getxLoc() < minX) {
+				this.minX = components.get(i).getxLoc();
+			} else if (components.get(i).getxLoc() + 20 > maxX) {
+				this.maxX = components.get(i).getxLoc() + 20;
+			} else if (components.get(i).getyLoc() < minY) {
+				this.minY = components.get(i).getyLoc();
+			} else if (components.get(i).getyLoc() + 5 < maxY) {
+				this.maxY = components.get(i).getyLoc() + 5;
+			}
+		}
 	}
-	
+
 	/**
 	 * Sla dit ontwerp op naar de DataOutputStream
+	 * 
 	 * @param dos
 	 */
 	public void save(DataOutputStream dos) {
 		// TODO: implement
 	}
-	
+
 	/**
 	 * Laad het ontwerp uit de DataInputStream
+	 * 
 	 * @param dis
 	 */
 	public void load(DataInputStream dis) {
 		// TODO: implement
 	}
-	
+
 	/**
 	 * Lijst van netwerkcomponenten die in deze lijst zitten
+	 * 
 	 * @return
 	 */
-	public List<NetworkComponent> getComponents(){
+	public List<NetworkComponent> getComponents() {
 		return components;
 	}
-	
+
 	/**
 	 * Lijst van verbindingen tussen netwerkcomponenten
+	 * 
 	 * @return
 	 */
-	public List<NetworkConnection> getConnections(){
+	public List<NetworkConnection> getConnections() {
 		return connections;
 	}
 
