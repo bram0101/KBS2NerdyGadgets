@@ -95,10 +95,10 @@ public class DataRetriever {
 			float diskTotal = 0;
 			int diskBusyTime = 0;
 			int bytesSent = 0;
+			int bytesReceived = 0;
 
-			int bytesReceived = 0; 
-			
-			ResultSet rs = statement.executeQuery("select * from Netwerk where timestamp > "+lastTimestamp+"  order by timestamp;");	
+			ResultSet rs = statement
+					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
 			while (rs.next()) {
 				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
@@ -117,14 +117,15 @@ public class DataRetriever {
 				if (lastTimestamp < timestamp) {
 					lastTimestamp = timestamp;
 				}
-				System.out.println(timestamp + ": " + naamConversie.get(rs.getInt("ComponentID")));
+//				System.out.println(timestamp + ": " + naamConversie.get(rs.getInt("ComponentID")));
 
 			}
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
 					if (e.getValue().getFirst().getTimestamp() >= lastTimestamp - 1) {
 						statusCache.put(e.getKey(), true);
-					} else { System.out.println(e.getKey());
+					} else {
+						System.out.println(e.getKey());
 						statusCache.put(e.getKey(), false);
 					}
 				} else {
@@ -143,18 +144,7 @@ public class DataRetriever {
 	 * @return Lijst met data. De eerste item in de lijst is de meest recente data.
 	 */
 	public LinkedList<MonitorData> getDataForComponent(String name) {
-		// TODO: implement
-		long timestamp = System.currentTimeMillis() / 1000L;
-		return new LinkedList<MonitorData>(Arrays
-				.asList(new MonitorData[] { new MonitorData(timestamp, 30, 0.36F, 0.4F, 1.0F, 2F, 4F, 100, 1024, 512),
-						new MonitorData(timestamp - 1, 29, 0.26F, 0.5F, 1.0F, 2F, 4F, 0, 2024, 0),
-						new MonitorData(timestamp - 2, 28, 0.6F, 0.4F, 1.0F, 2F, 4F, 0, 2024, 0),
-						new MonitorData(timestamp - 3, 27, 0.0F, 0.4F, 1.0F, 2.4F, 4F, 100, 4024, 4),
-						new MonitorData(timestamp - 4, 26, 0.0F, 0.5F, 1.0F, 2.8F, 4F, 100, 1024, 100),
-						new MonitorData(timestamp - 5, 25, 0.2F, 0.5F, 1.0F, 1F, 4F, 900, 24, 400),
-						new MonitorData(timestamp - 6, 24, 0.4F, 0.6F, 1.0F, 2F, 4F, 1000, 0, 900),
-						new MonitorData(timestamp - 7, 23, 0.9F, 0.7F, 1.0F, 4F, 4F, 600, 0, 100),
-						new MonitorData(timestamp - 8, 22, 0.9F, 0.6F, 1.0F, 2F, 4F, 400, 1024, 512) }));
+		return cache.get(name);
 	}
 
 	/**
