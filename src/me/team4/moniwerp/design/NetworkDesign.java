@@ -65,7 +65,7 @@ public class NetworkDesign {
 	 * @return de bounds [minX, minY, maxX, maxY]
 	 */
 	public int[] getBounds() {
-		return new int[] { 0, 0, 100, 100 };
+		return new int[] { minX, minY, maxX, maxY };
 	}
 
 	/**
