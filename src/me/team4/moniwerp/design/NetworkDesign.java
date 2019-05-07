@@ -26,6 +26,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,7 +50,6 @@ public class NetworkDesign {
 	 * De grootste y waarde van het gebied van de canvas dat wordt gebruikt
 	 */
 	private int maxY;
-	
 	
 	/**
 	 * De lijst met netwerkcomponenten die in dit ontwerp zitten
@@ -97,7 +97,6 @@ public class NetworkDesign {
 			}
 		}
 	}
-	private int length = components.size();
 	/**
 	 * Sla dit ontwerp op naar de DataOutputStream
 	 * 
@@ -112,20 +111,22 @@ public class NetworkDesign {
 			dos.writeInt(minY);
 			dos.writeInt(maxX);
 			dos.writeInt(maxY);
-			dos.writeInt(length);
+			dos.writeInt(components.size());
 			
-			for (int i = 0; i < length; i++) {
-				dos.writeInt(compID);
-				dos.writeUTF(compName);
-				dos.writeUTF(compType);
-				dos.writeInt(compCosts);
-				dos.writeFloat(compUptime);
-				dos.writeInt(compXloc);
-				dos.writeInt(compYloc);
-				
+			HashMap<NetworkComponent, Integer> idConv = new HashMap<NetworkComponent, Integer>();
+			int id = 0;
+			for (NetworkComponent comp : components) {
+				dos.writeInt(id);
+				dos.writeUTF(comp.getNaam());
+				dos.writeUTF(comp.getType());
+				dos.writeInt(comp.getCosts());
+				dos.writeFloat(comp.getUptime());
+				dos.writeInt(comp.getxLoc());
+				dos.writeInt(comp.getyLoc());
+				idConv.put(comp, id);
+				id++;
 			}
 	
-			
 		}
 		catch (IOException e) {
 			e.printStackTrace();
