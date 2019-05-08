@@ -118,11 +118,13 @@ public class DataRetriever {
 					lastTimestamp = timestamp;
 				}
 			}
+			System.out.println();
 			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
 					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
 						statusCache.put(e.getKey(), true);
+						System.out.println(e.getKey());
 					} else {
 						System.out.println(e.getKey());
 						statusCache.put(e.getKey(), false);
@@ -133,6 +135,12 @@ public class DataRetriever {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			try {
+				connection.close();
+			}catch(Exception ex2) {
+				ex.printStackTrace();
+			}
+			connection = null;
 		}
 	}
 
@@ -153,6 +161,9 @@ public class DataRetriever {
 	 * @return Monitor data
 	 */
 	public MonitorData getLatestDataForComponent(String name) {
+		if (!cache.containsKey(name)) {
+			return null;
+		}
 		return cache.get(name).peekFirst();
 	}
 
@@ -163,6 +174,9 @@ public class DataRetriever {
 	 * @return True als het netwerkcomponent aan staat.
 	 */
 	public boolean getStatusForComponent(String name) {
+		if (!statusCache.containsKey(name)) {
+			return true;
+		}
 		return statusCache.get(name);
 	}
 

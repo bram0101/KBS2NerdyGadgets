@@ -65,7 +65,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 		NetworkComponent pfSense = new NetworkComponent("pfSense", "firewall", 1000, 0.9999F, 0, 50);
 		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.9999F, 40, 55);
 		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9999F, 40, 65);
-		NetworkComponent lb = new NetworkComponent("LB2", "Loadbalancer", 1000, 0.9999F, 40, 40);
+		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.9999F, 40, 40);
 		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9999F, 80, 35);
 		NetworkComponent db2 = new NetworkComponent("DB2", "Database server", 1000, 0.9999F, 80, 45);
 		design.getComponents().add(pfSense);
@@ -79,6 +79,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 		design.getConnections().add(new NetworkConnection(pfSense, lb));
 		design.getConnections().add(new NetworkConnection(lb, db1));
 		design.getConnections().add(new NetworkConnection(lb, db2));
+		design.calcBounds();
 
 		// We willen kunnen kijken wanneer je er op klikt zodat we een component kunnen
 		// laten selecteren.
@@ -236,6 +237,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 	 * elke seconde geroepen door TabMonitor
 	 */
 	public void update() {
+		DataRetriever.getInstance().poll();
 		repaint();
 	}
 
@@ -263,7 +265,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 				// Zet de selected variabele naar het goede component
 				selected = comp;
 				// Zeg dat de viewport opnieuw moet worden getekent.
-				repaint();
+				update();
 				// Vertel de infolijst het
 				Main.getWindow().getMonitorTab().getInfoList().setSelectedComponent(comp.getNaam());
 				// Wij hebben al een hit gevonden, dus wij stoppen hier.
