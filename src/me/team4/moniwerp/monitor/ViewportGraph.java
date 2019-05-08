@@ -25,6 +25,9 @@ package me.team4.moniwerp.monitor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.LinkedList;
+import java.util.ListIterator;
+
+//import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
 
 import javax.swing.JPanel;
 
@@ -66,6 +69,8 @@ public class ViewportGraph extends JPanel {
 		int breedte = g.getClipBounds().width;
 		int hoogte = g.getClipBounds().height;
 		int padding = 40;
+		int breedteGraf = breedte - padding*2;
+		int hoogteGraf = hoogte - padding*2;
 		// Achtergrond voor de grafiek
 		g.setColor(new Color(255, 255, 255));
 		g.fillRect(padding, padding, breedte - padding * 2, hoogte - padding * 2);
@@ -80,7 +85,7 @@ public class ViewportGraph extends JPanel {
 		}
 
 		// Verticale lijnen voor de grafiek
-		int amtVertLines = 5;
+		int amtVertLines = 0;
 		// TODO: set amtVertLines
 		if (timeRange <= minuut) {
 			amtVertLines = Math.max(timeRange / (4), 4);
@@ -121,12 +126,48 @@ public class ViewportGraph extends JPanel {
 		g.drawString("0%", padding - 20, hoogte - padding);
 		g.drawString("100%", padding - 30, padding);
 
-		int prevX;
-		int prevY;
-
 		LinkedList<MonitorData> data = DataRetriever.getInstance().getDataForComponent(
 				Main.getWindow().getMonitorTab().getInfoList().getSelectedComponent());
+		
+		long currentTimestamp = System.currentTimeMillis()/1000L; // Huidige timestamp
+		java.util.ListIterator<MonitorData> list_Iter = data.listIterator(0);
+
+		while(list_Iter.hasNext()) {
+			MonitorData data1 = list_Iter.next(); // Nu heb je de data in de variabele 'data' gedaan
+		    if(data1.getTimestamp() < currentTimestamp - timeRange){
+		    	break; // De data is verder dan onze timerange, dus stoppen wij hier met 'break'
+		    }
+		    float RAMused = data1.getRamTotal() * data1.getRamUsed();
+		    float diskused = data1.getDiskTotal() * data1.getDiskUsed();
+		    int busy = data1.getDiskBusyTime() / 1000;
+		    int send = data1.getBytesSent() / 100000;
+		    int received = data1.getBytesReceived() / 100000;
+		    
+		    long minVal = currentTimestamp; //Nu
+		    long maxVal = currentTimestamp - timeRange; //Max timeRange
+		    float p = ((float) (data1.getTimestamp()-minVal)) / ((float) (maxVal-minVal));	    
+		    System.out.print(p + "\n");
+		    int xPos = Math.round(breedte - (padding + p * breedteGraf));
+		     
+		    int yPosCPU = Math.round(hoogte - (padding + data1.getCpu() * hoogteGraf));
+		    int yposRAM = Math.round(hoogte - (padding + hoogteGraf * RAMused));
+		    int yPosDisk = Math.round(hoogte - (padding + hoogteGraf * diskused));
+		    int yPosBusy = Math.round(hoogte - (padding + hoogteGraf * busy));
+		    int yPosSend = Math.round(hoogte - (padding + hoogteGraf * send));
+		    int yPosReceived = Math.round(hoogte - (padding + hoogteGraf * received));
+		    // bereken de y positie voor de cpu ("data.getCPU()")
+			
+		    int prevX = 0; // de vorige x locatie
+			int prevY = 0; // de vorige y locatie
+		    
+			drawDatapoint(yPosCPU, xPos, g);
+		    // teken hier de CPU punt, oftewel teken een lijntje maar dan met (xPos, yPoxCPU) als het beginpunt en eindpunt	    
+		}
 	}
+	private void drawDatapoint(int y, float x, Graphics g) {
+		g.drawLine((int)x, y, (int)x, y);
+	}
+	
 
 	private void drawHorizontalline(double x, Graphics g) {
 		int breedte = g.getClipBounds().width;
