@@ -28,6 +28,11 @@ public class NetworkComponentType {
 	private int costs;
 	private float uptime;
 	
+	public NetworkComponentType(String name, int costs, float uptime) {
+		this.name = name;
+		this.costs = costs;
+		this.uptime =uptime;
+	}
 	//TODO
 	
 	public String getName() {
