@@ -37,6 +37,11 @@ public class NetworkConnection {
 	 */
 	private NetworkComponent second;
 	
+	public NetworkConnection(NetworkComponent first, NetworkComponent second) {
+		this.first = first;
+		this.second = second;
+	}
+	
 	/**
 	 * @return Het component waar de verbinding vanuit komt.
 	 */

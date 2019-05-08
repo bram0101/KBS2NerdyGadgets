@@ -24,6 +24,7 @@ package me.team4.moniwerp.design;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +59,11 @@ public class NetworkDesign {
 	 * De lijst met verbindingen tussen netwerkcomponenten
 	 */
 	private List<NetworkConnection> connections;
+	
+	public NetworkDesign() {
+		components = new ArrayList<NetworkComponent>();
+		connections = new ArrayList<NetworkConnection>();
+	}
 
 	/**
 	 * Krijg het gebied van de canvas dat door het ontwerp wordt gebruikt
