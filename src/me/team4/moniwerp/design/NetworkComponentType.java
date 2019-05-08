@@ -23,5 +23,39 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentType {
-
+	/**
+	 * De naam van het Netwerkcomponenttype
+	 */
+	private String name;
+	/**
+	 * De kosten van het Netwerkcomponenttype
+	 */
+	private int costs;
+	
+	/**
+	 * De uptime van het Netwerkcomponenttype
+	 */
+	private float uptime;
+	
+	/**
+	 * De naam van het Netwerkcomponenttype
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * De kosten van het netwerkcomponenttype
+	 * @return costs
+	 */
+	public int getCosts() {
+		return costs;
+	}
+	/**
+	 * De uptime van het Netwerkcomponenttype
+	 * @return uptime
+	 */
+	public float getUptime() {
+		return uptime;
+	}
 }

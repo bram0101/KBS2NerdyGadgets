@@ -23,5 +23,28 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class Toolbar {
-
+	/**
+	 * Het netwerkcomponenttype dat geselecteerd is
+	 */
+	private NetworkComponentType selected;
+	
+	/**
+	 * Of de connectiontool gebruikt wordt
+	 */
+	private boolean ConnectionTool;
+	
+	/**
+	 * Het netwwerkcomponenttype dat geselecteerd is
+	 * @return selected
+	 */
+	public NetworkComponentType getSelected() {
+		return selected;
+	}
+	/**
+	 * Of de connectiontool gebruikt wordt
+	 * @return ConnectionTool
+	 */
+	public boolean useConnectiontool() {
+		return ConnectionTool;
+	}
 }

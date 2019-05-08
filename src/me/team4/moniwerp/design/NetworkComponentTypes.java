@@ -23,5 +23,16 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentTypes {
-
+private NetworkComponentTypes[] types = new NetworkComponentTypes[2];
+		NetworkComponentTypes[0] = 5;
+		NetworkComponentTypes[1] = 10;
+		NetworkComponentTypes[2] = 20;
+public NetworkComponentTypes[] getTypes() {
+	return types;
+}
+public NetworkComponentTypes getTypes(String name) {
+	return NetworkComponentTypes;
+}
+public void load() {
+}
 }
