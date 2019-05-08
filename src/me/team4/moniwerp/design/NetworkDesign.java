@@ -50,7 +50,7 @@ public class NetworkDesign {
 	 * De grootste y waarde van het gebied van de canvas dat wordt gebruikt
 	 */
 	private int maxY;
-	
+
 	/**
 	 * De lijst met netwerkcomponenten die in dit ontwerp zitten
 	 */
@@ -97,13 +97,14 @@ public class NetworkDesign {
 			}
 		}
 	}
+
 	/**
 	 * Sla dit ontwerp op naar de DataOutputStream
 	 * 
 	 * @param dos
 	 */
 	public void save(DataOutputStream dos) {
-		try{
+		try {
 			dos.writeInt(0x4d574400);
 			dos.writeByte(0x01);
 			dos.writeInt(minX);
@@ -111,7 +112,7 @@ public class NetworkDesign {
 			dos.writeInt(maxX);
 			dos.writeInt(maxY);
 			dos.writeInt(components.size());
-			
+
 			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen
 			HashMap<NetworkComponent, Integer> idConv = new HashMap<NetworkComponent, Integer>();
 			int id = 0;
@@ -126,12 +127,18 @@ public class NetworkDesign {
 				idConv.put(comp, id);
 				id++;
 			}
-	//TODO connections
-		}
-		catch (IOException e) {
+
+			dos.writeInt(connections.size());
+
+			for (NetworkConnection con : connections) {
+				dos.writeInt(idConv.get(con.getFirst()));
+				dos.writeInt(idConv.get(con.getSecond()));
+			} 
+			dos.flush();
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-				
 	}
 
 	/**
