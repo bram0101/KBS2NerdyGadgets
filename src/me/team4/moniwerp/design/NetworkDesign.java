@@ -137,7 +137,7 @@ public class NetworkDesign {
 				// vult de hashmap met het ID en het componentobject
 				idConv.put(comp, id);
 				
-				//doe hetzelfde voor het volgende netwerkcomponent
+				//elk id moet uniek worden, dus doen we een auto-increment
 				id++;
 			}
 			
@@ -147,7 +147,7 @@ public class NetworkDesign {
 				dos.writeInt(idConv.get(con.getFirst()));
 				dos.writeInt(idConv.get(con.getSecond()));
 				
-				// er wordt idConv gebruikt, want de componentnaam kan niet worden gebruikt, dus is het componentID nodig.
+				// er wordt idConv gebruikt, want de component object zelf kan niet worden gebruikt, dus is het componentID nodig.
 			} 
 			dos.flush(); // schrijft de data daadwerkelijk weg
 
