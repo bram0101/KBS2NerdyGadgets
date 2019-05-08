@@ -191,17 +191,22 @@ public class Window extends JFrame implements ComponentListener {
 		// Maakt de knop Monitor aan.
 		butMonitor = new JButton("Monitor") {
 			@Override
+			// Hier word een eigen knop getekend.
 			protected void paintComponent(Graphics g) {
+				// Tekst opmaak van de knop.
 				g.setFont(new Font("Arial", Font.BOLD, 20));
+				//
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Monitor", g);
+				// Als de knop is geselecteerd word er een lichtere kleur gegeven.
 				if (selectedTab == monTab){
 					g.setColor(new Color(147, 188, 255));
 				}else {
 					g.setColor(new Color(114,134,165));
 				}
+				//
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
                 g.setColor(Color.black);
-                  
+                // Een berekening om de tekst te centreren in de knop.
                 int h = butMonitor.getHeight()/2; 
                 int b = butMonitor.getWidth()/2;
 				g.drawString("Monitor", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
@@ -214,6 +219,7 @@ public class Window extends JFrame implements ComponentListener {
 		butMonitor.addActionListener(new ActionListener() {
 
 			@Override
+			// Maakt selectedTab gelijk aan monTab, verwijderd alles wat is getekend en voegt monTab toe.
 			public void actionPerformed(ActionEvent e) {
 				selectedTab = monTab;
 				tabPanel.removeAll();
@@ -225,17 +231,22 @@ public class Window extends JFrame implements ComponentListener {
 		// Maakt de knop Monitor aan.
 		butOntwerpen = new JButton("Ontwerpen") {
 			@Override
+			// Hier word een eigen knop getekend.
 			protected void paintComponent(Graphics g) {
+				// Tekst opmaak van de knop.
 				g.setFont(new Font("Arial", Font.BOLD, 20));
+				//
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Ontwerpen", g);
+				// Als de knop is geselecteerd word er een lichtere kleur gegeven.
 				if (selectedTab == designTab){
 					g.setColor(new Color(147, 188, 255));
 				}else {
 					g.setColor(new Color(114,134,165));
 				}
+				//
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 				g.setColor(Color.black);
-				  
+				// Een berekening om de tekst te centreren in de knop.
                 int h = butOntwerpen.getHeight()/2; 
                 int b = butOntwerpen.getWidth()/2;
 				g.drawString("Ontwerpen", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
@@ -247,6 +258,7 @@ public class Window extends JFrame implements ComponentListener {
 		butOntwerpen.addActionListener(new ActionListener() {
 
 			@Override
+			// Maakt selectedTab gelijk aan designTab, verwijderd alles wat is getekend en voegt designTab toe.
 			public void actionPerformed(ActionEvent e) {
 				selectedTab = designTab;
 				tabPanel.removeAll();
@@ -256,7 +268,7 @@ public class Window extends JFrame implements ComponentListener {
 
 		});
 		
-		//
+		// Zet de knoppen op de goede plaats (links en rechts).
 		root.add(butMonitor, BorderLayout.WEST);
 		root.add(butOntwerpen, BorderLayout.EAST);
 	}
