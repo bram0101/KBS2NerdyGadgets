@@ -23,16 +23,20 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentTypes {
-private NetworkComponentTypes[] types = new NetworkComponentTypes[2];
-		NetworkComponentTypes[0] = 5;
-		NetworkComponentTypes[1] = 10;
-		NetworkComponentTypes[2] = 20;
-public NetworkComponentTypes[] getTypes() {
-	return types;
-}
-public NetworkComponentTypes getTypes(String name) {
-	return NetworkComponentTypes;
-}
-public void load() {
-}
+	private static NetworkComponentType[] types;
+
+	public static NetworkComponentType[] getTypes() {
+		return new NetworkComponentType[] {
+				new NetworkComponentType("Database", 1000, 0.9F),
+				new NetworkComponentType("Webserver", 1500, 5.9F),
+				new NetworkComponentType("pfSense", 2000, 10.9F),
+		};
+	}
+
+	public static NetworkComponentType getTypes(String name) {
+		return new NetworkComponentType(name, 0, 0);
+	}
+
+	public void load() {
+	}
 }
