@@ -105,15 +105,15 @@ public class NetworkDesign {
 	 */
 	public void save(DataOutputStream dos) {
 		try {
-			dos.writeInt(0x4d574400);
-			dos.writeByte(0x01);
+			dos.writeInt(0x4d574400); // magic number voor het formaat MWD
+			dos.writeByte(0x01); // versienummer
 			dos.writeInt(minX);
 			dos.writeInt(minY);
 			dos.writeInt(maxX);
 			dos.writeInt(maxY);
 			dos.writeInt(components.size());
 
-			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen
+			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen en zet deze in de HashMap. 
 			HashMap<NetworkComponent, Integer> idConv = new HashMap<NetworkComponent, Integer>();
 			int id = 0;
 			for (NetworkComponent comp : components) {
@@ -127,14 +127,14 @@ public class NetworkDesign {
 				idConv.put(comp, id);
 				id++;
 			}
-
+			
 			dos.writeInt(connections.size());
-
+			// loopt door de connections en zet het compID erbij
 			for (NetworkConnection con : connections) {
 				dos.writeInt(idConv.get(con.getFirst()));
 				dos.writeInt(idConv.get(con.getSecond()));
 			} 
-			dos.flush();
+			dos.flush(); // schrijft de data daadwerkelijk weg
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -147,23 +147,28 @@ public class NetworkDesign {
 	 * @param dis
 	 */
 	public void load(DataInputStream dis) {
-		// TODO: implement
 		try {
+			// leegt de lijst
 			connections.clear();
 			components.clear();
 			
+			// als de magicnumber niet klopt, geen .MWD
 			if (dis.readInt() !=  0x4d574400) {
 				throw new IOException("Bestand is niet het goede formaat");
 			}
+			// check of versienummer klopt
 			if (dis.readByte() != 0x01) {
 				throw new IOException("Incorrect versienummer");
 			}
+			
+			// leest de waardes
 			this.minX =	dis.readInt();
 			this.minY = dis.readInt();
 			this.maxX = dis.readInt();
 			this.maxY = dis.readInt();
 			int componentSize = dis.readInt();
 			
+			// voegt de componenten toe aan de lijst, gebruikt idConv om het networkcomponent nummer om te zetten naar de naam
 			HashMap<Integer, NetworkComponent> idConv = new HashMap<Integer, NetworkComponent>();
 			for (int i =0; i< componentSize; i++) {
 				int id = dis.readInt();
@@ -177,17 +182,19 @@ public class NetworkDesign {
 				idConv.put(id, comp);
 				components.add(comp);
 			}
-			
+			// kijkt hoe groot de connectionlijst is
 			int connectionSize = dis.readInt();
+			// loopt voor het aantal keer dat de lijst groot is, leest first en second en voegt het ID toe
 			for (int i=0; i < connectionSize; i++) {
 				int first = dis.readInt();
 				int second = dis.readInt();
 				
+				// kijkt welk networkcomponent het is
 				NetworkComponent nc1 = idConv.get(first);
 				NetworkComponent nc2 = idConv.get(second);
 				
 				NetworkConnection con = new NetworkConnection(nc1, nc2);
-				
+				// voegt de connections toe aan de lijst
 				connections.add(con);
 			}
 		}
