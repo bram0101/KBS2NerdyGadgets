@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -95,7 +98,9 @@ public class DataRetriever {
 			int diskBusyTime = 0;
 			int bytesSent = 0;
 			int bytesReceived = 0;
+
 			// aanroepen welke tabel gebruik wordt
+
 			ResultSet rs = statement
 					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
 			while (rs.next()) {
@@ -124,7 +129,6 @@ public class DataRetriever {
 				if (!e.getValue().isEmpty()) {
 					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
 						statusCache.put(e.getKey(), true);
-						System.out.println(e.getKey());
 					} else {
 						System.out.println(e.getKey());
 						statusCache.put(e.getKey(), false);
@@ -146,7 +150,7 @@ public class DataRetriever {
 
 	/**
 	 * Krijg de monitor data uit de cache voor het netwerkcomponent.
-	 * 
+	 *
 	 * @param name De netwerkcomponent waar de data van wordt opgehaald.
 	 * @return Lijst met data. De eerste item in de lijst is de meest recente data.
 	 */
@@ -156,20 +160,20 @@ public class DataRetriever {
 
 	/**
 	 * Krijg de meest recente monitor data voor het netwerkcomponent.
-	 * 
+	 *
 	 * @param name De netwerkcomponent waar de data van wordt opgehaald.
 	 * @return Monitor data
 	 */
+
 	public MonitorData getLatestDataForComponent(String name) {
 		if (!cache.containsKey(name)) {
 			return null;
 		}
 		return cache.get(name).peekFirst();
 	}
-
 	/**
 	 * Deze methode kijkt of het netwerkcomponent aan of uit staat.
-	 * 
+	 *
 	 * @param name De naam van het netwerkcomponent.
 	 * @return True als het netwerkcomponent aan staat.
 	 */
@@ -181,14 +185,14 @@ public class DataRetriever {
 	}
 
 	/**
-	 * Er hoeft maar één instantie te zijn voor DataRetriever, dus die slaan wij
+	 * Er hoeft maar ï¿½ï¿½n instantie te zijn voor DataRetriever, dus die slaan wij
 	 * hier op.
 	 */
 	private static DataRetriever instance = new DataRetriever();
 
 	/**
-	 * Voor deze klas hebben wij maar één instantie.
-	 * 
+	 * Voor deze klas hebben wij maar ï¿½ï¿½n instantie.
+	 *
 	 * @return De instantie van DataRetriever
 	 */
 	public static DataRetriever getInstance() {
