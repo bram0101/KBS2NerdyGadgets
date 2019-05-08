@@ -152,7 +152,7 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_NEW);
-				System.out.println("Dit is stringie New");
+				
 			}
 
 		});
@@ -162,22 +162,8 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_OPEN);
-				System.out.println("Dit is stringie Open");
 
-				// Create a file chooser
-				final JFileChooser Of = new JFileChooser();
-
-				// In response to a button click:
-				int returnVal = Of.showOpenDialog(Of);
-
-				// If statement returnVal
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					//
-				} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-
-				} else if (returnVal == JFileChooser.ERROR_OPTION) {
-					// melding
-				}
+				
 			}
 
 		});
@@ -187,7 +173,7 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_SAVE);
-				System.out.println("Dit is stringie Save");
+				
 			}
 
 		});
@@ -197,20 +183,25 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_OPTIMIZE);
-				System.out.println("Dit is stringie Optimaliseren");
+				
 			}
 
 		});
+		
+		// Maakt de knop Monitor aan.
 		butMonitor = new JButton("Monitor") {
 			@Override
 			protected void paintComponent(Graphics g) {
 				g.setFont(new Font("Arial", Font.BOLD, 20));
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Monitor", g);
-				g.setColor(new Color(114,134,165));
+				if (selectedTab == monTab){
+					g.setColor(new Color(147, 188, 255));
+				}else {
+					g.setColor(new Color(114,134,165));
+				}
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
                 g.setColor(Color.black);
-                
-				// hoogte/2, breedte /2. center -x, y  
+                  
                 int h = butMonitor.getHeight()/2; 
                 int b = butMonitor.getWidth()/2;
 				g.drawString("Monitor", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
@@ -219,6 +210,7 @@ public class Window extends JFrame implements ComponentListener {
 			
 		};
 		
+		// Voegt functies toe aan de knop Monitor.
 		butMonitor.addActionListener(new ActionListener() {
 
 			@Override
@@ -230,22 +222,28 @@ public class Window extends JFrame implements ComponentListener {
 			}
 		});
 		
+		// Maakt de knop Monitor aan.
 		butOntwerpen = new JButton("Ontwerpen") {
 			@Override
 			protected void paintComponent(Graphics g) {
 				g.setFont(new Font("Arial", Font.BOLD, 20));
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Ontwerpen", g);
-				g.setColor(new Color(147, 188, 255));
+				if (selectedTab == designTab){
+					g.setColor(new Color(147, 188, 255));
+				}else {
+					g.setColor(new Color(114,134,165));
+				}
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 				g.setColor(Color.black);
-				
-				// hoogte/2, breedte /2. center -x, y  
+				  
                 int h = butOntwerpen.getHeight()/2; 
                 int b = butOntwerpen.getWidth()/2;
 				g.drawString("Ontwerpen", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
+				
 		    }
 		}; 
 		
+		// Voegt functies toe aan de knop Monitor.
 		butOntwerpen.addActionListener(new ActionListener() {
 
 			@Override
@@ -298,7 +296,15 @@ public class Window extends JFrame implements ComponentListener {
 	 * @return De TabDesign instantie die wordt gebruikt in dit venster.
 	 */
 	public TabDesign getDesignTab() {
-		return null;
+		return designTab;
+	}
+	
+	/**
+	 * 
+	 * @return Geeft geselecteerde tab terug.
+	 */
+	public Tab getSelectedTab() {
+		return selectedTab;
 	}
 
 }
