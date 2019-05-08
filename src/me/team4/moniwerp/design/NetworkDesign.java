@@ -24,7 +24,6 @@ package me.team4.moniwerp.design;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,15 +62,10 @@ public class NetworkDesign {
 	private List<NetworkConnection> connections;
 
 	public NetworkDesign() {
-		components = new ArrayList<NetworkComponent>();
-		connections = new ArrayList<NetworkConnection>();
-	}
-
-	public NetworkDesign() {
 		this.minX = 0;
 		this.minY = 0;
-		this.maxX = 0;
-		this.maxY = 0;
+		this.maxX = 100;
+		this.maxY = 100;
 		components = new ArrayList<NetworkComponent>();
 		connections = new ArrayList<NetworkConnection>();
 	}
@@ -91,23 +85,32 @@ public class NetworkDesign {
 	 * niet. Daar is deze methode voor.
 	 */
 	public void calcBounds() {
+
+		minX = Integer.MAX_VALUE;
+		minY = Integer.MAX_VALUE;
+		maxX = Integer.MIN_VALUE;
+		maxY = Integer.MIN_VALUE;
+
 		// kijk voor elk netwerkcomponent
 		for (int i = 0; i < components.size(); i++) {
 
-			//kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
+			// kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
 			if (components.get(i).getxLoc() < minX) {
 				this.minX = components.get(i).getxLoc();
 
-				//kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
-			} else if (components.get(i).getxLoc() + 20 > maxX) {
+				// kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
+			}
+			if (components.get(i).getxLoc() + 20 > maxX) {
 				this.maxX = components.get(i).getxLoc() + 20;
 
-				//kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
-			} else if (components.get(i).getyLoc() < minY) {
+				// kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
+			}
+			if (components.get(i).getyLoc() < minY) {
 				this.minY = components.get(i).getyLoc();
 
-				//kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
-			} else if (components.get(i).getyLoc() + 5 < maxY) {
+				// kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
+			}
+			if (components.get(i).getyLoc() + 5 > maxY) {
 				this.maxY = components.get(i).getyLoc() + 5;
 			}
 		}
@@ -128,7 +131,8 @@ public class NetworkDesign {
 			dos.writeInt(maxY);
 			dos.writeInt(components.size());
 
-			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen en zet deze in de HashMap.
+			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen en zet deze in
+			// de HashMap.
 			HashMap<NetworkComponent, Integer> idConv = new HashMap<NetworkComponent, Integer>();
 			int id = 0;
 			for (NetworkComponent comp : components) {
@@ -143,7 +147,7 @@ public class NetworkDesign {
 				// vult de hashmap met het ID en het componentobject
 				idConv.put(comp, id);
 
-				//elk id moet uniek worden, dus doen we een auto-increment
+				// elk id moet uniek worden, dus doen we een auto-increment
 				id++;
 			}
 
@@ -153,7 +157,8 @@ public class NetworkDesign {
 				dos.writeInt(idConv.get(con.getFirst()));
 				dos.writeInt(idConv.get(con.getSecond()));
 
-				// er wordt idConv gebruikt, want de component object zelf kan niet worden gebruikt, dus is het componentID nodig.
+				// er wordt idConv gebruikt, want de component object zelf kan niet worden
+				// gebruikt, dus is het componentID nodig.
 			}
 			dos.flush(); // schrijft de data daadwerkelijk weg
 
@@ -174,7 +179,7 @@ public class NetworkDesign {
 			components.clear();
 
 			// als de magicnumber niet klopt, geen .MWD
-			if (dis.readInt() !=  0x4d574400) {
+			if (dis.readInt() != 0x4d574400) {
 				throw new IOException("Bestand is niet het goede formaat");
 			}
 			// check of versienummer klopt
@@ -183,15 +188,16 @@ public class NetworkDesign {
 			}
 
 			// leest de waardes
-			this.minX =	dis.readInt();
+			this.minX = dis.readInt();
 			this.minY = dis.readInt();
 			this.maxX = dis.readInt();
 			this.maxY = dis.readInt();
 			int componentSize = dis.readInt();
 
-			// voegt de componenten toe aan de lijst, gebruikt idConv om het networkcomponent nummer om te zetten naar de naam
+			// voegt de componenten toe aan de lijst, gebruikt idConv om het
+			// networkcomponent nummer om te zetten naar de naam
 			HashMap<Integer, NetworkComponent> idConv = new HashMap<Integer, NetworkComponent>();
-			for (int i =0; i< componentSize; i++) {
+			for (int i = 0; i < componentSize; i++) {
 				int id = dis.readInt();
 				String naam = dis.readUTF();
 				String type = dis.readUTF();
@@ -205,8 +211,9 @@ public class NetworkDesign {
 			}
 			// kijkt hoe groot de connectionlijst is
 			int connectionSize = dis.readInt();
-			// loopt voor het aantal keer dat de lijst groot is, leest first en second en voegt het ID toe
-			for (int i=0; i < connectionSize; i++) {
+			// loopt voor het aantal keer dat de lijst groot is, leest first en second en
+			// voegt het ID toe
+			for (int i = 0; i < connectionSize; i++) {
 				int first = dis.readInt();
 				int second = dis.readInt();
 
@@ -218,8 +225,7 @@ public class NetworkDesign {
 				// voegt de connections toe aan de lijst
 				connections.add(con);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

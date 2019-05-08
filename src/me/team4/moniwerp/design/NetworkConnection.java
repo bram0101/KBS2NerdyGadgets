@@ -41,11 +41,6 @@ public class NetworkConnection {
 	 * @return Het component waar de verbinding vanuit komt.
 	 */
 	
-	public NetworkConnection(NetworkComponent first, NetworkComponent second) {
-		this.first = first;
-		this.second = second;
-	}
-	
 	/**
 	 * constructor voor de netwerk connecties
 	 * @param first Component waar de connectie uit komt

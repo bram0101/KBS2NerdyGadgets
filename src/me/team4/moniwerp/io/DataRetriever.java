@@ -26,12 +26,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import java.util.Arrays;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.concurrent.Executor;
 
 /**
  * Deze klas haalt de monitor data op uit de database.
@@ -61,6 +59,7 @@ public class DataRetriever {
 		// initialiseer de beide hashmaps
 		cache = new HashMap<String, LinkedList<MonitorData>>();
 		statusCache = new HashMap<String, Boolean>();
+		// 604800 is 1 week aan seconden
 		lastTimestamp = System.currentTimeMillis() / 1000L - 604800;
 	}
 
@@ -74,6 +73,15 @@ public class DataRetriever {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
 						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
 				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
+				// Als het langer dan een seconden duurt, stop er dan mee
+				connection.setNetworkTimeout(new Executor() {
+
+					@Override
+					public void execute(Runnable command) {
+						command.run();
+					}
+					
+				}, 1000);
 
 				// Maakt een SQL statement mogelijk
 				Statement stmt = connection.createStatement();
@@ -123,14 +131,12 @@ public class DataRetriever {
 					lastTimestamp = timestamp;
 				}
 			}
-			System.out.println();
 			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
 					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
 						statusCache.put(e.getKey(), true);
 					} else {
-						System.out.println(e.getKey());
 						statusCache.put(e.getKey(), false);
 					}
 				} else {
