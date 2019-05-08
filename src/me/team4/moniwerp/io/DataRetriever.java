@@ -117,7 +117,6 @@ public class DataRetriever {
 				if (lastTimestamp < timestamp) {
 					lastTimestamp = timestamp;
 				}
-
 			}
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {

@@ -148,14 +148,52 @@ public class NetworkDesign {
 	 */
 	public void load(DataInputStream dis) {
 		// TODO: implement
-//		try {
-//		dis.readInt();
-//		dis.readByte();		
-//		
-//		}
-//		catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			connections.clear();
+			components.clear();
+			
+			if (dis.readInt() !=  0x4d574400) {
+				throw new IOException("Bestand is niet het goede formaat");
+			}
+			if (dis.readByte() != 0x01) {
+				throw new IOException("Incorrect versienummer");
+			}
+			this.minX =	dis.readInt();
+			this.minY = dis.readInt();
+			this.maxX = dis.readInt();
+			this.maxY = dis.readInt();
+			int componentSize = dis.readInt();
+			
+			HashMap<Integer, NetworkComponent> idConv = new HashMap<Integer, NetworkComponent>();
+			for (int i =0; i< componentSize; i++) {
+				int id = dis.readInt();
+				String naam = dis.readUTF();
+				String type = dis.readUTF();
+				int costs = dis.readInt();
+				float uptime = dis.readFloat();
+				int xLoc = dis.readInt();
+				int yLoc = dis.readInt();
+				NetworkComponent comp = new NetworkComponent(naam, type, costs, uptime, xLoc, yLoc);
+				idConv.put(id, comp);
+				components.add(comp);
+			}
+			
+			int connectionSize = dis.readInt();
+			for (int i=0; i < connectionSize; i++) {
+				int first = dis.readInt();
+				int second = dis.readInt();
+				
+				NetworkComponent nc1 = idConv.get(first);
+				NetworkComponent nc2 = idConv.get(second);
+				
+				NetworkConnection con = new NetworkConnection(nc1, nc2);
+				
+				connections.add(con);
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

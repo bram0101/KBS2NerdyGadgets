@@ -28,6 +28,10 @@ package me.team4.moniwerp.design;
  */
 public class NetworkConnection {
 	
+	public NetworkConnection(NetworkComponent first, NetworkComponent second){
+		this.first = first;
+		this.second = second;
+	}
 	/**
 	 * Het component waar de verbinding vanuit komt.
 	 */
