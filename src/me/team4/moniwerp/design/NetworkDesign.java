@@ -103,7 +103,6 @@ public class NetworkDesign {
 	 * @param dos
 	 */
 	public void save(DataOutputStream dos) {
-		// TODO: implement
 		try{
 			dos.writeInt(0x4d574400);
 			dos.writeByte(0x01);
@@ -113,6 +112,7 @@ public class NetworkDesign {
 			dos.writeInt(maxY);
 			dos.writeInt(components.size());
 			
+			// geeft een nummer aan de netwerkcomponenten tijdens het ophalen
 			HashMap<NetworkComponent, Integer> idConv = new HashMap<NetworkComponent, Integer>();
 			int id = 0;
 			for (NetworkComponent comp : components) {
@@ -126,7 +126,7 @@ public class NetworkDesign {
 				idConv.put(comp, id);
 				id++;
 			}
-	
+	//TODO connections
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -141,6 +141,14 @@ public class NetworkDesign {
 	 */
 	public void load(DataInputStream dis) {
 		// TODO: implement
+//		try {
+//		dis.readInt();
+//		dis.readByte();		
+//		
+//		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
