@@ -134,7 +134,7 @@ public class DataRetriever {
 			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
-					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 1) {
+					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 2) {
 						statusCache.put(e.getKey(), true);
 					} else {
 						statusCache.put(e.getKey(), false);

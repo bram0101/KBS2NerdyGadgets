@@ -237,7 +237,6 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 	 * elke seconde geroepen door TabMonitor
 	 */
 	public void update() {
-		DataRetriever.getInstance().poll();
 		repaint();
 	}
 
