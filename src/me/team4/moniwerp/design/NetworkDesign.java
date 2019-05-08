@@ -85,13 +85,22 @@ public class NetworkDesign {
 	 * niet. Daar is deze methode voor.
 	 */
 	public void calcBounds() {
+		// kijk voor elk netwerkcomponent
 		for (int i = 0; i < components.size(); i++) {
+
+			//kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
 			if (components.get(i).getxLoc() < minX) {
 				this.minX = components.get(i).getxLoc();
+
+				//kijk of de X locatie binnen de marges valt, zo niet word het canvas groter.
 			} else if (components.get(i).getxLoc() + 20 > maxX) {
 				this.maxX = components.get(i).getxLoc() + 20;
+
+				//kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
 			} else if (components.get(i).getyLoc() < minY) {
 				this.minY = components.get(i).getyLoc();
+
+				//kijk of de Y locatie binnen de marges valt, zo niet word het canvas groter.
 			} else if (components.get(i).getyLoc() + 5 < maxY) {
 				this.maxY = components.get(i).getyLoc() + 5;
 			}
@@ -124,15 +133,21 @@ public class NetworkDesign {
 				dos.writeFloat(comp.getUptime());
 				dos.writeInt(comp.getxLoc());
 				dos.writeInt(comp.getyLoc());
+				
+				// vult de hashmap met het ID en het componentobject
 				idConv.put(comp, id);
+				
+				//doe hetzelfde voor het volgende netwerkcomponent
 				id++;
 			}
 			
 			dos.writeInt(connections.size());
-			// loopt door de connections en zet het compID erbij
+			// loopt door de connections en zet het componentID erbij
 			for (NetworkConnection con : connections) {
 				dos.writeInt(idConv.get(con.getFirst()));
 				dos.writeInt(idConv.get(con.getSecond()));
+				
+				// er wordt idConv gebruikt, want de componentnaam kan niet worden gebruikt, dus is het componentID nodig.
 			} 
 			dos.flush(); // schrijft de data daadwerkelijk weg
 
