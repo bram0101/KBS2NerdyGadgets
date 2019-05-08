@@ -24,4 +24,43 @@ package me.team4.moniwerp.design;
 
 public class Calculator {
 
+	/**
+	 * 
+	 * @param ontwerp uptime van het huidige ontwerp
+	 * @return
+	 */
+	public float calcUptime(NetworkDesign ontwerp) {
+		//TODO: implement
+		return 0;
+	}
+	/**
+	 * 
+	 * @param problem Het huidige probleem
+	 * @param solve De huidige (mogelijke) oplossing
+	 * @return
+	 */
+	public float calcUptime(int problem[][], byte solve[]) {
+		//TODO:implement
+		return 0;
+	}
+	/**
+	 * 
+	 * @param design huidige kosten van het ontwerp
+	 * @return 
+	 */
+	public int calcCosts(NetworkDesign design) {
+		//TODO: implement
+		
+		return 10000;
+	}
+	/**
+	 * 
+	 * @param problem Het huidige probleem
+	 * @param solve De huidige (mogelijke) oplossing
+	 * @return
+	 */
+	public int calcCosts(int problem[][], byte solve[]) {
+		//TODO: implement
+		return 24000;
+	}
 }

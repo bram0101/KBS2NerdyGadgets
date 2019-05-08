@@ -26,7 +26,7 @@ package me.team4.moniwerp.design;
  * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
  *
  */
-public class NetworkConnection {
+public class NetworkConnection implements Selectable {
 	
 	
 	/**

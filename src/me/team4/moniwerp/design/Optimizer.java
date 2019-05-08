@@ -24,4 +24,11 @@ package me.team4.moniwerp.design;
 
 public class Optimizer {
 
+	/**
+	 * 
+	 * @param ontwerp: Het huidige ontwerp
+	 */
+	public void optimize(NetworkDesign ontwerp) {
+		//TODO
+	}
 }
