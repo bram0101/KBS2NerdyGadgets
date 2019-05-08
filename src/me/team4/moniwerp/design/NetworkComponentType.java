@@ -23,5 +23,20 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentType {
-
+	
+	private String name;
+	private int costs;
+	private float uptime;
+	
+	//TODO
+	
+	public String getName() {
+		return name;
+	}
+	public int getCosts() {
+		return costs;
+	}
+	public float getUptime() {
+		return uptime;
+	}
 }

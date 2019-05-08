@@ -24,4 +24,5 @@ package me.team4.moniwerp.design;
 
 public class NetworkComponentTypes {
 
+	
 }

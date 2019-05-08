@@ -22,6 +22,38 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.util.LinkedList;
+
 public class ViewportDesign {
 
+	private Selectable selected;
+	private LinkedList<NetworkDesign> UndoQueue = new LinkedList<NetworkDesign>();
+	private LinkedList<NetworkDesign> redoQueue = new LinkedList<NetworkDesign>();
+	
+	
+	/**
+	 * redo knop: Je undo undo-en :)
+	 */
+	public void redo() {
+		//TODO
+	}
+	/**
+	 * undo knop: een stap terug
+	 */
+	public void undo() {
+		//TODO
+	}
+	/**
+	 *  geeft netwerkontwerpen weer.
+	 */
+	public void getNetworkDesign() {
+		
+	}
+	
+	/**
+	 * run de optimizer
+	 */
+	public void optimize() {
+		//TODO
+	}
 }
