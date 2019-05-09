@@ -30,7 +30,7 @@ public class CulledHierarchy {
 	 * @return de meest geschikte infrastructuur
 	 */
 	public byte[] execute(NetworkComponent components, int[][] probleem) {
-		//todo
+		// TODO
 		return null;
 	}
 
