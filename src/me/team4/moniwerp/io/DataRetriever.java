@@ -106,11 +106,13 @@ public class DataRetriever {
 			int diskBusyTime = 0;
 			int bytesSent = 0;
 			int bytesReceived = 0;
+			String name = "";
+			LinkedList<MonitorData> dataList = null;
 
 			// aanroepen welke tabel gebruik wordt
 
 			ResultSet rs = statement
-					.executeQuery("select * from Netwerk where timestamp > " + lastTimestamp + "  order by timestamp;");
+					.executeQuery("select * from Netwerk where timestamp > " + (lastTimestamp - 2) + "  order by timestamp;");
 			while (rs.next()) {
 				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
@@ -123,8 +125,12 @@ public class DataRetriever {
 				diskBusyTime = rs.getInt("schijf busytime");
 				bytesSent = rs.getInt("bytes sent");
 				bytesReceived = rs.getInt("bytes received");
+				name = naamConversie.get(rs.getInt("ComponentID"));
+				dataList = cache.get(name);
 				// zet de ComponentID bij de opgehaalde MonitorData in de linkedlist van cache
-				cache.get(naamConversie.get(rs.getInt("ComponentID"))).addFirst(new MonitorData(timestamp, uptime, cpu,
+				if(!dataList.isEmpty() && timestamp <= dataList.peekFirst().getTimestamp())
+					continue; // Deze zou al in de lijst moeten zitten, dus voeg hem niet weer toe.
+				dataList.addFirst(new MonitorData(timestamp, uptime, cpu,
 						ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
 				// vervang de oude timestamp als er iets nieuws is
 				if (lastTimestamp < timestamp) {
@@ -134,7 +140,7 @@ public class DataRetriever {
 			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
-					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 2) {
+					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 3) {
 						statusCache.put(e.getKey(), true);
 					} else {
 						statusCache.put(e.getKey(), false);
