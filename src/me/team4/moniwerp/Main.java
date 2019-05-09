@@ -25,6 +25,8 @@ package me.team4.moniwerp;
 
 import javax.swing.UIManager;
 
+import me.team4.moniwerp.io.DataRetriever;
+
 public class Main {
 	
 	private static Window window;
@@ -36,6 +38,7 @@ public class Main {
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		DataRetriever.getInstance().poll();
 		// Maak een venster aan en geef het weer.
 		window = new Window();
 		window.setVisible(true);

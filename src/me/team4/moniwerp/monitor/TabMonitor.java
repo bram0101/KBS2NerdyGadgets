@@ -80,8 +80,8 @@ public class TabMonitor extends JPanel implements Tab {
 				if (Main.getWindow().getSelectedTab() == Main.getWindow().getMonitorTab()) {
 					DataRetriever.getInstance().poll();
 					infoList.update();
-					viewportGraph.update();
 					viewportNetwork.update();
+					viewportGraph.update();
 				}
 			}
 		}, 1000, 1000);

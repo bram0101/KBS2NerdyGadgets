@@ -264,7 +264,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 				// Zet de selected variabele naar het goede component
 				selected = comp;
 				// Zeg dat de viewport opnieuw moet worden getekent.
-				update();
+				repaint();
 				// Vertel de infolijst het
 				Main.getWindow().getMonitorTab().getInfoList().setSelectedComponent(comp.getNaam());
 				// Wij hebben al een hit gevonden, dus wij stoppen hier.

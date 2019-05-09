@@ -60,7 +60,7 @@ public class DataRetriever {
 		cache = new HashMap<String, LinkedList<MonitorData>>();
 		statusCache = new HashMap<String, Boolean>();
 		// 604800 is 1 week aan seconden
-		lastTimestamp = System.currentTimeMillis() / 1000L - 604800;
+		lastTimestamp = System.currentTimeMillis() / 1000L - 2;
 	}
 
 	/**

@@ -23,6 +23,7 @@ SOFTWARE.
 package me.team4.moniwerp.monitor;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,6 +52,9 @@ public class InfoList extends JPanel {
 	
 	public InfoList() {
 		setBackground(Color.red);
+		selectedData = new ArrayList<String>();
+		selectedData.add("cpu");
+		selectedData.add("ram");
 	}
 	
 	/**
@@ -60,6 +64,7 @@ public class InfoList extends JPanel {
 	 */
 	public void setSelectedComponent(String name) {
 		// TODO: implement
+		selectedComponent = name;
 	}
 
 	/**
@@ -91,8 +96,7 @@ public class InfoList extends JPanel {
 		HashMap<String, Color> map = new HashMap<String, Color>();
 		map.put("uptime", Color.BLUE);
 		map.put("cpu", Color.CYAN);
-		map.put("ramUsed", Color.GREEN);
-		map.put("ramTotal", Color.MAGENTA);
+		map.put("ram", Color.GREEN);
 		return map;
 	}
 
