@@ -23,5 +23,15 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class CulledHierarchy {
+	/**
+	 * 
+	 * @param components het netwerkcomponent
+	 * @param probleem de beschikbaarheid
+	 * @return de meest geschikte infrastructuur
+	 */
+	public byte[] execute(NetworkComponent components, int[][] probleem) {
+		//todo
+		return null;
+	}
 
 }
