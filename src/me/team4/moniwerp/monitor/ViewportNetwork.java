@@ -105,12 +105,13 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		// Teken de achtergrond. Het is net niet 100% wit.
-		g.setColor(new Color(240, 240, 240));
-		g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
+		g.setColor(new Color(251, 251, 251));
+		g.fillRect(0, 0, getWidth(), getHeight());
 		// Teken een border. Gewoon een lijntje
 		g.setColor(Color.DARK_GRAY);
-		g.drawRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
+		g.drawRect(0, 0, getWidth()-1, getHeight()-1);
 
 		// De componenten kunnen overal staan. Dus moeten wij een klein beetje wiskunde
 		// doen.
@@ -248,8 +249,8 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 		int yOffset = design.getBounds()[1] - 10;
 		float xScale = this.getWidth() / ((float) (design.getBounds()[2] - design.getBounds()[0]) + 20f);
 		float yScale = this.getHeight() / ((float) (design.getBounds()[3] - design.getBounds()[1]) + 20f);
-		float widthScale = ((float) this.getWidth()) / 100f;
-		float heightScale = ((float) this.getHeight()) / 100f;
+		float widthScale = ((float) getWidth()) / (design.getBounds()[2] - design.getBounds()[0]);
+		float heightScale = ((float) getHeight()) / (design.getBounds()[3] - design.getBounds()[1]);
 		float sizeScale = Math.min(widthScale, heightScale);
 		
 		// Ga langs elk component.

@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import me.team4.moniwerp.Main;
 import me.team4.moniwerp.io.DataRetriever;
@@ -56,7 +55,7 @@ public class ViewportGraph extends JPanel {
 	private final static int dag = 60 * 60 * 24; // 1 dag in seconden
 	private final static int week = 60 * 60 * 24 * 7; // 1 week in seconden
 	// De hoeveelheid seconden aan geschiedenis dat wordt weergegeven in de grafiek.
-	private int timeRange = 20;
+	private int timeRange = minuut;
 
 	private BufferedImage img;
 
@@ -142,7 +141,7 @@ public class ViewportGraph extends JPanel {
 			// Er word anti aliasing aangezet voor de grafiek en de bij horende data
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			// De dikte van de lijn voor de grafiek word gezet naar 2 pixel
-			((Graphics2D) g).setStroke(new BasicStroke(2));
+			((Graphics2D) g).setStroke(new BasicStroke(3));
 
 			// De y posite van de datapunten worden gemaakt en in op een latere punt
 			// gebruikt
@@ -218,23 +217,23 @@ public class ViewportGraph extends JPanel {
 					g.setColor(new Color(colorram.getRed(), colorram.getGreen(), colorram.getBlue(), 200));
 					g.drawLine(prevX, prevYRAM - 1, xPos, yPosRAM - 1);
 				}
-				if (isSelected("disk")) {
-					Color colordisk = Main.getWindow().getMonitorTab().getInfoList().getColours().get("disk");
+				if (isSelected("diskUsage")) {
+					Color colordisk = Main.getWindow().getMonitorTab().getInfoList().getColours().get("diskUsage");
 					g.setColor(new Color(colordisk.getRed(), colordisk.getGreen(), colordisk.getBlue(), 200));
 					g.drawLine(prevX, prevYDisk - 1, xPos, yPosDisk - 1);
 				}
-				if (isSelected("busy")) {
+				if (isSelected("diskBusyTime")) {
 					Color colorbusy = Main.getWindow().getMonitorTab().getInfoList().getColours().get("diskBusyTime");
 					g.setColor(new Color(colorbusy.getRed(), colorbusy.getGreen(), colorbusy.getBlue(), 200));
 					g.drawLine(prevX, prevYBusy - 1, xPos, yPosBusy - 1);
 				}
 
-				if (isSelected("send")) {
+				if (isSelected("bytesSend")) {
 					Color colorsend = Main.getWindow().getMonitorTab().getInfoList().getColours().get("bytesSend");
 					g.setColor(new Color(colorsend.getRed(), colorsend.getGreen(), colorsend.getBlue(), 200));
 					g.drawLine(prevX, prevYSend - 1, xPos, yPosSend - 1);
 				}
-				if (isSelected("received")) {
+				if (isSelected("bytesReceived")) {
 					Color colorreceived = Main.getWindow().getMonitorTab().getInfoList().getColours()
 							.get("bytesReceived");
 					g.setColor(

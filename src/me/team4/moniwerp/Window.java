@@ -35,7 +35,6 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -190,6 +189,11 @@ public class Window extends JFrame implements ComponentListener {
 		
 		// Maakt de knop Monitor aan.
 		butMonitor = new JButton("Monitor") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			// Hier word een eigen knop getekend.
 			protected void paintComponent(Graphics g) {
@@ -230,6 +234,11 @@ public class Window extends JFrame implements ComponentListener {
 		
 		// Maakt de knop Monitor aan.
 		butOntwerpen = new JButton("Ontwerpen") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			// Hier word een eigen knop getekend.
 			protected void paintComponent(Graphics g) {
