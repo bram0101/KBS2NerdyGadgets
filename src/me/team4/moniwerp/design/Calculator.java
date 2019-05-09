@@ -30,7 +30,7 @@ public class Calculator {
 	/**
 	 * Berekent de uptime
 	 * @param ontwerp uptime van het huidige ontwerp
-	 * @return float 
+	 * @return uptime in seconden 
 	 */
 	public float calcUptime(NetworkDesign ontwerp) {
 		//TODO: implement
@@ -40,7 +40,7 @@ public class Calculator {
 	 * 
 	 * @param problem Het huidige probleem
 	 * @param solve De huidige (mogelijke) oplossing
-	 * @return
+	 * @return uptime in seconden
 	 */
 	public float calcUptime(int problem[][], byte solve[]) {
 		//TODO:implement
@@ -49,7 +49,7 @@ public class Calculator {
 	/**
 	 * 
 	 * @param design huidige kosten van het ontwerp
-	 * @return 
+	 * @return costs
 	 */
 	public int calcCosts(NetworkDesign design) {
 		//TODO: implement
@@ -60,7 +60,7 @@ public class Calculator {
 	 * 
 	 * @param problem Het huidige probleem
 	 * @param solve De huidige (mogelijke) oplossing
-	 * @return
+	 * @return costs
 	 */
 	public int calcCosts(int problem[][], byte solve[]) {
 		//TODO: implement
