@@ -119,9 +119,9 @@ public class ViewportGraph extends JPanel {
 		} else {
 			t1 = timeRange + " seconden";
 		}
-		
+
 		g.setColor(Color.black);
-		
+
 		// Er word een label gegeven voor de x en y-as
 		g.drawString("nu", breedte - padding - 10, hoogte - padding + 10);
 		g.drawString(t1, padding, hoogte - padding + 10);
@@ -152,7 +152,19 @@ public class ViewportGraph extends JPanel {
 			int prevYBusy = 0;
 			int prevYSend = 0;
 			int prevYReceived = 0;
+			float maxBytesSendReceived = 100000;
 
+			// Ga door de data en hou de maximale waardes bij zodat wij de grafiek goed
+			// kunnen schalen.
+			while (list_Iter.hasNext()) {
+				MonitorData data1 = list_Iter.next(); // Nu heb je de data in de variabele 'data' gedaan
+				if (data1.getTimestamp() < currentTimestamp - timeRange) {
+					break; // De data is verder dan onze timerange, dus stoppen wij hier met 'break'
+				}
+				maxBytesSendReceived = Math.max(maxBytesSendReceived, Math.max(data1.getBytesSent(), data1.getBytesReceived()));
+			}
+
+			list_Iter = data.listIterator(0);// reset de iterator
 			while (list_Iter.hasNext()) {
 				MonitorData data1 = list_Iter.next(); // Nu heb je de data in de variabele 'data' gedaan
 				if (data1.getTimestamp() < currentTimestamp - timeRange) {
@@ -169,10 +181,10 @@ public class ViewportGraph extends JPanel {
 				float busy = data1.getDiskBusyTime() / 1000F;
 				// de data ven de verzonden bytes worden gedeeld door honderdduizend(bytes) voor
 				// een percentage
-				float send = data1.getBytesSent() / 100000F;
+				float send = data1.getBytesSent() / maxBytesSendReceived;
 				// de data van de received bytes worden gedeeld door honderdduizen(bytes) voor
 				// een percentage
-				float received = data1.getBytesReceived() / 100000F;
+				float received = data1.getBytesReceived() / maxBytesSendReceived;
 
 				long minVal = currentTimestamp - 2; // Het huidige tijdsstip
 				long maxVal = currentTimestamp - timeRange; // Maximale timeRange voor de grafiek

@@ -174,10 +174,6 @@ public class NetworkDesign {
 	 */
 	public void load(DataInputStream dis) {
 		try {
-			// leegt de lijst
-			connections.clear();
-			components.clear();
-
 			// als de magicnumber niet klopt, geen .MWD
 			if (dis.readInt() != 0x4d574400) {
 				throw new IOException("Bestand is niet het goede formaat");
@@ -186,6 +182,9 @@ public class NetworkDesign {
 			if (dis.readByte() != 0x01) {
 				throw new IOException("Incorrect versienummer");
 			}
+			// leegt de lijst
+			connections.clear();
+			components.clear();
 
 			// leest de waardes
 			this.minX = dis.readInt();

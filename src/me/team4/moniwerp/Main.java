@@ -23,27 +23,64 @@ SOFTWARE.
 
 package me.team4.moniwerp;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JWindow;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import me.team4.moniwerp.io.DataRetriever;
 
 public class Main {
-	
+
 	private static Window window;
+	private static JWindow splashscreen;
 
 	public static void main(String[] args) {
 		// Zorg dat het programma eruit ziet alsof het native is.
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		DataRetriever.getInstance().poll();
-		// Maak een venster aan en geef het weer.
-		window = new Window();
-		window.setVisible(true);
+
+		showSplashscreen();
+		// Wacht even met de rest van de code. Dan heeft AWT de tijd om de splashscreen
+		// ook echt weer te geven.
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				// Haal alvast een groot deel van de data uit de database server. Dit kan lang
+				// duren, daar is de splashscreen voor.
+				DataRetriever.getInstance().poll();
+				// Maak een venster aan en geef het weer.
+				window = new Window();
+				window.setVisible(true);
+				hideSplashscreen();
+			}
+
+		});
 	}
-	
+
+	private static void showSplashscreen() {
+		// Maak een venster zonder titlebar en voeg de afbeelding toe.
+		splashscreen = new JWindow();
+		splashscreen.getContentPane().add(new JLabel("",
+				new ImageIcon(Main.class.getClassLoader().getResource("splashscreen.png")), SwingConstants.CENTER));
+		// zet de grootte
+		splashscreen.setSize(400, 200);
+		// plaatst het in het midden
+		splashscreen.setLocationRelativeTo(null);
+		// geef het venster weer.
+		splashscreen.setVisible(true);
+	}
+
+	private static void hideSplashscreen() {
+		splashscreen.setVisible(false);
+	}
+
 	/**
 	 * @return Het hoofdvenster van deze applicatie.
 	 */

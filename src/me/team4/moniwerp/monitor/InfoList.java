@@ -302,7 +302,7 @@ public class InfoList extends JPanel implements MouseListener {
 			ramvalue.setText(numberFormat.format(data.getRamUsed()) + " GB / " + numberFormat.format(data.getRamTotal()) + " GB");
 			diskUsagevalue.setText(numberFormat.format(data.getDiskUsed()) + " GB / " + numberFormat.format(data.getDiskTotal()) + " GB");
 			diskBusyTimevalue.setText(data.getDiskBusyTime() + " ms");
-			bytesSendvalue.setText(data.getBytesSent() + " Byes");
+			bytesSendvalue.setText(data.getBytesSent() + " Bytes");
 			bytesReceivedvalue.setText(data.getBytesReceived() + " Bytes");
 		}else {
 			valUptime.setText(0 + ":" + 0 + ":" + 0 + ":" + 0);
@@ -310,7 +310,7 @@ public class InfoList extends JPanel implements MouseListener {
 			ramvalue.setText("0.00 GB / " + "0.00 GB");
 			diskUsagevalue.setText("0.00 GB / " + "0.00 GB");
 			diskBusyTimevalue.setText(0 + " ms");
-			bytesSendvalue.setText(0 + " Byes");
+			bytesSendvalue.setText(0 + " Bytes");
 			bytesReceivedvalue.setText(0 + " Bytes");
 		}
 	}
@@ -359,7 +359,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				cpuSel = true;
 				JPcpu.setBackground(getColours().get("cpu"));
-				;
 			}
 		}
 
@@ -370,7 +369,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				ramSel = true;
 				JPram.setBackground(getColours().get("ram"));
-				;
 			}
 		}
 
@@ -381,7 +379,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				diskUsageSel = true;
 				JPdiskUsage.setBackground(getColours().get("diskUsage"));
-				;
 			}
 		}
 
@@ -392,7 +389,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				diskBusyTimeSel = true;
 				JPdiskBusyTime.setBackground(getColours().get("diskBusyTime"));
-				;
 			}
 		}
 
@@ -403,7 +399,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				bytesSendSel = true;
 				JPbytesSend.setBackground(getColours().get("bytesSend"));
-				;
 			}
 		}
 
@@ -414,7 +409,6 @@ public class InfoList extends JPanel implements MouseListener {
 			} else {
 				bytesReceivedSel = true;
 				JPbytesReceived.setBackground(getColours().get("bytesReceived"));
-				;
 			}
 		}
 	}

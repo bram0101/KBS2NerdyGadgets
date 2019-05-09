@@ -60,7 +60,7 @@ public class DataRetriever {
 		cache = new HashMap<String, LinkedList<MonitorData>>();
 		statusCache = new HashMap<String, Boolean>();
 		// 604800 is 1 week aan seconden
-		lastTimestamp = System.currentTimeMillis() / 1000L - 2;
+		lastTimestamp = System.currentTimeMillis() / 1000L - 2 - 6000;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class DataRetriever {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
 						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
 				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
-				// Als het langer dan een seconden duurt, stop er dan mee
+				// Als het langer dan een seconde duurt, stop er dan mee
 				connection.setNetworkTimeout(new Executor() {
 
 					@Override

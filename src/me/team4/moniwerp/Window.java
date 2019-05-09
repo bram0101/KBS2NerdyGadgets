@@ -138,7 +138,7 @@ public class Window extends JFrame implements ComponentListener {
 		menuBar.add(menu2);
 
 		// Create menu2 items
-		JMenuItem m4 = new JMenuItem("Optimaliserem");
+		JMenuItem m4 = new JMenuItem("Optimaliseren");
 
 		// Add menu items to menu2
 		menu2.add(m4);
@@ -232,7 +232,7 @@ public class Window extends JFrame implements ComponentListener {
 			}
 		});
 		
-		// Maakt de knop Monitor aan.
+		// Maakt de knop ontwerpen aan.
 		butOntwerpen = new JButton("Ontwerpen") {
 			/**
 			 * 
