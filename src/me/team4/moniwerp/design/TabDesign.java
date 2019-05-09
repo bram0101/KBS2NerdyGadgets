@@ -32,9 +32,6 @@ import me.team4.moniwerp.Tab;
  */
 public class TabDesign extends JPanel implements Tab {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -46,5 +43,4 @@ public class TabDesign extends JPanel implements Tab {
 	public void onResizeTab(int width, int height) {
 		
 	}
-
 }

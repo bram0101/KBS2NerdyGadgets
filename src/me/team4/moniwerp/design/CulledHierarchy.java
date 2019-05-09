@@ -21,7 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
+/**
+ * roept de algoritme aan die de ideale infrastructuur berekend.
+ */
 public class CulledHierarchy {
 	/**
 	 * 

@@ -21,7 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
+/**
+ * Maakt een lijst met alle netwerkcomponenttypes.
+ */
 public class NetworkComponentTypes {
 	/**
 	 * Een lijst met NetworkComponentTypes
