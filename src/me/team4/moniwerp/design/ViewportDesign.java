@@ -23,7 +23,9 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 import java.util.LinkedList;
-
+/*
+ * De viewport van het design 
+ */
 public class ViewportDesign {
 
 	private Selectable selected;
@@ -51,7 +53,7 @@ public class ViewportDesign {
 	}
 	
 	/**
-	 * run de optimizer
+	 * run de optimizer, de optimizer optimaliseerd het huidige ontwerp door middel van CulledHierarchys
 	 */
 	public void optimize() {
 		//TODO
