@@ -35,7 +35,7 @@ public class MonitorData {
 	/**
 	 * Het aantal seconden dat de machine aan staat.
 	 */
-	private int uptime;
+	private long uptime;
 	/**
 	 * Hoeveel cpu er wordt gebruikt. 0.0F is 0%. 1.0F is 100%
 	 */
@@ -82,7 +82,7 @@ public class MonitorData {
 	 * @param bytesSent     Het aantal bytes dat is verstuurt via het netwerk.
 	 * @param bytesReceived Het aantal bytes dat is binnengekomen via het netwerk.
 	 */
-	public MonitorData(long timestamp, int uptime, float cpu, float ramUsed, float ramTotal, float diskUsed,
+	public MonitorData(long timestamp, long uptime, float cpu, float ramUsed, float ramTotal, float diskUsed,
 			float diskTotal, int diskBusyTime, int bytesSent, int bytesReceived) {
 		super();
 		this.timestamp = timestamp;
@@ -107,7 +107,7 @@ public class MonitorData {
 	/**
 	 * Het aantal seconden dat de machine aan staat.
 	 */
-	public int getUptime() {
+	public long getUptime() {
 		return uptime;
 	}
 

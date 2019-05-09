@@ -77,6 +77,7 @@ public class TabMonitor extends JPanel implements Tab{
 		infoList.setPreferredSize(new Dimension(width/3, height));
 		viewportNetwork.setPreferredSize(new Dimension(width-width/3,height-height/3));
 		viewportGraph.setPreferredSize(new Dimension(width-width/3,height/3));
+		infoList.onResizeComponent(width/3, height);
 	}
 	
 	public InfoList getInfoList() {

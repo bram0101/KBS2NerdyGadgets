@@ -22,17 +22,27 @@ SOFTWARE.
 */
 package me.team4.moniwerp.monitor;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import me.team4.moniwerp.io.DataRetriever;
+import me.team4.moniwerp.io.MonitorData;
 
 /**
  * Lijst met huidige informatie over de geselecteerde node
  *
  */
-public class InfoList extends JPanel {
+public class InfoList extends JPanel implements MouseListener{
 
 	/**
 	 * 
@@ -49,8 +59,170 @@ public class InfoList extends JPanel {
 	 */
 	private List<String> selectedData;
 	
+	//Lijst van alle variabelen.
+	private JPanel JPuptime;
+	private JLabel valUptime;
+	
+	private JPanel JPcpu;
+	private JLabel cpuvalue;
+	private boolean cpuSel = true;
+	
+	private JPanel JPram;
+	private JLabel ramvalue;
+	private boolean ramSel;
+	
+	private JPanel JPdiskUsage;
+	private JLabel diskUsagevalue;
+	private boolean diskUsageSel;
+	
+	private JPanel JPdiskBusyTime;
+	private JLabel diskBusyTimevalue;
+	private boolean diskBusyTimeSel;
+	
+	private JPanel JPbytesSend;
+	private JLabel bytesSendvalue;
+	private boolean bytesSendSel;
+	
+	private JPanel JPbytesReceived;
+	private JLabel bytesReceivedvalue;
+	private boolean bytesReceivedSel;
+	
 	public InfoList() {
-		setBackground(Color.red);
+		
+		 // Layout is FlowLayout.
+        this.setLayout(new FlowLayout());
+        
+        // Maak panel JPuptime
+        JPuptime = new JPanel();
+        JPuptime.setLayout(new BorderLayout());
+        // Voeg JPuptime panel toe aan panel infoList
+        this.add(JPuptime);
+        
+        // Maak labels voor JPuptime.
+        JLabel uptime = new JLabel("    Uptime: ");
+        uptime.setPreferredSize(new Dimension(120, 20));
+        valUptime = new JLabel();
+        
+        // Voeg labels toe aan JPuptime.
+        JPuptime.add(uptime, BorderLayout.WEST);    
+        JPuptime.add(valUptime, BorderLayout.CENTER);
+        
+        
+        
+        // Maak panel JPcpu
+        JPcpu = new JPanel();
+        JPcpu.setLayout(new BorderLayout());
+        // Voeg JPcpu panel toe aan panel infoList
+        this.add(JPcpu);
+        
+        JPcpu.addMouseListener(this);
+        JPcpu.setBackground(getColours().get("cpu"));
+        
+        // Maak labels voor JPcpu.
+        JLabel cpu = new JLabel("    Cpu usage: ");
+        cpu.setPreferredSize(new Dimension(120, 20));
+        cpuvalue = new JLabel();
+        
+        // Voeg labels toe aan JPcpu.
+        JPcpu.add(cpu, BorderLayout.WEST);    
+        JPcpu.add(cpuvalue, BorderLayout.CENTER);
+        
+        
+        
+        // Maak panel JPram
+        JPram = new JPanel();
+        JPram.setLayout(new BorderLayout());
+        // Voeg JPram panel toe aan panel infoList
+        this.add(JPram);
+        
+        JPram.addMouseListener(this);
+        
+        // Maak labels voor JPram.
+        JLabel ram = new JLabel("    Ram usage: ");
+        ram.setPreferredSize(new Dimension(120, 20));
+        ramvalue = new JLabel();
+        
+        // Voeg labels toe aan JPram.
+        JPram.add(ram, BorderLayout.WEST);    
+        JPram.add(ramvalue, BorderLayout.CENTER);
+        
+        
+        
+        // Maak panel JPdiskUsage
+        JPdiskUsage = new JPanel();
+        JPdiskUsage.setLayout(new BorderLayout());
+        // Voeg JPdiskUsage panel toe aan panel infoList
+        this.add(JPdiskUsage);
+        
+        JPdiskUsage.addMouseListener(this);
+        
+        // Maak labels voor JPdiskUsage.
+        JLabel diskUsage = new JLabel("    Disk usage: ");
+        diskUsage.setPreferredSize(new Dimension(120, 20));
+        diskUsagevalue = new JLabel();
+        
+        // Voeg labels toe aan JPdiskUsage.
+        JPdiskUsage.add(diskUsage, BorderLayout.WEST);    
+        JPdiskUsage.add(diskUsagevalue, BorderLayout.CENTER);        
+        
+        
+        
+        // Maak panel JPdiskBusyTime
+        JPdiskBusyTime = new JPanel();
+        JPdiskBusyTime.setLayout(new BorderLayout());
+        // Voeg JPdiskBusyTime panel toe aan panel infoList
+        this.add(JPdiskBusyTime);
+        
+        JPdiskBusyTime.addMouseListener(this);
+        
+        // Maak labels voor JPdiskBusyTime.
+        JLabel diskBusyTime = new JLabel("    Disk BusyTime: ");
+        diskBusyTime.setPreferredSize(new Dimension(120, 20));
+        diskBusyTimevalue = new JLabel();
+        
+        // Voeg labels toe aan JPdiskBusyTime.
+        JPdiskBusyTime.add(diskBusyTime, BorderLayout.WEST);    
+        JPdiskBusyTime.add(diskBusyTimevalue, BorderLayout.CENTER);
+        
+        
+        
+        // Maak panel JPbytesSend
+        JPbytesSend = new JPanel();
+        JPbytesSend.setLayout(new BorderLayout());
+        // Voeg JPbytesSend panel toe aan panel infoList
+        this.add(JPbytesSend);
+        
+        JPbytesSend.addMouseListener(this);
+        
+        // Maak labels voor JPbytesSend.
+        JLabel bytesSend = new JLabel("    Bytes Sent: ");
+        bytesSend.setPreferredSize(new Dimension(120, 20));
+        bytesSendvalue = new JLabel();
+        
+        // Voeg labels toe aan JPnetwork.
+        JPbytesSend.add(bytesSend, BorderLayout.WEST);    
+        JPbytesSend.add(bytesSendvalue, BorderLayout.CENTER);
+        
+        
+        
+        // Maak panel JPbytesReceived
+        JPbytesReceived = new JPanel();
+        JPbytesReceived.setLayout(new BorderLayout());
+        // Voeg JPbytesReceived panel toe aan panel infoList
+        this.add(JPbytesReceived);
+        
+        JPbytesReceived.addMouseListener(this);
+        
+        // Maak labels voor JPbytesReceived.
+        JLabel bytesReceived = new JLabel("    Bytes Received: ");
+        bytesReceived.setPreferredSize(new Dimension(120, 20));
+        bytesReceivedvalue = new JLabel();
+        
+        // Voeg labels toe aan JPnetwork.
+        JPbytesReceived.add(bytesReceived, BorderLayout.WEST);    
+        JPbytesReceived.add(bytesReceivedvalue, BorderLayout.CENTER);
+        
+        update();
 	}
 	
 	/**
@@ -60,6 +232,7 @@ public class InfoList extends JPanel {
 	 */
 	public void setSelectedComponent(String name) {
 		// TODO: implement
+        
 	}
 
 	/**
@@ -78,6 +251,25 @@ public class InfoList extends JPanel {
 	 * @return lijst met de namen van geselecteerde data.
 	 */
 	public List<String> getSelectedData() {
+		List<String> selectedData = new ArrayList<String>();
+		if(cpuSel) {
+			selectedData.add("cpu");
+		}
+		if(ramSel) {
+			selectedData.add("ram");
+		}
+		if(diskUsageSel) {
+			selectedData.add("diskUsageSel");
+		}
+		if(diskUsageSel) {
+			selectedData.add("diskBusyTimeSel");
+		}
+		if(diskUsageSel) {
+			selectedData.add("bytesSendSel");
+		}
+		if(diskUsageSel) {
+			selectedData.add("bytesReceivedSel");
+		}
 		return selectedData;
 	}
 
@@ -91,8 +283,11 @@ public class InfoList extends JPanel {
 		HashMap<String, Color> map = new HashMap<String, Color>();
 		map.put("uptime", Color.BLUE);
 		map.put("cpu", Color.CYAN);
-		map.put("ramUsed", Color.GREEN);
-		map.put("ramTotal", Color.MAGENTA);
+		map.put("ram", Color.MAGENTA);
+		map.put("diskUsage", Color.YELLOW);
+		map.put("diskBusyTime", Color.ORANGE);
+		map.put("bytesSend", Color.RED);
+		map.put("bytesReceived", Color.GREEN);
 		return map;
 	}
 
@@ -101,7 +296,112 @@ public class InfoList extends JPanel {
 	 * elke seconde geroepen door TabMonitor
 	 */
 	public void update() {
-		// TODO: implement
+		// haal monitordata op
+		MonitorData data = DataRetriever.getInstance().getLatestDataForComponent(getSelectedComponent());
+		long timeActive = (System.currentTimeMillis()/1000L-data.getUptime());
+		long days = timeActive/(24*60*60);
+		long hours = (timeActive/(60*60))%24;
+		long minutes = (timeActive/60)%60;
+		long seconds = (timeActive)%60;
+		
+		valUptime.setText(days+":"+hours+":"+minutes+":"+seconds);
+		cpuvalue.setText(Math.round(data.getCpu() * 100.0) + "%");
+		ramvalue.setText(data.getRamTotal() + " GB / " + data.getRamUsed()+" GB");
+		diskUsagevalue.setText(data.getDiskTotal() + " GB / " + data.getDiskUsed()+" GB");
+		diskBusyTimevalue.setText(data.getDiskBusyTime()+" ms");
+		bytesSendvalue.setText(data.getBytesSent()+" Byes");
+		bytesReceivedvalue.setText(data.getBytesReceived()+" Bytes");
+	}
+	// Geef JPanels een bepaalde grootte.
+	public void onResizeComponent(int width, int height) {
+		JPuptime.setPreferredSize(new Dimension(width, 24));
+		JPcpu.setPreferredSize(new Dimension(width, 24));
+		JPram.setPreferredSize(new Dimension(width, 24));
+		JPdiskUsage.setPreferredSize(new Dimension(width, 24));
+		JPdiskBusyTime.setPreferredSize(new Dimension(width, 24));
+		JPbytesSend.setPreferredSize(new Dimension(width, 24));
+		JPbytesReceived.setPreferredSize(new Dimension(width, 24));
+	}
+
+	@Override
+	// Kijk of het JPanel is geselecteerd en geef de correcte achtergrond kleur.
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getComponent() == JPcpu) {
+			if(cpuSel) {
+				cpuSel=false;
+				JPcpu.setBackground(null);
+			}else {
+				cpuSel=true;
+				JPcpu.setBackground(getColours().get("cpu"));;
+			}
+		}
+		
+		if(e.getComponent() == JPram) {
+			if(ramSel) {
+				ramSel=false;
+				JPram.setBackground(null);
+			}else {
+				ramSel=true;
+				JPram.setBackground(getColours().get("ram"));;
+			}
+		}
+		
+		if(e.getComponent() == JPdiskUsage) {
+			if(diskUsageSel) {
+				diskUsageSel=false;
+				JPdiskUsage.setBackground(null);
+			}else {
+				diskUsageSel=true;
+				JPdiskUsage.setBackground(getColours().get("diskUsage"));;
+			}
+		}
+		
+		if(e.getComponent() == JPdiskBusyTime) {
+			if(diskBusyTimeSel) {
+				diskBusyTimeSel=false;
+				JPdiskBusyTime.setBackground(null);
+			}else {
+				diskBusyTimeSel=true;
+				JPdiskBusyTime.setBackground(getColours().get("diskBusyTime"));;
+			}
+		}
+		
+		if(e.getComponent() == JPbytesSend) {
+			if(bytesSendSel) {
+				bytesSendSel=false;
+				JPbytesSend.setBackground(null);
+			}else {
+				bytesSendSel=true;
+				JPbytesSend.setBackground(getColours().get("bytesSend"));;
+			}
+		}
+		
+		if(e.getComponent() == JPbytesReceived) {
+			if(bytesReceivedSel) {
+				bytesReceivedSel=false;
+				JPbytesReceived.setBackground(null);
+			}else {
+				bytesReceivedSel=true;
+				JPbytesReceived.setBackground(getColours().get("bytesReceived"));;
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 	}
 
 }

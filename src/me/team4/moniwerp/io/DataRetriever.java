@@ -89,7 +89,7 @@ public class DataRetriever {
 	 */
 	public MonitorData getLatestDataForComponent(String name) {
 		// TODO: implement
-		return new MonitorData(System.currentTimeMillis() / 1000L, 30, 0.36F, 0.4F, 1.0F, 2F, 4F, 100, 1024, 512);
+		return new MonitorData(System.currentTimeMillis() / 1000L, (int) (System.currentTimeMillis() / 1000L - 60*60-2456), 0.36F, 0.4F, 1.0F, 2F, 4F, 100, 1024, 512);
 	}
 
 	/**
