@@ -23,10 +23,26 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentType {
+	/**
+	 * De naam van het NetworkComponentType
+	 */
 	private String name;
-	private int costs;
-	private float uptime;
 	
+	/**
+	 * De kosten van het NetworkComponentType
+	 */
+	private int costs;
+	
+	/**
+	 * De uptime van het NetworkComponentType
+	 */
+	private float uptime;
+	/**
+	 * Een constructor die een NetworkComponentType aanmaakt met de gegeven parameters
+	 * @param name
+	 * @param costs
+	 * @param uptime
+	 */
 	public NetworkComponentType(String name, int costs, float uptime) {
 		this.name = name;
 		this.costs = costs;
@@ -34,12 +50,26 @@ public class NetworkComponentType {
 	}
 	//TODO
 	
+	/**
+	 * Een getter voor de naam
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Een getter voor de kosten
+	 * @return costs
+	 */
 	public int getCosts() {
 		return costs;
 	}
+	
+	/**
+	 * Een getter voor de uptime
+	 * @return uptime
+	 */
 	public float getUptime() {
 		return uptime;
 	}

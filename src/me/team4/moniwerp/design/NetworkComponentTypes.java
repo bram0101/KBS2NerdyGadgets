@@ -23,8 +23,16 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 public class NetworkComponentTypes {
+	/**
+	 * Een lijst met NetworkComponentTypes
+	 */
 	private static NetworkComponentType[] types;
 
+	//TODO implement
+	/**
+	 * Een getter voor de lijst NetworkComponentTypes, 
+	 * @return NetworkComponentType[]
+	 */
 	public static NetworkComponentType[] getTypes() {
 		return new NetworkComponentType[] {
 				new NetworkComponentType("Database", 1000, 0.9F),
@@ -32,11 +40,16 @@ public class NetworkComponentTypes {
 				new NetworkComponentType("pfSense", 2000, 10.9F),
 		};
 	}
-
+	/**
+	 * 	Een getter voor een specifiek NetworkComponentType
+	 * @param name
+	 */
 	public static NetworkComponentType getTypes(String name) {
 		return new NetworkComponentType(name, 0, 0);
 	}
-
-	public void load() {
+	/**
+	 * Laadt het aantal verschillende Networkcomponenttypes uit het configuratiebestand
+	 */
+	public static void load() {
 	}
 }
