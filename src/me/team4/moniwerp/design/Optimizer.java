@@ -21,11 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
+/**
+ * Optimaliseert het huidige ontwerp door middel van CulledHierarchy
+ */
 public class Optimizer {
 
 	/**
-	 * 
+	 * Optimaliseerd het huidige ontwerp
 	 * @param ontwerp: Het huidige ontwerp
 	 */
 	public void optimize(NetworkDesign ontwerp) {

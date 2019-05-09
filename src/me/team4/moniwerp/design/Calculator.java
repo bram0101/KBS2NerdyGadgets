@@ -22,12 +22,15 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+/** Een calculator om de uptime en kosten te berekenen
+ *
+ */
 public class Calculator {
 
 	/**
-	 * 
+	 * Berekent de uptime
 	 * @param ontwerp uptime van het huidige ontwerp
-	 * @return
+	 * @return float 
 	 */
 	public float calcUptime(NetworkDesign ontwerp) {
 		//TODO: implement
