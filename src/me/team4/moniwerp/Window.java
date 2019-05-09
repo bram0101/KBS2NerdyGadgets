@@ -225,6 +225,7 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.removeAll();
 				tabPanel.add(monTab);
 				tabPanel.revalidate();
+				root.repaint();
 			}
 		});
 		
@@ -264,6 +265,7 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.removeAll();
 				tabPanel.add(designTab);
 				tabPanel.revalidate();
+				root.repaint();
 			}
 
 		});
@@ -281,6 +283,7 @@ public class Window extends JFrame implements ComponentListener {
 		
 		// Zeg tegen het tabblad dat de layout opnieuw moet worden gedaan.
 		monTab.onResizeTab(root.getWidth(), root.getHeight()-60);
+		designTab.onResizeTab(root.getWidth(), root.getHeight()-60);
 		// Zeg tegen AWT/Swing dat de layout is aangepast en forceer een update.
 		tabPanel.revalidate();
 	}

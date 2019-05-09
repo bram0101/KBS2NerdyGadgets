@@ -21,10 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
+
+import java.awt.Color;
+
+import javax.swing.JPanel;
+
 /**
  * laat de toolbar zien boven het designgedeelte
  */
-public class Toolbar {
+public class Toolbar extends JPanel{
+	
+	
+	public Toolbar() {
+		setBackground(Color.GREEN);
+	}
 	/**
 	 * Het netwerkcomponenttype dat geselecteerd is
 	 */

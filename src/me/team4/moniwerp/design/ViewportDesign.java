@@ -22,17 +22,22 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.awt.Color;
 import java.util.LinkedList;
+
+import javax.swing.JPanel;
 /*
  * De viewport van het design 
  */
-public class ViewportDesign {
+public class ViewportDesign extends JPanel{
 
 	private Selectable selected;
 	private LinkedList<NetworkDesign> UndoQueue = new LinkedList<NetworkDesign>();
 	private LinkedList<NetworkDesign> redoQueue = new LinkedList<NetworkDesign>();
 	
-	
+	public ViewportDesign() {
+		setBackground(Color.blue);
+	}
 	/**
 	 * redo knop: Je undo undo-en :)
 	 */

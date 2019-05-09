@@ -22,6 +22,9 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 
 import me.team4.moniwerp.Tab;
@@ -34,13 +37,34 @@ public class TabDesign extends JPanel implements Tab {
 
 	private static final long serialVersionUID = 1L;
 
+	private Toolbar toolbar;
+	private ViewportDesign viewport;
+	
+	public TabDesign() {
+		
+		BorderLayout mainlayout = new BorderLayout();
+		setLayout(mainlayout);
+		
+		toolbar = new Toolbar();
+		viewport = new ViewportDesign();
+		
+		add(toolbar, BorderLayout.WEST);
+		add(viewport, BorderLayout.CENTER);
+		
+	}
+	
 	@Override
 	public void onMenuButton(int buttonID) {
 		// TODO Auto-generated method stub
 	}
+	
+	
 
 	@Override
 	public void onResizeTab(int width, int height) {
-		
+		// Geef de componenten hun nieuwe grootte.
+		setPreferredSize(new Dimension(width, height));
+		toolbar.setPreferredSize(new Dimension(96, height));
+		viewport.setPreferredSize(new Dimension(width - 96, height));
 	}
 }
