@@ -80,7 +80,7 @@ public class DataRetriever {
 					public void execute(Runnable command) {
 						command.run();
 					}
-					
+
 				}, 1000);
 
 				// Maakt een SQL statement mogelijk

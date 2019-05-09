@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,14 +40,14 @@ import me.team4.moniwerp.io.DataRetriever;
 
 /**
  * Het tabblad voor de monitor kant van de applicatie.
- * 
+ *
  * Deze klas zorgt er ook voor dat de UI elke seconde update.
  *
  */
 public class TabMonitor extends JPanel implements Tab {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -108,10 +108,10 @@ public class TabMonitor extends JPanel implements Tab {
 				}
 			// Sluit de FileChooser af zonder verdere acties.
 			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
-				
+
 			// Sluit de FileChooser af zonder verdere acties.
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
-				
+
 			}
 		}
 	}
@@ -120,9 +120,10 @@ public class TabMonitor extends JPanel implements Tab {
 	public void onResizeTab(int width, int height) {
 		// Geef de componenten hun nieuwe grootte.
 		setPreferredSize(new Dimension(width, height));
-		infoList.setPreferredSize(new Dimension(width / 3, height));
-		viewportNetwork.setPreferredSize(new Dimension(width - width / 3, height - height / 3));
-		viewportGraph.setPreferredSize(new Dimension(width - width / 3, height / 3));
+		infoList.setPreferredSize(new Dimension(width/3, height));
+		viewportNetwork.setPreferredSize(new Dimension(width-width/3,height-height/3));
+		viewportGraph.setPreferredSize(new Dimension(width-width/3,height/3));
+		infoList.onResizeComponent(width/3, height);
 	}
 
 	public InfoList getInfoList() {
