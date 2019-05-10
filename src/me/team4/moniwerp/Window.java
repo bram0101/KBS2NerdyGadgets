@@ -86,6 +86,8 @@ public class Window extends JFrame implements ComponentListener {
 	public Window() {
 		// Als je op het kruisje klikt, dan stopt het programma
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setTitle("Moniwerp - Monitoren");
 
 		// We hebben een panel nodig waar wij alles aan kunnen toevoegen.
 		root = new JPanel();
@@ -229,6 +231,7 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.removeAll();
 				tabPanel.add(monTab);
 				tabPanel.revalidate();
+				setTitle("Moniwerp - Monitoren");
 			}
 		});
 		
@@ -273,6 +276,7 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.removeAll();
 				tabPanel.add(designTab);
 				tabPanel.revalidate();
+				setTitle("Moniwerp - Ontwerpen");
 			}
 
 		});
