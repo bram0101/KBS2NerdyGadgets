@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@ import me.team4.moniwerp.monitor.TabMonitor;
 public class Window extends JFrame implements ComponentListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -86,7 +86,7 @@ public class Window extends JFrame implements ComponentListener {
 	public Window() {
 		// Als je op het kruisje klikt, dan stopt het programma
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		setTitle("Moniwerp - Monitoren");
 
 		// We hebben een panel nodig waar wij alles aan kunnen toevoegen.
@@ -153,7 +153,7 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_NEW);
-				
+
 			}
 
 		});
@@ -164,7 +164,7 @@ public class Window extends JFrame implements ComponentListener {
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_OPEN);
 
-				
+
 			}
 
 		});
@@ -174,7 +174,7 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_SAVE);
-				
+
 			}
 
 		});
@@ -184,15 +184,15 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_OPTIMIZE);
-				
+
 			}
 
 		});
-		
+
 		// Maakt de knop Monitor aan.
 		butMonitor = new JButton("Monitor") {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -213,14 +213,14 @@ public class Window extends JFrame implements ComponentListener {
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
                 g.setColor(Color.black);
                 // Een berekening om de tekst te centreren in de knop.
-                int h = butMonitor.getHeight()/2; 
+                int h = butMonitor.getHeight()/2;
                 int b = butMonitor.getWidth()/2;
 				g.drawString("Monitor", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
 			}
-			
-			
+
+
 		};
-		
+
 		// Voegt functies toe aan de knop Monitor.
 		butMonitor.addActionListener(new ActionListener() {
 
@@ -232,13 +232,14 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.add(monTab);
 				tabPanel.revalidate();
 				setTitle("Moniwerp - Monitoren");
+				root.repaint();
 			}
 		});
-		
+
 		// Maakt de knop ontwerpen aan.
 		butOntwerpen = new JButton("Ontwerpen") {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -259,13 +260,13 @@ public class Window extends JFrame implements ComponentListener {
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 				g.setColor(Color.black);
 				// Een berekening om de tekst te centreren in de knop.
-                int h = butOntwerpen.getHeight()/2; 
+                int h = butOntwerpen.getHeight()/2;
                 int b = butOntwerpen.getWidth()/2;
 				g.drawString("Ontwerpen", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
-				
+
 		    }
-		}; 
-		
+		};
+
 		// Voegt functies toe aan de knop Monitor.
 		butOntwerpen.addActionListener(new ActionListener() {
 
@@ -277,10 +278,11 @@ public class Window extends JFrame implements ComponentListener {
 				tabPanel.add(designTab);
 				tabPanel.revalidate();
 				setTitle("Moniwerp - Ontwerpen");
+				root.repaint();
 			}
 
 		});
-		
+
 		// Zet de knoppen op de goede plaats (links en rechts).
 		root.add(butMonitor, BorderLayout.WEST);
 		root.add(butOntwerpen, BorderLayout.EAST);
@@ -288,12 +290,13 @@ public class Window extends JFrame implements ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		
+
 		butMonitor.setPreferredSize(new Dimension(root.getWidth()/2,60));
 		butOntwerpen.setPreferredSize(new Dimension(root.getWidth()/2,60));
-		
+
 		// Zeg tegen het tabblad dat de layout opnieuw moet worden gedaan.
 		monTab.onResizeTab(root.getWidth(), root.getHeight()-60);
+		designTab.onResizeTab(root.getWidth(), root.getHeight()-60);
 		// Zeg tegen AWT/Swing dat de layout is aangepast en forceer een update.
 		tabPanel.revalidate();
 	}
@@ -323,9 +326,9 @@ public class Window extends JFrame implements ComponentListener {
 	public TabDesign getDesignTab() {
 		return designTab;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return Geeft geselecteerde tab terug.
 	 */
 	public Tab getSelectedTab() {

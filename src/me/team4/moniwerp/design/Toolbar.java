@@ -22,47 +22,41 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.awt.Color;
+
+import javax.swing.JPanel;
+
 /**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
- *
+ * laat de toolbar zien boven het designgedeelte
  */
-public class NetworkConnection implements Selectable {
+public class Toolbar extends JPanel{
 	
 	
-	/**
-	 * Het component waar de verbinding vanuit komt.
-	 */
-	private NetworkComponent first;
-	/**
-	 * Het component waar de verbinding in gaat.
-	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	
-	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
-	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	public Toolbar() {
+		setBackground(Color.GREEN);
 	}
-		
 	/**
-	 * @return Het component waar de verbinding vanuit komt.
+	 * Het netwerkcomponenttype dat geselecteerd is
 	 */
-	public NetworkComponent getFirst() {
-		return first;
-	}
+	private NetworkComponentType selected;
 	
 	/**
-	 * @return Het component waar de verbinding in komt.
+	 * Of de connectiontool gebruikt wordt
 	 */
-	public NetworkComponent getSecond() {
-		return second;
-	}
+	private boolean ConnectionTool;
 	
+	/**
+	 * Het netwwerkcomponenttype dat geselecteerd is
+	 * @return selected
+	 */
+	public NetworkComponentType getSelected() {
+		return selected;
+	}
+	/**
+	 * Of de connectiontool gebruikt wordt
+	 * @return ConnectionTool
+	 */
+	public boolean useConnectiontool() {
+		return ConnectionTool;
+	}
 }

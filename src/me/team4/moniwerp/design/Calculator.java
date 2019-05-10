@@ -22,47 +22,48 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-/**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
+/** Een calculator om de uptime en kosten te berekenen
  *
  */
-public class NetworkConnection implements Selectable {
-	
-	
+public class Calculator {
+
 	/**
-	 * Het component waar de verbinding vanuit komt.
+	 * Berekent de uptime
+	 * @param ontwerp uptime van het huidige ontwerp
+	 * @return uptime in seconden 
 	 */
-	private NetworkComponent first;
-	/**
-	 * Het component waar de verbinding in gaat.
-	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	
-	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
-	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	public float calcUptime(NetworkDesign ontwerp) {
+		//TODO: implement
+		return 0;
 	}
+	/**
+	 * 
+	 * @param problem Het huidige probleem
+	 * @param solve De huidige (mogelijke) oplossing
+	 * @return uptime in seconden
+	 */
+	public float calcUptime(int problem[][], byte solve[]) {
+		//TODO:implement
+		return 0;
+	}
+	/**
+	 * 
+	 * @param design huidige kosten van het ontwerp
+	 * @return costs
+	 */
+	public int calcCosts(NetworkDesign design) {
+		//TODO: implement
 		
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	public NetworkComponent getFirst() {
-		return first;
+		return 10000;
 	}
-	
 	/**
-	 * @return Het component waar de verbinding in komt.
+	 * 
+	 * @param problem Het huidige probleem
+	 * @param solve De huidige (mogelijke) oplossing
+	 * @return costs
 	 */
-	public NetworkComponent getSecond() {
-		return second;
+	public int calcCosts(int problem[][], byte solve[]) {
+		//TODO: implement
+		return 24000;
 	}
-	
 }

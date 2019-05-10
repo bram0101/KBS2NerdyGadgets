@@ -21,48 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
 /**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
- *
+ * Maakt een lijst met alle netwerkcomponenttypes.
  */
-public class NetworkConnection implements Selectable {
-	
-	
+public class NetworkComponentTypes {
 	/**
-	 * Het component waar de verbinding vanuit komt.
+	 * Een lijst met NetworkComponentTypes
 	 */
-	private NetworkComponent first;
+	private static NetworkComponentType[] types;
+
+	//TODO implement
 	/**
-	 * Het component waar de verbinding in gaat.
+	 * Een getter voor de lijst NetworkComponentTypes, 
+	 * @return NetworkComponentType[]
 	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	
-	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
-	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	public static NetworkComponentType[] getTypes() {
+		return new NetworkComponentType[] {
+				new NetworkComponentType("Database", 1000, 0.9F),
+				new NetworkComponentType("Webserver", 1500, 5.9F),
+				new NetworkComponentType("pfSense", 2000, 10.9F),
+		};
 	}
-		
 	/**
-	 * @return Het component waar de verbinding vanuit komt.
+	 * 	Een getter voor een specifiek NetworkComponentType
+	 * @param name
 	 */
-	public NetworkComponent getFirst() {
-		return first;
+	public static NetworkComponentType getTypes(String name) {
+		return new NetworkComponentType(name, 0, 0);
 	}
-	
 	/**
-	 * @return Het component waar de verbinding in komt.
+	 * Laadt het aantal verschillende Networkcomponenttypes uit het configuratiebestand
 	 */
-	public NetworkComponent getSecond() {
-		return second;
+	public static void load() {
 	}
-	
 }

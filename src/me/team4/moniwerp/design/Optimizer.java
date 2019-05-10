@@ -21,48 +21,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
 /**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
- *
+ * Optimaliseert het huidige ontwerp door middel van CulledHierarchy
  */
-public class NetworkConnection implements Selectable {
-	
-	
+public class Optimizer {
+
 	/**
-	 * Het component waar de verbinding vanuit komt.
+	 * Optimaliseerd het huidige ontwerp
+	 * @param ontwerp: Het huidige ontwerp
 	 */
-	private NetworkComponent first;
-	/**
-	 * Het component waar de verbinding in gaat.
-	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	
-	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
-	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	public void optimize(NetworkDesign ontwerp) {
+		//TODO
 	}
-		
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	public NetworkComponent getFirst() {
-		return first;
-	}
-	
-	/**
-	 * @return Het component waar de verbinding in komt.
-	 */
-	public NetworkComponent getSecond() {
-		return second;
-	}
-	
 }

@@ -21,48 +21,58 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
-
 /**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
- *
+ * Haalt de waardes van van de Networkcomponents op
  */
-public class NetworkConnection implements Selectable {
-	
-	
+public class NetworkComponentType {
 	/**
-	 * Het component waar de verbinding vanuit komt.
+	 * De naam van het NetworkComponentType
 	 */
-	private NetworkComponent first;
-	/**
-	 * Het component waar de verbinding in gaat.
-	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
+	private String name;
 	
 	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
+	 * De kosten van het NetworkComponentType
 	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	private int costs;
+	
+	/**
+	 * De uptime van het NetworkComponentType
+	 */
+	private float uptime;
+	/**
+	 * Een constructor die een NetworkComponentType aanmaakt met de gegeven parameters
+	 * @param name
+	 * @param costs
+	 * @param uptime
+	 */
+	public NetworkComponentType(String name, int costs, float uptime) {
+		this.name = name;
+		this.costs = costs;
+		this.uptime =uptime;
 	}
-		
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	public NetworkComponent getFirst() {
-		return first;
-	}
+	//TODO
 	
 	/**
-	 * @return Het component waar de verbinding in komt.
+	 * Een getter voor de naam
+	 * @return name
 	 */
-	public NetworkComponent getSecond() {
-		return second;
+	public String getName() {
+		return name;
 	}
 	
+	/**
+	 * Een getter voor de kosten
+	 * @return costs
+	 */
+	public int getCosts() {
+		return costs;
+	}
+	
+	/**
+	 * Een getter voor de uptime
+	 * @return uptime
+	 */
+	public float getUptime() {
+		return uptime;
+	}
 }

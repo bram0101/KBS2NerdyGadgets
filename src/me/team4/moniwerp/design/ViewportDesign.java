@@ -22,47 +22,45 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-/**
- * Deze klas slaat een verbinding tussen twee netwerkcomponent op.
- *
+import java.awt.Color;
+import java.util.LinkedList;
+
+import javax.swing.JPanel;
+/*
+ * De viewport van het design 
  */
-public class NetworkConnection implements Selectable {
+public class ViewportDesign extends JPanel{
+
+	private Selectable selected;
+	private LinkedList<NetworkDesign> UndoQueue = new LinkedList<NetworkDesign>();
+	private LinkedList<NetworkDesign> redoQueue = new LinkedList<NetworkDesign>();
 	
-	
-	/**
-	 * Het component waar de verbinding vanuit komt.
-	 */
-	private NetworkComponent first;
-	/**
-	 * Het component waar de verbinding in gaat.
-	 */
-	private NetworkComponent second;
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	
-	/**
-	 * constructor voor de netwerk connecties
-	 * @param first Component waar de connectie uit komt
-	 * @param second Componenent waar de connectie in gaat
-	 */
-	public NetworkConnection(NetworkComponent first, NetworkComponent second){
-		this.first = first;
-		this.second = second;
+	public ViewportDesign() {
+		setBackground(Color.blue);
 	}
+	/**
+	 * redo knop: Je undo undo-en :)
+	 */
+	public void redo() {
+		//TODO
+	}
+	/**
+	 * undo knop: een stap terug
+	 */
+	public void undo() {
+		//TODO
+	}
+	/**
+	 *  geeft netwerkontwerpen weer.
+	 */
+	public void getNetworkDesign() {
 		
-	/**
-	 * @return Het component waar de verbinding vanuit komt.
-	 */
-	public NetworkComponent getFirst() {
-		return first;
 	}
 	
 	/**
-	 * @return Het component waar de verbinding in komt.
+	 * run de optimizer, de optimizer optimaliseerd het huidige ontwerp door middel van CulledHierarchys
 	 */
-	public NetworkComponent getSecond() {
-		return second;
+	public void optimize() {
+		//TODO
 	}
-	
 }

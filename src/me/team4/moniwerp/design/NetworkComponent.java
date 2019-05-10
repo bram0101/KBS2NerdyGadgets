@@ -26,7 +26,7 @@ package me.team4.moniwerp.design;
  * Een netwerkcomponent met een naam, kosten, theoretische beschikbaarheid en positie.
  *
  */
-public class NetworkComponent {
+public class NetworkComponent implements Selectable {
 	
 	/**
 	 * De naam van het netwerkcomponent.
