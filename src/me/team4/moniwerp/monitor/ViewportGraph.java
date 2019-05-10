@@ -153,6 +153,7 @@ public class ViewportGraph extends JPanel {
 			int prevYSend = 0;
 			int prevYReceived = 0;
 			float maxBytesSendReceived = 100000;
+			long prevTimestamp = 0;
 
 			// Ga door de data en hou de maximale waardes bij zodat wij de grafiek goed
 			// kunnen schalen.
@@ -161,7 +162,8 @@ public class ViewportGraph extends JPanel {
 				if (data1.getTimestamp() < currentTimestamp - timeRange) {
 					break; // De data is verder dan onze timerange, dus stoppen wij hier met 'break'
 				}
-				maxBytesSendReceived = Math.max(maxBytesSendReceived, Math.max(data1.getBytesSent(), data1.getBytesReceived()));
+				maxBytesSendReceived = Math.max(maxBytesSendReceived,
+						Math.max(data1.getBytesSent(), data1.getBytesReceived()));
 			}
 
 			list_Iter = data.listIterator(0);// reset de iterator
@@ -216,41 +218,45 @@ public class ViewportGraph extends JPanel {
 					prevYBusy = yPosBusy;
 					prevYSend = yPosSend;
 					prevYReceived = yPosReceived;
+					prevTimestamp = data1.getTimestamp();
 				}
 				// Een geselecteer monitor item word weergegeven in de grafiek met een gegeven
 				// kleur en transpirantie
-				if (isSelected("cpu")) {
-					Color colorcpu = Main.getWindow().getMonitorTab().getInfoList().getColours().get("cpu");
-					g.setColor(new Color(colorcpu.getRed(), colorcpu.getGreen(), colorcpu.getBlue(), 200));
-					g.drawLine(prevX, prevYCPU - 1, xPos, yPosCPU - 1);
-				}
-				if (isSelected("ram")) {
-					Color colorram = Main.getWindow().getMonitorTab().getInfoList().getColours().get("ram");
-					g.setColor(new Color(colorram.getRed(), colorram.getGreen(), colorram.getBlue(), 200));
-					g.drawLine(prevX, prevYRAM - 1, xPos, yPosRAM - 1);
-				}
-				if (isSelected("diskUsage")) {
-					Color colordisk = Main.getWindow().getMonitorTab().getInfoList().getColours().get("diskUsage");
-					g.setColor(new Color(colordisk.getRed(), colordisk.getGreen(), colordisk.getBlue(), 200));
-					g.drawLine(prevX, prevYDisk - 1, xPos, yPosDisk - 1);
-				}
-				if (isSelected("diskBusyTime")) {
-					Color colorbusy = Main.getWindow().getMonitorTab().getInfoList().getColours().get("diskBusyTime");
-					g.setColor(new Color(colorbusy.getRed(), colorbusy.getGreen(), colorbusy.getBlue(), 200));
-					g.drawLine(prevX, prevYBusy - 1, xPos, yPosBusy - 1);
-				}
+				if (Math.abs(data1.getTimestamp() - prevTimestamp) <= 1) {
+					if (isSelected("cpu")) {
+						Color colorcpu = Main.getWindow().getMonitorTab().getInfoList().getColours().get("cpu");
+						g.setColor(new Color(colorcpu.getRed(), colorcpu.getGreen(), colorcpu.getBlue(), 200));
+						g.drawLine(prevX, prevYCPU - 1, xPos, yPosCPU - 1);
+					}
+					if (isSelected("ram")) {
+						Color colorram = Main.getWindow().getMonitorTab().getInfoList().getColours().get("ram");
+						g.setColor(new Color(colorram.getRed(), colorram.getGreen(), colorram.getBlue(), 200));
+						g.drawLine(prevX, prevYRAM - 1, xPos, yPosRAM - 1);
+					}
+					if (isSelected("diskUsage")) {
+						Color colordisk = Main.getWindow().getMonitorTab().getInfoList().getColours().get("diskUsage");
+						g.setColor(new Color(colordisk.getRed(), colordisk.getGreen(), colordisk.getBlue(), 200));
+						g.drawLine(prevX, prevYDisk - 1, xPos, yPosDisk - 1);
+					}
+					if (isSelected("diskBusyTime")) {
+						Color colorbusy = Main.getWindow().getMonitorTab().getInfoList().getColours()
+								.get("diskBusyTime");
+						g.setColor(new Color(colorbusy.getRed(), colorbusy.getGreen(), colorbusy.getBlue(), 200));
+						g.drawLine(prevX, prevYBusy - 1, xPos, yPosBusy - 1);
+					}
 
-				if (isSelected("bytesSend")) {
-					Color colorsend = Main.getWindow().getMonitorTab().getInfoList().getColours().get("bytesSend");
-					g.setColor(new Color(colorsend.getRed(), colorsend.getGreen(), colorsend.getBlue(), 200));
-					g.drawLine(prevX, prevYSend - 1, xPos, yPosSend - 1);
-				}
-				if (isSelected("bytesReceived")) {
-					Color colorreceived = Main.getWindow().getMonitorTab().getInfoList().getColours()
-							.get("bytesReceived");
-					g.setColor(
-							new Color(colorreceived.getRed(), colorreceived.getGreen(), colorreceived.getBlue(), 200));
-					g.drawLine(prevX, prevYReceived - 1, xPos, yPosReceived - 1);
+					if (isSelected("bytesSend")) {
+						Color colorsend = Main.getWindow().getMonitorTab().getInfoList().getColours().get("bytesSend");
+						g.setColor(new Color(colorsend.getRed(), colorsend.getGreen(), colorsend.getBlue(), 200));
+						g.drawLine(prevX, prevYSend - 1, xPos, yPosSend - 1);
+					}
+					if (isSelected("bytesReceived")) {
+						Color colorreceived = Main.getWindow().getMonitorTab().getInfoList().getColours()
+								.get("bytesReceived");
+						g.setColor(new Color(colorreceived.getRed(), colorreceived.getGreen(), colorreceived.getBlue(),
+								200));
+						g.drawLine(prevX, prevYReceived - 1, xPos, yPosReceived - 1);
+					}
 				}
 
 				// De berekende x en y positie worden in een variable gezet die er voor zorgt
@@ -263,7 +269,7 @@ public class ViewportGraph extends JPanel {
 				prevYBusy = yPosBusy;
 				prevYSend = yPosSend;
 				prevYReceived = yPosReceived;
-
+				prevTimestamp = data1.getTimestamp();
 			}
 		}
 		// De dikte van de lijn voor de grafiek word gezet naar 1 pixel

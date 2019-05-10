@@ -90,8 +90,10 @@ public class DataRetriever {
 				// Geeft elke regel weer
 				while (rs.next()) {
 					naamConversie.put(rs.getInt("ComponentID"), rs.getString("naam"));
-					cache.put(rs.getString("naam"), new LinkedList<MonitorData>());
-					// pakt elke ID + Naam samen en gooit ze in een LinkedList
+					if (!cache.containsKey(rs.getString("naam"))) {
+						cache.put(rs.getString("naam"), new LinkedList<MonitorData>());
+						// pakt elke ID + Naam samen en gooit ze in een LinkedList
+					}
 				}
 			}
 			Statement statement = connection.createStatement();
@@ -111,8 +113,8 @@ public class DataRetriever {
 
 			// aanroepen welke tabel gebruik wordt
 
-			ResultSet rs = statement
-					.executeQuery("select * from Netwerk where timestamp > " + (lastTimestamp - 2) + "  order by timestamp;");
+			ResultSet rs = statement.executeQuery(
+					"select * from Netwerk where timestamp > " + (lastTimestamp - 2) + "  order by timestamp;");
 			while (rs.next()) {
 				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
@@ -128,10 +130,10 @@ public class DataRetriever {
 				name = naamConversie.get(rs.getInt("ComponentID"));
 				dataList = cache.get(name);
 				// zet de ComponentID bij de opgehaalde MonitorData in de linkedlist van cache
-				if(!dataList.isEmpty() && timestamp <= dataList.peekFirst().getTimestamp())
+				if (!dataList.isEmpty() && timestamp <= dataList.peekFirst().getTimestamp())
 					continue; // Deze zou al in de lijst moeten zitten, dus voeg hem niet weer toe.
-				dataList.addFirst(new MonitorData(timestamp, uptime, cpu,
-						ramUsed, ramTotal, diskUsed, diskTotal, diskBusyTime, bytesSent, bytesReceived));
+				dataList.addFirst(new MonitorData(timestamp, uptime, cpu, ramUsed, ramTotal, diskUsed, diskTotal,
+						diskBusyTime, bytesSent, bytesReceived));
 				// vervang de oude timestamp als er iets nieuws is
 				if (lastTimestamp < timestamp) {
 					lastTimestamp = timestamp;
@@ -153,7 +155,7 @@ public class DataRetriever {
 			ex.printStackTrace();
 			try {
 				connection.close();
-			}catch(Exception ex2) {
+			} catch (Exception ex2) {
 				ex.printStackTrace();
 			}
 			connection = null;
@@ -183,6 +185,7 @@ public class DataRetriever {
 		}
 		return cache.get(name).peekFirst();
 	}
+
 	/**
 	 * Deze methode kijkt of het netwerkcomponent aan of uit staat.
 	 *
