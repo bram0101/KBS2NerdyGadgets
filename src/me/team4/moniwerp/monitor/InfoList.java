@@ -290,21 +290,33 @@ public class InfoList extends JPanel implements MouseListener {
 		// haal monitordata op
 		MonitorData data = DataRetriever.getInstance().getLatestDataForComponent(getSelectedComponent());
 		if (data != null) {
-			DecimalFormat numberFormat = new DecimalFormat("#.##");
-			long timeActive = (System.currentTimeMillis() / 1000L - data.getUptime());
-			long days = timeActive / (24 * 60 * 60);
-			long hours = (timeActive / (60 * 60)) % 24;
-			long minutes = (timeActive / 60) % 60;
-			long seconds = (timeActive) % 60;
+			if (DataRetriever.getInstance().getStatusForComponent(getSelectedComponent())) {
+				DecimalFormat numberFormat = new DecimalFormat("#.##");
+				long timeActive = (System.currentTimeMillis() / 1000L - data.getUptime());
+				long days = timeActive / (24 * 60 * 60);
+				long hours = (timeActive / (60 * 60)) % 24;
+				long minutes = (timeActive / 60) % 60;
+				long seconds = (timeActive) % 60;
 
-			valUptime.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
-			cpuvalue.setText(Math.round(data.getCpu() * 100.0) + "%");
-			ramvalue.setText(numberFormat.format(data.getRamUsed()) + " GB / " + numberFormat.format(data.getRamTotal()) + " GB");
-			diskUsagevalue.setText(numberFormat.format(data.getDiskUsed()) + " GB / " + numberFormat.format(data.getDiskTotal()) + " GB");
-			diskBusyTimevalue.setText(data.getDiskBusyTime() + " ms");
-			bytesSendvalue.setText(data.getBytesSent() + " Bytes");
-			bytesReceivedvalue.setText(data.getBytesReceived() + " Bytes");
-		}else {
+				valUptime.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
+				cpuvalue.setText(Math.round(data.getCpu() * 100.0) + "%");
+				ramvalue.setText(numberFormat.format(data.getRamUsed()) + " GB / "
+						+ numberFormat.format(data.getRamTotal()) + " GB");
+				diskUsagevalue.setText(numberFormat.format(data.getDiskUsed()) + " GB / "
+						+ numberFormat.format(data.getDiskTotal()) + " GB");
+				diskBusyTimevalue.setText(data.getDiskBusyTime() + " ms");
+				bytesSendvalue.setText(data.getBytesSent() + " Bytes");
+				bytesReceivedvalue.setText(data.getBytesReceived() + " Bytes");
+			} else {
+				valUptime.setText("OFFLINE");
+				cpuvalue.setText(Math.round(0 * 100.0) + "%");
+				ramvalue.setText("0.00 GB / " + "0.00 GB");
+				diskUsagevalue.setText("0.00 GB / " + "0.00 GB");
+				diskBusyTimevalue.setText(0 + " ms");
+				bytesSendvalue.setText(0 + " Bytes");
+				bytesReceivedvalue.setText(0 + " Bytes");
+			}
+		} else {
 			valUptime.setText(0 + ":" + 0 + ":" + 0 + ":" + 0);
 			cpuvalue.setText(Math.round(0 * 100.0) + "%");
 			ramvalue.setText("0.00 GB / " + "0.00 GB");
@@ -317,7 +329,7 @@ public class InfoList extends JPanel implements MouseListener {
 
 	// Geef JPanels een bepaalde grootte.
 	public void onResizeComponent(int width, int height) {
-		int size = width/22;
+		int size = width / 22;
 		Font font = new Font("Arial", Font.PLAIN, size);
 		JPuptime.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPcpu.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
@@ -340,13 +352,13 @@ public class InfoList extends JPanel implements MouseListener {
 		diskBusyTime.setFont(font);
 		bytesSend.setFont(font);
 		bytesReceived.setFont(font);
-		uptime.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		cpu.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		ram.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		diskUsage.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		diskBusyTime.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		bytesSend.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
-		bytesReceived.setPreferredSize(new Dimension((int) (width/2.5), (int) (size * 1.5)));
+		uptime.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		cpu.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		ram.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		diskUsage.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		diskBusyTime.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		bytesSend.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
+		bytesReceived.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
 	}
 
 	@Override
