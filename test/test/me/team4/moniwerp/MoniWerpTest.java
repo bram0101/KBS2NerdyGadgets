@@ -32,12 +32,12 @@ public class MoniWerpTest {
 	public static void main(String[] args) {
 		NetworkDesign design = new NetworkDesign();
 		// In dit geval hardcoded een ontwerp
-		NetworkComponent pfSense = new NetworkComponent("pfSense", "firewall", 1000, 0.9999F, 0, 50);
-		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.9999F, 40, 55);
-		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9999F, 40, 65);
-		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.9999F, 40, 40);
-		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9999F, 80, 35);
-		NetworkComponent db2 = new NetworkComponent("DB2", "Database server", 1000, 0.9999F, 80, 45);
+		NetworkComponent pfSense = new NetworkComponent("pfSense", "firewall", 1000, 0.99999F, 0, 50);
+		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.8F, 40, 55);
+		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9F, 40, 65);
+		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.99999F, 40, 40);
+		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9F, 80, 35);
+		NetworkComponent db2 = new NetworkComponent("DB2", "Database server", 1000, 0.9F, 80, 45);
 		design.getComponents().add(pfSense);
 		design.getComponents().add(w1);
 		design.getComponents().add(w2);
@@ -53,7 +53,7 @@ public class MoniWerpTest {
 		
 		Calculator calc = new Calculator();
 		
-		System.out.println(calc.calcCosts(design));
+		System.out.println(calc.calcUptime(design));
 	}
 	
 }

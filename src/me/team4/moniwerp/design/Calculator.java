@@ -22,6 +22,9 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,12 +41,50 @@ public class Calculator {
 		for (int i = 0; i < comp.size(); i++) {
 			boolean found = true;
 			// loop om eerste te vinden
-
 			for (int j = 0; j < con.size(); j++) {
-				if(con.get(j).getSecond() == comp.get(j).getNaam()){
+				if (con.get(j).getSecond() == comp.get(i)) {
 					found = false;
+					break;
 				}
 			}
+			// Dit is dus de eerste node
+			if (found == true) {
+				firstNode = new Node(comp.get(i));
+				break;
+			}
+		}
+		HashSet<NetworkComponent> loopCheck = new HashSet<NetworkComponent>();
+		LinkedList<Node> queue = new LinkedList<Node>();
+		queue.add(firstNode); // voeg de eerste node toe aan de queue
+		while (queue.isEmpty() == false) {
+			Node n = queue.removeFirst();
+			for (int j = 0; j < con.size(); j++) {
+				if (con.get(j).getFirst() == n.comp) {
+					System.out.println(n.comp.getNaam() + ":" + con.get(j).getSecond().getNaam());
+					if (loopCheck.contains(con.get(j).getSecond()) == false) {
+						Node o = new Node(con.get(j).getSecond());
+						queue.add(o);
+						n.getNodes().add(o);
+						loopCheck.add(con.get(j).getSecond());
+					}
+				}
+			}
+		}
+
+		 //System.out.println(firstNode.getComp().getNaam());
+	}
+
+	private float getUptime(Node n) {
+		if (n.getNodes().size() == 0) {
+			return n.getComp().getUptime();
+		} else if (n.getNodes().size() == 1) {
+			return n.getComp().getUptime() * getUptime(n.getNodes().get(0));
+		} else {
+			float v = 1;
+			for (int j = 0; j < n.getNodes().size(); j++) {
+				v *= 1 - getUptime(n.getNodes().get(j));
+			}
+			return (1-v)*n.getComp().getUptime();
 		}
 	}
 
@@ -56,8 +97,8 @@ public class Calculator {
 
 	public float calcUptime(NetworkDesign ontwerp) {
 		// TODO: implement
-
-		return 0;
+		buildNodeNetwork(ontwerp);
+		return getUptime(firstNode);
 	}
 
 	/**
@@ -104,6 +145,11 @@ public class Calculator {
 
 		public Node(NetworkComponent comp) {
 			this.comp = comp;
+			nodes = new ArrayList<Node>();
+		}
+
+		public NetworkComponent getComp() {
+			return comp;
 		}
 
 		public List<Node> getNodes() {
