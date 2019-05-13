@@ -24,10 +24,18 @@ package me.team4.moniwerp.design;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.team4.moniwerp.Tab;
+import me.team4.moniwerp.Window;
 
 /**
  * Het tabblad voor de ontwerp kant van de applicatie
@@ -39,26 +47,75 @@ public class TabDesign extends JPanel implements Tab {
 
 	private Toolbar toolbar;
 	private ViewportDesign viewport;
-	
+
 	public TabDesign() {
-		
+		// Voeg een layout toe
 		BorderLayout mainlayout = new BorderLayout();
 		setLayout(mainlayout);
-		
+
+		// Maak de componenten die nodig zijn voor TabDesign
 		toolbar = new Toolbar();
 		viewport = new ViewportDesign();
-		
+
+		// Voeg de componenten toe
 		add(toolbar, BorderLayout.WEST);
 		add(viewport, BorderLayout.CENTER);
-		
+
 	}
-	
+
 	@Override
 	public void onMenuButton(int buttonID) {
-		// TODO Auto-generated method stub
+		if (buttonID == Window.BUTTON_NEW) {
+			// We willen een niew ontwerp. Dit kan simpelweg door de lijst met componeten en
+			// verbindingen te legen
+			viewport.getNetworkDesign().getComponents().clear();
+			viewport.getNetworkDesign().getConnections().clear();
+		}
+		if (buttonID == Window.BUTTON_OPEN) {
+			// Create a file chooser
+			final JFileChooser Of = new JFileChooser();
+			Of.setFileFilter(new FileNameExtensionFilter("Moniwerp Design", "mwd"));
+
+			// In response to a button click:
+			int returnVal = Of.showOpenDialog(Of);
+
+			// If statement returnVal
+			// Open FilesChooser en laad geselecteerd bestand
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				try {
+					DataInputStream dis = new DataInputStream(new FileInputStream(Of.getSelectedFile()));
+					viewport.getNetworkDesign().load(dis);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				// Sluit de FileChooser af zonder verdere acties.
+			}
+		}
+		if (buttonID == Window.BUTTON_SAVE) {
+			// Create a file chooser
+			final JFileChooser Of = new JFileChooser();
+			Of.setFileFilter(new FileNameExtensionFilter("Moniwerp Design", "mwd"));
+
+			// In response to a button click:
+			int returnVal = Of.showSaveDialog(Of);
+
+			// If statement returnVal
+			// Open FilesChooser en sla het geselecteerd bestand op
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				try {
+					DataOutputStream dis = new DataOutputStream(new FileOutputStream(Of.getSelectedFile()));
+					viewport.getNetworkDesign().save(dis);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				// Sluit de FileChooser af zonder verdere acties.
+			}
+		}
+		if (buttonID == Window.BUTTON_OPTIMIZE) {
+			// Zeg tegen de viewport dat wij het ontwerp willen laten optimalizeren
+			viewport.optimize();
+		}
 	}
-	
-	
 
 	@Override
 	public void onResizeTab(int width, int height) {
@@ -66,5 +123,6 @@ public class TabDesign extends JPanel implements Tab {
 		setPreferredSize(new Dimension(width, height));
 		toolbar.setPreferredSize(new Dimension(96, height));
 		viewport.setPreferredSize(new Dimension(width - 96, height));
+		toolbar.onResize(96, height);
 	}
 }

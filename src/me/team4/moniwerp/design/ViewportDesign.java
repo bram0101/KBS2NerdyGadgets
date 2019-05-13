@@ -53,8 +53,8 @@ public class ViewportDesign extends JPanel{
 	/**
 	 *  geeft netwerkontwerpen weer.
 	 */
-	public void getNetworkDesign() {
-		
+	public NetworkDesign getNetworkDesign() {
+		return new NetworkDesign();
 	}
 	
 	/**

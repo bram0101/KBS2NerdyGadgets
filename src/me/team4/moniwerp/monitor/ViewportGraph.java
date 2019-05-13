@@ -188,7 +188,7 @@ public class ViewportGraph extends JPanel {
 				// een percentage
 				float received = data1.getBytesReceived() / maxBytesSendReceived;
 
-				long minVal = currentTimestamp - 2; // Het huidige tijdsstip
+				long minVal = currentTimestamp - 5; // Het huidige tijdsstip
 				long maxVal = currentTimestamp - timeRange; // Maximale timeRange voor de grafiek
 				float p = ((float) (data1.getTimestamp() - minVal)) / ((float) (maxVal - minVal)); // percentage van de
 																									// timeStamp

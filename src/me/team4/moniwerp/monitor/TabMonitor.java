@@ -32,6 +32,7 @@ import java.util.TimerTask;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.team4.moniwerp.Main;
 import me.team4.moniwerp.Tab;
@@ -89,10 +90,10 @@ public class TabMonitor extends JPanel implements Tab {
 
 	@Override
 	public void onMenuButton(int buttonID) {
-		// TODO Auto-generated method stub
 		if(buttonID == Window.BUTTON_OPEN) {
 			// Create a file chooser
 			final JFileChooser Of = new JFileChooser();
+			Of.setFileFilter(new FileNameExtensionFilter("Moniwerp Design", "mwd"));
 
 			// In response to a button click:
 			int returnVal = Of.showOpenDialog(Of);
