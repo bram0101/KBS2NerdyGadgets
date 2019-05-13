@@ -246,5 +246,5 @@ public class NetworkDesign {
 	public List<NetworkConnection> getConnections() {
 		return connections;
 	}
-
+	
 }

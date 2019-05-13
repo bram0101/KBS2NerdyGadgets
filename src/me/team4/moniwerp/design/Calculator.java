@@ -22,48 +22,93 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-/** Een calculator om de uptime en kosten te berekenen
+import java.util.List;
+
+/**
+ * Een calculator om de uptime en kosten te berekenen
  *
  */
 public class Calculator {
 
+	private Node firstNode;
+
+	private void buildNodeNetwork(NetworkDesign design) {
+		List<NetworkComponent> comp = design.getComponents();
+		List<NetworkConnection> con = design.getConnections();
+		for (int i = 0; i < comp.size(); i++) {
+			boolean found = true;
+			// loop om eerste te vinden
+
+			for (int j = 0; j < con.size(); j++) {
+				if(con.get(j).getSecond() == comp.get(j).getNaam()){
+					found = false;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Berekent de uptime
+	 * 
 	 * @param ontwerp uptime van het huidige ontwerp
-	 * @return uptime in seconden 
+	 * @return uptime in seconden
 	 */
+
 	public float calcUptime(NetworkDesign ontwerp) {
-		//TODO: implement
+		// TODO: implement
+
 		return 0;
 	}
+
 	/**
 	 * 
 	 * @param problem Het huidige probleem
-	 * @param solve De huidige (mogelijke) oplossing
+	 * @param solve   De huidige (mogelijke) oplossing
 	 * @return uptime in seconden
 	 */
 	public float calcUptime(int problem[][], byte solve[]) {
-		//TODO:implement
+		// TODO:implement
 		return 0;
 	}
+
 	/**
 	 * 
 	 * @param design huidige kosten van het ontwerp
 	 * @return costs
 	 */
 	public int calcCosts(NetworkDesign design) {
-		//TODO: implement
-		
-		return 10000;
+		List<NetworkComponent> comps = design.getComponents();
+		int costs = 0;
+		for (int i = 0; i < comps.size(); i++) {
+			costs += comps.get(i).getCosts();
+		}
+
+		return costs;
 	}
+
 	/**
 	 * 
 	 * @param problem Het huidige probleem
-	 * @param solve De huidige (mogelijke) oplossing
+	 * @param solve   De huidige (mogelijke) oplossing
 	 * @return costs
 	 */
 	public int calcCosts(int problem[][], byte solve[]) {
-		//TODO: implement
+		// TODO: implement
 		return 24000;
 	}
+
+	public static class Node {
+
+		private NetworkComponent comp;
+		private List<Node> nodes;
+
+		public Node(NetworkComponent comp) {
+			this.comp = comp;
+		}
+
+		public List<Node> getNodes() {
+			return nodes;
+		}
+	}
+
 }
