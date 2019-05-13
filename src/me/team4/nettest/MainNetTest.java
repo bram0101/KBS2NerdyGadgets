@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import me.team4.nettest.tests.NetworkTestLoadBalancer;
 import me.team4.nettest.tests.NetworkTestLocalHost;
 import me.team4.nettest.tests.NetworkTestWeb;
+import me.team4.nettest.tests.NetworkTestpfSense;
 
 
 public class MainNetTest {
@@ -38,7 +39,8 @@ public class MainNetTest {
 		NetworkTest[] tests = new NetworkTest[] {
 				new NetworkTestLocalHost(),
 				new NetworkTestWeb(),
-				new NetworkTestLoadBalancer()
+				new NetworkTestLoadBalancer(),
+				new NetworkTestpfSense()
 		};
 
 		try {
