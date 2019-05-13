@@ -22,9 +22,11 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 /**
  * laat de toolbar zien boven het designgedeelte
@@ -32,9 +34,6 @@ import javax.swing.JPanel;
 public class Toolbar extends JPanel{
 	
 	
-	public Toolbar() {
-		setBackground(Color.GREEN);
-	}
 	/**
 	 * Het netwerkcomponenttype dat geselecteerd is
 	 */
@@ -44,6 +43,20 @@ public class Toolbar extends JPanel{
 	 * Of de connectiontool gebruikt wordt
 	 */
 	private boolean ConnectionTool;
+	
+	public Toolbar() {
+		selected = new NetworkComponentType("Webserver", 100, 0.9f);
+		JToggleButton button = new JToggleButton();
+		add(button);
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ConnectionTool = !ConnectionTool;
+			}
+			
+		});
+	}
 	
 	/**
 	 * Het netwwerkcomponenttype dat geselecteerd is

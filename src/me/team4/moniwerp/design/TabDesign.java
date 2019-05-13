@@ -58,7 +58,9 @@ public class TabDesign extends JPanel implements Tab {
 		// TODO Auto-generated method stub
 	}
 	
-	
+	public Toolbar getToolbar() {
+		return toolbar;
+	}
 
 	@Override
 	public void onResizeTab(int width, int height) {
