@@ -34,8 +34,11 @@ import java.util.List;
 public class Calculator {
 
 	private Node firstNode;
-
+	private int[][] problemDefinition;
+	
 	public void buildNodeNetwork(NetworkDesign design) {
+		byte id = 0;
+		List<int[]> problemDefinitionTemp = new ArrayList();
 		List<NetworkComponent> comp = design.getComponents();
 		List<NetworkConnection> con = design.getConnections();
 		for (int i = 0; i < comp.size(); i++) {
@@ -49,7 +52,14 @@ public class Calculator {
 			}
 			// Dit is dus de eerste node
 			if (found == true) {
-				firstNode = new Node(comp.get(i));
+				if (comp instanceof NetworkComponentUnknown) {
+					firstNode = new Node(comp.get(i), id);
+					NetworkComponentUnkown compunknown = ()comp;
+					int[] TypeArray = new ;
+					id++;
+				} else {
+					firstNode = new Node(comp.get(i), (byte) -1);
+				}
 				break;
 			}
 		}
@@ -62,16 +72,23 @@ public class Calculator {
 				if (con.get(j).getFirst() == n.comp) {
 					System.out.println(n.comp.getNaam() + ":" + con.get(j).getSecond().getNaam());
 					if (loopCheck.contains(con.get(j).getSecond()) == false) {
-						Node o = new Node(con.get(j).getSecond());
-						queue.add(o);
-						n.getNodes().add(o);
-						loopCheck.add(con.get(j).getSecond());
+						if (comp instanceof NetworkComponentUnknown) {
+							Node o = new Node(con.get(j).getSecond(), id);
+							id++;
+							queue.add(o);
+							n.getNodes().add(o);
+							loopCheck.add(con.get(j).getSecond());
+						} else {
+							Node o = new Node(con.get(j).getSecond(), (byte) -1);
+							queue.add(o);
+							n.getNodes().add(o);
+							loopCheck.add(con.get(j).getSecond());
+						}
 					}
 				}
 			}
 		}
-
-		 //System.out.println(firstNode.getComp().getNaam());
+		// System.out.println(firstNode.getComp().getNaam());
 	}
 
 	private float getUptime(Node n) {
@@ -84,7 +101,7 @@ public class Calculator {
 			for (int j = 0; j < n.getNodes().size(); j++) {
 				v *= 1 - getUptime(n.getNodes().get(j));
 			}
-			return (1-v)*n.getComp().getUptime();
+			return (1 - v) * n.getComp().getUptime();
 		}
 	}
 
@@ -131,14 +148,20 @@ public class Calculator {
 
 		private NetworkComponent comp;
 		private List<Node> nodes;
+		private Byte ID;
 
-		public Node(NetworkComponent comp) {
+		public Node(NetworkComponent comp, Byte ID) {
 			this.comp = comp;
 			nodes = new ArrayList<Node>();
+			this.ID = ID;
 		}
 
 		public NetworkComponent getComp() {
 			return comp;
+		}
+
+		public Byte GetID() {
+			return ID;
 		}
 
 		public List<Node> getNodes() {
