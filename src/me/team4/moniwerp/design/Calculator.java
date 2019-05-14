@@ -35,7 +35,7 @@ public class Calculator {
 
 	private Node firstNode;
 
-	private void buildNodeNetwork(NetworkDesign design) {
+	public void buildNodeNetwork(NetworkDesign design) {
 		List<NetworkComponent> comp = design.getComponents();
 		List<NetworkConnection> con = design.getConnections();
 		for (int i = 0; i < comp.size(); i++) {
@@ -125,17 +125,6 @@ public class Calculator {
 		}
 
 		return costs;
-	}
-
-	/**
-	 * 
-	 * @param problem Het huidige probleem
-	 * @param solve   De huidige (mogelijke) oplossing
-	 * @return costs
-	 */
-	public int calcCosts(int problem[][], byte solve[]) {
-		// TODO: implement
-		return 24000;
 	}
 
 	public static class Node {
