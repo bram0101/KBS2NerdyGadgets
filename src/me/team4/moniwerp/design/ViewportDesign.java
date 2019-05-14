@@ -25,6 +25,7 @@ package me.team4.moniwerp.design;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -33,18 +34,26 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
+import javafx.scene.input.KeyCode;
 import me.team4.moniwerp.Main;
 
 /*
  * De viewport van het design 
  */
-public class ViewportDesign extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener{
+public class ViewportDesign extends JPanel
+		implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 
 	private NetworkComponent selected;
 	private LinkedList<NetworkDesign> undoQueue = new LinkedList<NetworkDesign>();
@@ -70,7 +79,7 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9999F, 40, 65);
 		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.9999F, 40, 40);
 		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9999F, 80, 35);
-		NetworkComponent db2 = new NetworkComponent("DB2", "Database server", 1000, 0.9999F, 80, 45);
+		NetworkComponent db2 = new NetworkComponentUnknown("DB2", "Database server", 1000, 0.9999F, 80, 45, null);
 		design.getComponents().add(pfSense);
 		design.getComponents().add(w1);
 		design.getComponents().add(w2);
@@ -90,18 +99,38 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 		addMouseListener(this);
 		addMouseWheelListener(this);
 		addMouseMotionListener(this);
-		addKeyListener(this);
+
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_MASK), "undo");
+		getActionMap().put("undo", new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				undo();
+			}
+
+		});
+		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_MASK), "redo");
+		getActionMap().put("redo", new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				redo();
+			}
+
+		});
 	}
 
 	/**
 	 * redo knop: Je undo undo-en :)
 	 */
 	public void redo() {
-		NetworkDesign design = redoQueue.getFirst();
-		NetworkDesign undoDesign = copyDesign(design);
+		if (redoQueue.isEmpty())
+			return;
+		NetworkDesign design = redoQueue.removeFirst();
+		NetworkDesign undoDesign = copyDesign(this.design);
 		this.design = design;
 		undoQueue.addFirst(undoDesign);
-		if(undoQueue.size() > 10) {
+		if (undoQueue.size() > 10) {
 			undoQueue.removeLast();
 		}
 		repaint();
@@ -111,8 +140,10 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 	 * undo knop: een stap terug
 	 */
 	public void undo() {
-		NetworkDesign design = undoQueue.getFirst();
-		NetworkDesign redoDesign = copyDesign(design);
+		if (undoQueue.isEmpty())
+			return;
+		NetworkDesign design = undoQueue.removeFirst();
+		NetworkDesign redoDesign = copyDesign(this.design);
 		this.design = design;
 		redoQueue.addFirst(redoDesign);
 		if (redoQueue.size() > 10) {
@@ -149,11 +180,19 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 			if (comp == connFirst) {
 				g.setColor(new Color(150, 255, 255));
 			} else if (comp == selected) {
-				// Hij is geselecteerd dus een lichtere blauw.
-				g.setColor(new Color(150, 200, 255));
+				if (comp instanceof NetworkComponentUnknown) {
+					g.setColor(new Color(150, 255, 200));
+				} else {
+					// Hij is geselecteerd dus een lichtere blauw.
+					g.setColor(new Color(150, 200, 255));
+				}
 			} else {
-				// Hij is niet geselecteerd dus een normale blauw
-				g.setColor(new Color(100, 150, 255));
+				if (comp instanceof NetworkComponentUnknown) {
+					g.setColor(new Color(100, 255, 150));
+				} else {
+					// Hij is niet geselecteerd dus een normale blauw
+					g.setColor(new Color(100, 150, 255));
+				}
 			}
 
 			// Vul de rechthoek. Dit is de basis van een component.
@@ -170,14 +209,25 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 					(int) (20 * scale), (int) (5 * scale));
 			// Zet de kleur voor de tekst
 			g.setColor(Color.black);
-			// Hiermee vragen wij de grootte van de text op in pixels. Dan kunnen wij het
-			// centreren.
-			Rectangle2D textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
-			// Teken de text. Pak de pixel locatie van het midden van het component en haal
-			// de helft van de grootte van de textbounds eraf.
-			g.drawString(comp.getNaam(),
-					(int) ((comp.getxLoc() - xOffset) * scale + 10.0 * scale - textBounds.getCenterX()),
-					(int) ((comp.getyLoc() - yOffset) * scale + 2.5 * scale - textBounds.getCenterY()));
+			if (comp instanceof NetworkComponentUnknown) {
+				// teken unknown
+				int x1 = (int) ((comp.getxLoc() - xOffset) * scale);
+				int y1 = (int) ((comp.getyLoc() - yOffset) * scale);
+
+				g.drawLine((int) (x1 + (5 / 3 * scale)), (int) (y1 + (5 / 3F * scale)),
+						(int) (x1 + ((20 - 5 / 3) * scale)), (int) (y1 + (5 / 3F * scale)));
+				g.drawLine((int) (x1 + (5 / 3 * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)),
+						(int) (x1 + ((20 - 5 / 3) * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)));
+			} else {
+				// Hiermee vragen wij de grootte van de text op in pixels. Dan kunnen wij het
+				// centreren.
+				Rectangle2D textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+				// Teken de text. Pak de pixel locatie van het midden van het component en haal
+				// de helft van de grootte van de textbounds eraf.
+				g.drawString(comp.getNaam(),
+						(int) ((comp.getxLoc() - xOffset) * scale + 10.0 * scale - textBounds.getCenterX()),
+						(int) ((comp.getyLoc() - yOffset) * scale + 2.5 * scale - textBounds.getCenterY()));
+			}
 		}
 		// Ga langs elke connectie en teken die.
 		for (NetworkConnection con : design.getConnections()) {
@@ -221,7 +271,7 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
 				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale);
 			} else {
-				// Nar rechts toe
+				// Naar rechts toe
 				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
 				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale);
 
@@ -303,7 +353,6 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 	public void mouseClicked(MouseEvent e) {
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
-		isPanning = true;
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (isPanning) {
 				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
@@ -481,10 +530,19 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 		NetworkDesign designCopy = new NetworkDesign();
 		HashMap<NetworkComponent, NetworkComponent> compConv = new HashMap<NetworkComponent, NetworkComponent>();
 		for (NetworkComponent comp : design.getComponents()) {
-			NetworkComponent compCopy = new NetworkComponent(comp.getNaam(), comp.getType(), comp.getCosts(),
-					comp.getUptime(), comp.getxLoc(), comp.getyLoc());
-			designCopy.getComponents().add(compCopy);
-			compConv.put(comp, compCopy);
+			if (comp instanceof NetworkComponentUnknown) {
+				NetworkComponent compCopy = new NetworkComponentUnknown(comp.getNaam(), comp.getType(), comp.getCosts(),
+						comp.getUptime(), comp.getxLoc(), comp.getyLoc(),
+						((NetworkComponentUnknown) comp).GetComponentTypes());
+				designCopy.getComponents().add(compCopy);
+				compConv.put(comp, compCopy);
+			} else {
+				NetworkComponent compCopy = new NetworkComponent(comp.getNaam(), comp.getType(), comp.getCosts(),
+						comp.getUptime(), comp.getxLoc(), comp.getyLoc());
+				designCopy.getComponents().add(compCopy);
+				compConv.put(comp, compCopy);
+			}
+
 		}
 		for (NetworkConnection conn : design.getConnections()) {
 			NetworkConnection connCopy = new NetworkConnection(compConv.get(conn.getFirst()),
@@ -503,20 +561,23 @@ public class ViewportDesign extends JPanel implements MouseListener, MouseMotion
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if ((e.getKeyCode() == KeyEvent.VK_C) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            System.out.println("woot!");
-        }
+		// System.out.println(e.getKeyCode() + ":" + KeyEvent.VK_C);
+		// if(Main.getWindow().getSelectedTab() != Main.getWindow().getDesignTab())
+		// return;
+		if ((e.getKeyCode() == KeyEvent.VK_C)) {
+			System.out.println("test");
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

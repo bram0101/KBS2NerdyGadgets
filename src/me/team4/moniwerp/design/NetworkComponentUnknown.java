@@ -22,55 +22,18 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.util.List;
 
-import javax.swing.JPanel;
+public class NetworkComponentUnknown extends NetworkComponent{
 
-import me.team4.moniwerp.Tab;
+    private List<Integer> ComponentTypes;
 
-/**
- * Het tabblad voor de ontwerp kant van de applicatie
- *
- */
-public class TabDesign extends JPanel implements Tab {
+    public NetworkComponentUnknown(String naam, String type, int costs, float uptime, int xLoc, int yLoc, List ComponentTypes) {
+        super(naam, type, costs, uptime, xLoc, yLoc);
+        this.ComponentTypes = ComponentTypes;
+    }
 
-	private static final long serialVersionUID = 1L;
-
-	private Toolbar toolbar;
-	private ViewportDesign viewport;
-	
-	public TabDesign() {
-		
-		BorderLayout mainlayout = new BorderLayout();
-		setLayout(mainlayout);
-		
-		toolbar = new Toolbar();
-		viewport = new ViewportDesign();
-		
-		add(toolbar, BorderLayout.WEST);
-		add(viewport, BorderLayout.CENTER);
-		
-	}
-	
-	@Override
-	public void onMenuButton(int buttonID) {
-		// TODO Auto-generated method stub
-	}
-	
-	public Toolbar getToolbar() {
-		return toolbar;
-	}
-	
-	public ViewportDesign getViewportDesign() {
-		return viewport;
-	}
-
-	@Override
-	public void onResizeTab(int width, int height) {
-		// Geef de componenten hun nieuwe grootte.
-		setPreferredSize(new Dimension(width, height));
-		toolbar.setPreferredSize(new Dimension(96, height));
-		viewport.setPreferredSize(new Dimension(width - 96, height));
-	}
+    public List<Integer> GetComponentTypes(){
+        return ComponentTypes;
+    }
 }
