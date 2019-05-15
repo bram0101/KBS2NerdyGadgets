@@ -35,6 +35,7 @@ public class Calculator {
 
 	private Node firstNode;
 	private int[][] problemDefinition;
+	private int[] offsetGrootte;
 
 	public void buildNodeNetwork(NetworkDesign design) {
 		byte id = 0;
@@ -99,7 +100,13 @@ public class Calculator {
 				}
 			}
 		}
-		// System.out.println(firstNode.getComp().getNaam());
+		problemDefinition = (int[][]) problemDefinitionTemp.toArray();
+		offsetGrootte = new int[problemDefinition.length];
+		int i = 0;
+		for (int j = 0; j < problemDefinition.length; j++) {
+			offsetGrootte[j] = i;
+			i += problemDefinition[j].length;
+		}
 	}
 
 	private float getUptime(Node n) {
@@ -124,9 +131,31 @@ public class Calculator {
 	 */
 
 	public float calcUptime(NetworkDesign ontwerp) {
-		// TODO: implement
 		buildNodeNetwork(ontwerp);
 		return getUptime(firstNode);
+	}
+
+	private float getUptime(Node n, byte solve[]) {
+		float uptime = n.getComp().getUptime();
+		if (n.GetID() >= 0) {
+			float v = 1;
+			for (int i = 0; i < problemDefinition[n.GetID()].length; i++) {
+				v *= Math.pow(1.0f - NetworkComponentTypes.getTypes()[problemDefinition[n.GetID()][i]].getUptime(),
+						solve[offsetGrootte[n.GetID()] + i]);
+			}
+			uptime = 1.0f - v;
+		}
+		if (n.getNodes().size() == 0) {
+			return uptime;
+		} else if (n.getNodes().size() == 1) {
+			return uptime * getUptime(n.getNodes().get(0), solve);
+		} else {
+			float v = 1;
+			for (int j = 0; j < n.getNodes().size(); j++) {
+				v *= 1 - getUptime(n.getNodes().get(j), solve);
+			}
+			return (1 - v) * uptime;
+		}
 	}
 
 	/**
@@ -135,9 +164,8 @@ public class Calculator {
 	 * @param solve   De huidige (mogelijke) oplossing
 	 * @return uptime in seconden
 	 */
-	public float calcUptime(int problem[][], byte solve[]) {
-		// TODO:implement
-		return 0;
+	public float calcUptime(byte solve[]) {
+		return getUptime(firstNode, solve);
 	}
 
 	/**
