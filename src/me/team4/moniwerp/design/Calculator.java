@@ -35,7 +35,7 @@ public class Calculator {
 
 	private Node firstNode;
 	private int[][] problemDefinition;
-	
+
 	public void buildNodeNetwork(NetworkDesign design) {
 		byte id = 0;
 		List<int[]> problemDefinitionTemp = new ArrayList();
@@ -54,8 +54,11 @@ public class Calculator {
 			if (found == true) {
 				if (comp instanceof NetworkComponentUnknown) {
 					firstNode = new Node(comp.get(i), id);
-					NetworkComponentUnkown compunknown = ()comp;
-					int[] TypeArray = new ;
+					NetworkComponentUnknown compunknown = (NetworkComponentUnknown) comp;
+					int[] types = new int[compunknown.GetComponentTypes().size()];
+					for (int j = 0; j < types.length; j++)
+						types[j] = compunknown.GetComponentTypes().get(j);
+					problemDefinitionTemp.add(types);
 					id++;
 				} else {
 					firstNode = new Node(comp.get(i), (byte) -1);
@@ -72,8 +75,16 @@ public class Calculator {
 				if (con.get(j).getFirst() == n.comp) {
 					System.out.println(n.comp.getNaam() + ":" + con.get(j).getSecond().getNaam());
 					if (loopCheck.contains(con.get(j).getSecond()) == false) {
+
 						if (comp instanceof NetworkComponentUnknown) {
 							Node o = new Node(con.get(j).getSecond(), id);
+							NetworkComponentUnknown compunknown = (NetworkComponentUnknown) comp;
+							int[] types = new int[compunknown.GetComponentTypes().size()];
+
+							for (int k = 0; k < types.length; k++)
+								types[k] = compunknown.GetComponentTypes().get(k);
+
+							problemDefinitionTemp.add(types);
 							id++;
 							queue.add(o);
 							n.getNodes().add(o);
