@@ -40,7 +40,8 @@ public class naamDialoog extends JDialog implements ActionListener {
 	private JButton ok, cancel;
 	private JLabel titel;
 	private String inputNaam;
-
+	private NetworkComponent selected;
+	
 	public naamDialoog(JFrame frame) {
 		setSize(300, 150);
 		setLayout(new FlowLayout());
@@ -67,9 +68,9 @@ public class naamDialoog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == ok) {
 			inputNaam = naam.getText();
-			System.out.println(selected.getNaam());
+			//System.out.println(selected.getNaam());
 			System.out.println(getinputNaam());
-
+			dispose();
 			} 
 		else {
 			dispose();
@@ -79,4 +80,9 @@ public class naamDialoog extends JDialog implements ActionListener {
 	public String getinputNaam() {
 		return inputNaam;
 	}
+	
+	public NetworkComponent getSelected() {
+		return selected;
+	}
+	
 }

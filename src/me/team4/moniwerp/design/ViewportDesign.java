@@ -355,9 +355,9 @@ public class ViewportDesign extends JPanel
 
 				if (e.getClickCount() == 2 && !e.isConsumed()) {
 					naamDialoog nD = new naamDialoog(frame);
-					selected.setNaam(nD.getinputNaam());
+					//selected.setNaam(nD.getinputNaam());
 					System.out.println(selected.getNaam());
-					System.out.println(nD.getinputNaam());
+					//System.out.println(nD.getinputNaam());
 				}
 			
 		if (e.getButton() == MouseEvent.BUTTON1) {
