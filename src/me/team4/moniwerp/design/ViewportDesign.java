@@ -34,19 +34,16 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
-import javafx.scene.input.KeyCode;
 import me.team4.moniwerp.Main;
 
 /*
@@ -60,6 +57,7 @@ public class ViewportDesign extends JPanel
 	private LinkedList<NetworkDesign> redoQueue = new LinkedList<NetworkDesign>();
 
 	private NetworkDesign design;
+	private JFrame frame;
 	private float panningX = 1;
 	private float panningY = 1;
 	private float prevMouseX = 0;
@@ -118,6 +116,7 @@ public class ViewportDesign extends JPanel
 			}
 
 		});
+
 	}
 
 	/**
@@ -353,6 +352,14 @@ public class ViewportDesign extends JPanel
 	public void mouseClicked(MouseEvent e) {
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
+
+				if (e.getClickCount() == 2 && !e.isConsumed()) {
+					naamDialoog nD = new naamDialoog(frame);
+					selected.setNaam(nD.getinputNaam());
+					System.out.println(selected.getNaam());
+					System.out.println(nD.getinputNaam());
+				}
+			
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (isPanning) {
 				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
@@ -561,12 +568,6 @@ public class ViewportDesign extends JPanel
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		// System.out.println(e.getKeyCode() + ":" + KeyEvent.VK_C);
-		// if(Main.getWindow().getSelectedTab() != Main.getWindow().getDesignTab())
-		// return;
-		if ((e.getKeyCode() == KeyEvent.VK_C)) {
-			System.out.println("test");
-		}
 	}
 
 	@Override
@@ -578,6 +579,8 @@ public class ViewportDesign extends JPanel
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-
+	}
+	public NetworkComponent getSelected() {
+		return selected;
 	}
 }
