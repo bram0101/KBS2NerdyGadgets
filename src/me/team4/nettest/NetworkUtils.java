@@ -60,6 +60,25 @@ public class NetworkUtils {
 		}
 		return false;
 	}
+	
+	public static boolean https(String ip, String file) {
+		try {
+			URL url = new URL("https://" + ip + "/" + file);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+			con.setInstanceFollowRedirects(true);
+
+			int status = con.getResponseCode();
+
+			if (status == 200)
+				return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
 
 	public static boolean sql(String ip, String database, String user, String pass) {
 		try {

@@ -35,19 +35,28 @@ public class NetworkTestWeb implements NetworkTest {
 
 	@Override
 	public void run(TestResult result) {
+		
+		// Variabelen IPv4.
 		String w1_4 = "192.168.10.1";
-		String w1_6 = "[FC00:0:0:10:3000:0:0:1]";
 		String w2_4 = "192.168.10.2";
+		
+		// Variabelen IPv6.
+		String w1_6 = "[FC00:0:0:10:3000:0:0:1]";
 		String w2_6 = "[FC00:0:0:10:3000:0:0:2]";
 		
+		// Webservers ping tests op IPv4 en IPv6 en voeg resultaten toe aan log file
 		result.addResult("ping W1 IPv4", NetworkUtils.ping(w1_4));
-		result.addResult("ping W1 IPv6", NetworkUtils.ping(w1_6));
 		result.addResult("ping W2 IPv4", NetworkUtils.ping(w2_4));
+		result.addResult("ping W1 IPv6", NetworkUtils.ping(w1_6));
 		result.addResult("ping W2 IPv6", NetworkUtils.ping(w2_6));
-		result.addResult("Index W1 IPv4", NetworkUtils.http(w1_4, ""));
-		result.addResult("Index W1 IPv6", NetworkUtils.http(w1_6, ""));
-		result.addResult("Index W2 IPv4", NetworkUtils.http(w2_4, ""));
-		result.addResult("Index W2 IPv6", NetworkUtils.http(w2_6, ""));
+		result.addResult("Webservers1", null);
+		
+		// Http test op de webservers voor de beschikbaarheid van de website en voeg resultaten toe aan log file.
+		
+		result.addResult("HTTP W1 IPv4", NetworkUtils.http(w1_4, ""));
+		result.addResult("HTTP W2 IPv4", NetworkUtils.http(w2_4, ""));
+		result.addResult("HTTP W1 IPv6", NetworkUtils.http(w1_6, ""));
+		result.addResult("HTTP W2 IPv6", NetworkUtils.http(w2_6, ""));
 	}
 
 }
