@@ -34,9 +34,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -67,6 +70,8 @@ public class ViewportDesign extends JPanel
 	private float scale = 5;
 	private boolean isPanning;
 	private NetworkComponent connFirst = null;
+	private int kosten;
+	private float uptime;
 
 	public ViewportDesign() {
 		// Maak een nieuw design instantie.
@@ -77,7 +82,8 @@ public class ViewportDesign extends JPanel
 		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9999F, 40, 65);
 		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.9999F, 40, 40);
 		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9999F, 80, 35);
-		NetworkComponent db2 = new NetworkComponentUnknown("DB2", "Database server", 1000, 0.9999F, 80, 45, null);
+		NetworkComponent db2 = new NetworkComponentUnknown("DB2", "Database server", 1000, 0.9999F, 80, 45,
+				new ArrayList<Integer>());
 		design.getComponents().add(pfSense);
 		design.getComponents().add(w1);
 		design.getComponents().add(w2);
@@ -116,6 +122,16 @@ public class ViewportDesign extends JPanel
 			}
 
 		});
+		
+		Timer t = new Timer();
+		t.scheduleAtFixedRate(new TimerTask() {			
+			@Override
+			public void run() {
+				Calculator c = new Calculator();
+				kosten  = c.calcCosts(design);
+				uptime = c.calcUptime(design) * 100;
+			}
+		}, 2000, 2000);
 
 	}
 
@@ -285,6 +301,14 @@ public class ViewportDesign extends JPanel
 			g.fillOval(radiusX, radiusY, (int) (3 * scale), (int) (3 * scale));
 			g.fillRect((int) (x2 - (1 * scale)), (int) (y2 - (1 * scale)), (int) (2 * scale), (int) (2 * scale));
 		}
+		g.setFont(new Font("Arial", Font.PLAIN, 15));
+		g.setColor(new Color(220, 220, 220));
+		g.fillRect(1, 1, 125, 40);
+		g.setColor(Color.black);
+		g.drawRect(0, 0, 125, 40);
+		g.drawString("Kosten: $"+kosten, 5, 15);
+		g.drawString("Uptime:" + uptime+"%", 5, 30);
+		repaint();
 	}
 
 	/**
@@ -353,15 +377,18 @@ public class ViewportDesign extends JPanel
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
 
-				if (e.getClickCount() == 2 && !e.isConsumed()) {
-					naamDialoog nD = new naamDialoog(frame);
-					//selected.setNaam(nD.getinputNaam());
-					System.out.println(selected.getNaam());
-					//System.out.println(nD.getinputNaam());
-				}
-			
+		if ((e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) && !e.isConsumed() && !isPanning) {
+			if (selected instanceof NetworkComponentUnknown) {
+				typeDialoog tD = new typeDialoog(frame);
+				tD.setSelected((NetworkComponentUnknown) selected);
+			} else {
+				naamDialoog nD = new naamDialoog(frame);
+				nD.setSelected(selected);
+			}
+		}
+
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			if (isPanning) {
+			if (!isPanning) {
 				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
 				if (Main.getWindow().getDesignTab().getToolbar().useConnectiontool()) {
 					// Maak een verbinding
@@ -381,8 +408,14 @@ public class ViewportDesign extends JPanel
 					float yOffset = panningY - 10;
 					int xLoc = (int) (prevMouseX / scale + xOffset);
 					int yLoc = (int) (prevMouseY / scale + yOffset);
-					NetworkComponent comp = new NetworkComponent(type.getName(), type.getName(), type.getCosts(),
-							type.getUptime(), xLoc, yLoc);
+					NetworkComponent comp = null;
+					if (type.getName().equals("Unknown")) {
+						comp = new NetworkComponentUnknown(type.getName(), type.getName(), type.getCosts(),
+								type.getUptime(), xLoc, yLoc, new ArrayList<Integer>());
+					} else {
+						comp = new NetworkComponent(type.getName(), type.getName(), type.getCosts(), type.getUptime(),
+								xLoc, yLoc);
+					}
 					addHistory();
 					design.getComponents().add(comp);
 					repaint();
@@ -580,6 +613,7 @@ public class ViewportDesign extends JPanel
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 	}
+
 	public NetworkComponent getSelected() {
 		return selected;
 	}

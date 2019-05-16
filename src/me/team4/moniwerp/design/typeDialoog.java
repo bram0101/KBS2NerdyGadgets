@@ -22,45 +22,49 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import me.team4.moniwerp.Main;
-
-public class naamDialoog extends JDialog implements ActionListener {
-	private JTextField naam;
+public class typeDialoog extends JDialog implements ActionListener {
 	private JButton ok, cancel;
 	private JLabel titel;
-	private String inputNaam;
-	private NetworkComponent selected;
+	private NetworkComponentUnknown selected;
+	private JCheckBox[] checkboxes;
 
-	public naamDialoog(JFrame frame) {
-		setSize(300, 100);
-		setLayout(new FlowLayout());
+	public typeDialoog(JFrame frame) {
+		setSize(300, 150);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		JPanel root = new JPanel();
-		naam = new JTextField(5);
+		titel = new JLabel("Voer het type in voor het onbekende component");
 		JPanel buttonPanel = new JPanel();
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
-		titel = new JLabel("Voer een naam in voor het geselecteerde component");
 
 		root.add(titel);
-		root.add(naam);
+
+		int i = 0;
+		checkboxes = new JCheckBox[NetworkComponentTypes.getTypes().length];
+		for (NetworkComponentType type : NetworkComponentTypes.getTypes()) {
+			checkboxes[i] = new JCheckBox(type.getName());
+			root.add(checkboxes[i]);
+			i++;
+		}
+
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 		root.add(buttonPanel);
+
 		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
+
 		add(root);
 
 		pack();
@@ -74,31 +78,26 @@ public class naamDialoog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == ok) {
-			try {
-
-				inputNaam = naam.getText().trim();
-				if (!inputNaam.isEmpty()) {
-					selected.setNaam(inputNaam);
+			selected.GetComponentTypes().clear();
+			for (int i = 0; i < checkboxes.length; i++) {
+				if (checkboxes[i].isSelected()) {
+					selected.GetComponentTypes().add(i);
 				}
-				Main.getWindow().getDesignTab().getViewportDesign().repaint();
-				dispose();
-			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
+			dispose();
 		} else {
 			dispose();
 		}
-	}
-
-	public String getinputNaam() {
-		return inputNaam;
 	}
 
 	public NetworkComponent getSelected() {
 		return selected;
 	}
 
-	public void setSelected(NetworkComponent s) {
+	public void setSelected(NetworkComponentUnknown s) {
 		this.selected = s;
+		for (Integer i : selected.GetComponentTypes()) {
+			checkboxes[i].setSelected(true);
+		}
 	}
 }
