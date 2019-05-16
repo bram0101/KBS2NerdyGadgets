@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
+
 /**
  * Optimaliseert het huidige ontwerp door middel van CulledHierarchy
  */
@@ -28,9 +29,17 @@ public class Optimizer {
 
 	/**
 	 * Optimaliseerd het huidige ontwerp
+	 * 
 	 * @param ontwerp: Het huidige ontwerp
 	 */
+	private byte[] bestSolve;
 	public void optimize(NetworkDesign ontwerp) {
-		//TODO
+		Calculator c = new Calculator();
+		c.buildNodeNetwork(ontwerp);
+
+		CulledHierarchy ch = new CulledHierarchy();
+		
+		bestSolve = ch.execute(c.getProblemDefinition(), c, 0.9999F);
+		System.out.println(bestSolve);
 	}
 }

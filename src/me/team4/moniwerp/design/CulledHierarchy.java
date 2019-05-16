@@ -21,6 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 package me.team4.moniwerp.design;
+
+import java.util.concurrent.LinkedTransferQueue;
+
 /**
  * roept de algoritme aan die de ideale infrastructuur berekend.
  */
@@ -29,17 +32,14 @@ public class CulledHierarchy {
 	 * @param probleem de beschikbaarheid
 	 * @return de meest geschikte infrastructuur
 	 */
-	public byte[] execute(int[][] probleem) {
-		// TODO
-		return null;
-	}
-	public SolvedProblem run(Problem problem) {
+	public byte[] execute(int[][] problem, Calculator calculator, float minimumUptime) {
 		// Met bestSolve houden wij bij wat de beste oplossing is. Het is nu
 		// geinitialiseerd naar een oplossing met de hoogste kosten en geen echte solve.
 		// Hiermee hoef je geen rekening te houden met dat bestSolve null kan zijn (want
 		// die zal nooit null meer zijn) en alle echte oplossingen zullen altijd
 		// goedkoper zijn dan Float.MAX.
-		SolvedProblem bestSolve = new SolvedProblem(problem, null, 0F, Float.MAX_VALUE);
+		byte[] bestSolve = null;
+		int bestCosts = Integer.MAX_VALUE;
 		// De queue is een lijst met nodes die wij moeten verwerken. Wij pakken de
 		// eerste node uit de lijst en als wij nodes toevoegen komen die aan het einde
 		// van de lijst. Dit heet FIFO (first-in-first-out). LinkedTransferQueue is
@@ -47,13 +47,13 @@ public class CulledHierarchy {
 		// is dan een normale array of ArrayList.
 		LinkedTransferQueue<Node> queue = new LinkedTransferQueue<Node>();
 		// Voor de snelheid en leesbaarheid slaan wij deze waarde op in een variabele.
-		int listAmount = problem.getProblemDefinition().length;
+		int listAmount = problem.length;
 		// Bouw de offsetlijst op.
 		int totalSolveSize = 0;
 		int[] solveListOffset = new int[listAmount];
-		for (int i = 0; i < problem.getProblemDefinition().length; i++) {
+		for (int i = 0; i < problem.length; i++) {
 			solveListOffset[i] = totalSolveSize;
-			totalSolveSize += problem.getProblemDefinition()[i].length;
+			totalSolveSize += problem[i].length;
 		}
 		// Maak alvast wat variabelen aan.
 		// De huidige node die wij aan het verwerken zijn.
@@ -78,10 +78,9 @@ public class CulledHierarchy {
 		// Hier vinden wij een eerste solve. Dit is nodig voor de score systeem
 		// Zolang de uptime nog niet het minimum heeft berijkt, voeg een
 		// netwerkcomponent toe.
-		while ((uptime = problem.getProblemCalculator().calcUptime(problem, currentComponentsList)) < problem
-				.getMinimumUptime()) {
+		while ((uptime = calculator.calcUptime(currentComponentsList)) < minimumUptime) {
 			// Voeg eentje toe. Eerst bij A, dan bij B, dan bij C
-			currentComponentsList[solveListOffset[j] + (k % problem.getProblemDefinition()[j].length)] += 1;
+			currentComponentsList[solveListOffset[j] + (k % problem[j].length)] += 1;
 			j++;
 			if (j == listAmount) {
 				j = 0;
@@ -89,24 +88,24 @@ public class CulledHierarchy {
 			}
 		}
 		// Maak een solvedproblem aan.
-		bestSolve = new SolvedProblem(problem, currentComponentsList, uptime,
-				problem.getProblemCalculator().calcCost(problem, currentComponentsList));
+		bestSolve = currentComponentsList;
+		bestCosts = calculator.calcCosts(currentComponentsList);
 
 		// Bereken de score voor deze solve.
-		float perfRef = bestSolve.getUptime() / bestSolve.getCost();
+		float perfRef = uptime / bestCosts;
 
 		// Voeg de eerste paar nodes toe.
 		// -1 als component id betekent geen component. Deze zit niet in de lijst van
 		// problemDefinition dus doe voegen wij zo toe.
 		currentComponentsList = new byte[totalSolveSize];
-		queue.add(new Node(0, 0F, currentComponentsList, new boolean[listAmount]));
+		queue.add(new Node(0, 0, currentComponentsList, new boolean[listAmount]));
 		// Ga langs alle mogelijke componenten en voeg die toe aan de queue.
 		i = 0;
-		for (int l : problem.getProblemDefinition()[0]) {
+		for (int l : problem[0]) {
 			currentComponentsList = new byte[totalSolveSize];
 			currentComponentsList[i++] = 1;
 			queue.add(
-					new Node(0, problem.getComponents()[l].getCost(), currentComponentsList, new boolean[listAmount]));
+					new Node(0, NetworkComponentTypes.getTypes()[l].getCosts(), currentComponentsList, new boolean[listAmount]));
 		}
 
 		// Ga door elke node in de queue en verwerk die.
@@ -118,17 +117,18 @@ public class CulledHierarchy {
 		while ((currentNode = queue.poll()) != null) {
 			// Wij zoeken de goedkoopste oplossing, dus als een node even duur of duurder
 			// is, dan kunnen wij hem negeren.
-			if (currentNode.cost >= bestSolve.getCost())
+			if (currentNode.cost >= bestCosts)
 				continue;
 
 			// Bereken de uptime
-			uptime = problem.getProblemCalculator().calcUptime(problem, currentNode.components);
+			uptime = calculator.calcUptime(currentNode.components);
 
 			// Als de uptime het minimuum heeft behaald, dan is dit onze nieuwe beste
 			// oplossing.
 			// Vanwege de if statement hierboven, weten wij al dat de kosten ook later zijn.
-			if (uptime >= problem.getMinimumUptime()) {
-				bestSolve = new SolvedProblem(problem, currentNode.components, uptime, currentNode.cost);
+			if (uptime >= minimumUptime) {
+				bestSolve = currentNode.components;
+				bestCosts = currentNode.cost;
 			} else {
 				// De kosten zijn wel lager, maar de uptime is nog niet bereikt dus we zoeken
 				// verder.
@@ -163,19 +163,19 @@ public class CulledHierarchy {
 				currentEmptyList[(currentNode.depth + 1) % listAmount] = true;
 				queue.add(new Node(currentNode.depth + 1, currentNode.cost, currentNode.components, currentEmptyList));
 
-				// Ga langs de problemDefinition en voeg voor elk component een nieuwe mogelijkheid toe.
-				for (i = 0; i < problem.getProblemDefinition()[(currentNode.depth + 1) % listAmount].length; i++) {
+				// Ga langs de problemDefinition en voeg voor elk component een nieuwe
+				// mogelijkheid toe.
+				for (i = 0; i < problem[(currentNode.depth + 1) % listAmount].length; i++) {
 					currentComponentsList = currentNode.components.clone();
 					currentComponentsList[solveListOffset[(currentNode.depth + 1) % listAmount] + i] += 1;
 					queue.add(new Node(currentNode.depth + 1,
-							currentNode.cost + problem.getComponents()[problem
-									.getProblemDefinition()[(currentNode.depth + 1) % listAmount][i]].getCost(),
+							currentNode.cost + NetworkComponentTypes.getTypes()[problem[(currentNode.depth + 1) % listAmount][i]].getCosts(),
 							currentComponentsList, currentNode.empty));
 				}
 			}
 		}
 		// Als wij een solve hebben gevonden, geef die terug.
-		return bestSolve.getSolve() == null ? null : bestSolve;
+		return bestSolve;
 	}
 
 	private static class Node {
@@ -187,7 +187,7 @@ public class CulledHierarchy {
 		/**
 		 * Hoeveel deze node cost. In dit geval als float, maar had ook int kunnen zijn
 		 */
-		public float cost;
+		public int cost;
 		/**
 		 * Hoeveel componenten deze node heeft.
 		 */
@@ -197,7 +197,7 @@ public class CulledHierarchy {
 		 */
 		public boolean[] empty;
 
-		public Node(int depth, float cost, byte[] components, boolean[] empty) {
+		public Node(int depth, int cost, byte[] components, boolean[] empty) {
 			this.depth = depth;
 			this.cost = cost;
 			this.components = components;

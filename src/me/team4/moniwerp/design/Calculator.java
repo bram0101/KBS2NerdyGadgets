@@ -189,10 +189,12 @@ public class Calculator {
 		for (int i = 0; i < problemDefinition.length; i++) {
 			int k = 0;
 			for (int j = 0; j < problemDefinition[i].length; j++) {
-				k += solve[offsetGrootte[i] + j]; // kijk hoeveel componenten er in problemdefinition staan en gooi deze in "k"
+				k += solve[offsetGrootte[i] + j]; // kijk hoeveel componenten er in problemdefinition staan en gooi deze
+													// in "k"
 			}
-			if(k < 2)
-				return 0F;	// als er minder dan 2 componenten in staan is het netwerk niet redundant, dus return 0
+			if (k < 2)
+				return 0F; // als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
+							// return 0
 		}
 		return getUptime(firstNode, solve);
 	}
@@ -211,6 +213,27 @@ public class Calculator {
 		}
 
 		return costs;
+	}
+	
+	/**
+	 * 
+	 * @param problem Het huidige probleem
+	 * @param solve   De huidige (mogelijke) oplossing
+	 * @return kosten
+	 */
+	public int calcCosts(byte solve[]) {
+		int costs = 0;
+		for (int i = 0; i < problemDefinition.length; i++) {
+			for (int j = 0; j < problemDefinition[i].length; j++) {
+				costs += NetworkComponentTypes.getTypes()[problemDefinition[i][j]].getCosts() * solve[offsetGrootte[i] + j];;
+			}	
+		}
+		return costs;
+	}
+
+
+	public int[][] getProblemDefinition() {
+		return problemDefinition;
 	}
 
 	public static class Node {
