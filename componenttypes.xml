@@ -1,0 +1,10 @@
+<types>
+	<componenttype name="pfSense" costs="2000" uptime="0.99999"></componenttype>
+	<componenttype name="DBloadbalancher" costs="2000" uptime="0.99999"></componenttype>
+	<componenttype name="HAL9001DB" costs="5100" uptime="0.90"></componenttype>
+	<componenttype name="HAL9002DB" costs="7700" uptime="0.95"></componenttype>
+	<componenttype name="HAL9003DB" costs="12200" uptime="0.98"></componenttype>
+	<componenttype name="HAL9001W" costs="2200" uptime="0.80"></componenttype>
+	<componenttype name="HAL9002W" costs="3200" uptime="0.90"></componenttype>
+	<componenttype name="HAL9003W" costs="5100" uptime="0.95"></componenttype>
+</types>
