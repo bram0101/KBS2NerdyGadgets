@@ -28,21 +28,21 @@ import java.util.Map.Entry;
 
 public class TestResult {
 	
-	private HashMap<String, Boolean> results;
+	private HashMap<String, Boolean> results; 
 	
 	public TestResult() {
 		results = new LinkedHashMap<String, Boolean>();
 	}
 	
-	public void addResult(String name, boolean passed) {
+	public void addResult(String name, boolean passed) { // geeft de naam en of het passed of niet en zet dit in de results.txt 
 		results.put(name, passed);
 	}
 	
-	public HashMap<String, Boolean> getResults(){
+	public HashMap<String, Boolean> getResults(){ 
 		return results;
 	}
 	
-	public float passRatio() {
+	public float passRatio() { // zet de waarde om in een percentage
 		float r = 0;
 		for(Entry<String, Boolean> v : results.entrySet()) {
 			if(v.getValue())

@@ -35,9 +35,9 @@ public class NetworkTestLoadBalancer implements NetworkTest {
 
 	@Override
 	public void run(TestResult result) {
-		result.addResult("ping IPv4", NetworkUtils.ping("192.168.20.221"));
+		result.addResult("ping IPv4", NetworkUtils.ping("192.168.20.221")); 
 		result.addResult("ping IPv6", NetworkUtils.ping("[FC00:0:0:20:2000:0:0:1]"));
-		result.addResult("SQL query IPv4", NetworkUtils.sql("192.168.20.221:3306", "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv4", NetworkUtils.sql("192.168.20.221:3306", "monDB", "monitor", "sfcou%345")); //test sql query
 		result.addResult("SQL query IPv6", NetworkUtils.sql("[FC00:0:0:20:2000:0:0:1]:3306", "monDB", "monitor", "sfcou%345"));
 	}
 	

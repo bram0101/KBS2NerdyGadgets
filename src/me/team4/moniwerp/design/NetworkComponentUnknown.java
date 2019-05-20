@@ -22,7 +22,6 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class NetworkComponentUnknown extends NetworkComponent{

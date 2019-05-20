@@ -28,7 +28,7 @@ package me.team4.moniwerp.design;
 public class Optimizer {
 
 	/**
-	 * Optimaliseerd het huidige ontwerp
+	 * Zorgt ervoor dat CulledHierarchy het beste ontwerp kan gebruiken
 	 * 
 	 * @param ontwerp: Het huidige ontwerp
 	 */
@@ -40,6 +40,5 @@ public class Optimizer {
 		CulledHierarchy ch = new CulledHierarchy();
 		
 		bestSolve = ch.execute(c.getProblemDefinition(), c, 0.9999F);
-		System.out.println(bestSolve);
-	}
+		}
 }

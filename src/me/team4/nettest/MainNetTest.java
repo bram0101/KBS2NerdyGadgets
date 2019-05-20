@@ -42,13 +42,14 @@ public class MainNetTest {
 		};
 
 		try {
+			// initialiseren
 			float ratio = 0F;
 			float amt = 0F;
 
 			PrintWriter pw = new PrintWriter(new File("./results.txt"));
 
-			pw.println("====== Starting test at " + LocalDateTime.now() + " ======");
-			for (int i = 0; i < tests.length; i++) {
+			pw.println("====== Starting test at " + LocalDateTime.now() + " ======"); // zet de huidige tijd boven de testresultaten
+			for (int i = 0; i < tests.length; i++) { // loopt door alle netwerkcomponenten  
 				System.out.println(((int) (((float) i) / ((float) tests.length) * 100F)) + "%");
 				pw.println("== TEST: " + tests[i].getName() + " ==");
 
@@ -61,7 +62,7 @@ public class MainNetTest {
 
 				for(Entry<String, Boolean> e : result.getResults().entrySet()) {
 					pw.print("  " + e.getKey());
-					for(int j = 0; j < 32 - e.getKey().length(); j++)
+					for(int j = 0; j < 32 - e.getKey().length(); j++) // zorgt voor padding na de naam, zodat de percentages onder elkaar komen
 						pw.print(" ");
 					pw.print(": " + (e.getValue() ? "PASSED" : "FAILED"));
 					pw.println();
@@ -70,14 +71,13 @@ public class MainNetTest {
 			}
 
 			pw.println();
-			pw.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%");
+			pw.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%"); // de totale percentage
 			pw.println();
 			pw.println();
-			pw.flush();
-			pw.close();
+			pw.flush(); // zet de gegevens daadwerkelijk naar de results.txt
+			pw.close(); // netjes afsluiten
 
-			System.out.println("100.0%");
-			System.out.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%");
+			System.out.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%"); // print de totale percentage
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -35,16 +35,16 @@ public class NetworkTestWeb implements NetworkTest {
 
 	@Override
 	public void run(TestResult result) {
-		String w1_4 = "192.168.10.1";
-		String w1_6 = "[FC00:0:0:10:3000:0:0:1]";
-		String w2_4 = "192.168.10.2";
-		String w2_6 = "[FC00:0:0:10:3000:0:0:2]";
+		String w1_4 = "192.168.10.1"; //ipv4 adres van webserver 1
+		String w1_6 = "[FC00:0:0:10:3000:0:0:1]"; //ipv6 adres van webserver 1
+		String w2_4 = "192.168.10.2"; //ipv4 adres van webserver 2
+		String w2_6 = "[FC00:0:0:10:3000:0:0:2]"; //ipv6 adres van webserver 2
 		
-		result.addResult("ping W1 IPv4", NetworkUtils.ping(w1_4));
+		result.addResult("ping W1 IPv4", NetworkUtils.ping(w1_4)); //ping requests
 		result.addResult("ping W1 IPv6", NetworkUtils.ping(w1_6));
 		result.addResult("ping W2 IPv4", NetworkUtils.ping(w2_4));
 		result.addResult("ping W2 IPv6", NetworkUtils.ping(w2_6));
-		result.addResult("Index W1 IPv4", NetworkUtils.http(w1_4, ""));
+		result.addResult("Index W1 IPv4", NetworkUtils.http(w1_4, "")); //http requests, "" is de standaard pagina
 		result.addResult("Index W1 IPv6", NetworkUtils.http(w1_6, ""));
 		result.addResult("Index W2 IPv4", NetworkUtils.http(w2_4, ""));
 		result.addResult("Index W2 IPv6", NetworkUtils.http(w2_6, ""));

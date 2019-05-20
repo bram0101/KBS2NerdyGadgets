@@ -1,4 +1,4 @@
-====== Starting test at 2019-05-06T12:02:36.346 ======
+====== Starting test at 2019-05-20T13:52:01.044 ======
 == TEST: LocalHost ==
   ping 127.0.0.1                  : PASSED
 
@@ -9,7 +9,7 @@
   ping W2 IPv6                    : FAILED
   Index W1 IPv4                   : PASSED
   Index W1 IPv6                   : FAILED
-  Index W2 IPv4                   : PASSED
+  Index W2 IPv4                   : FAILED
   Index W2 IPv6                   : FAILED
 
 == TEST: DB Loadbalancer ==
@@ -19,6 +19,6 @@
   SQL query IPv6                  : FAILED
 
 
-PASSED: 66%
+PASSED: 62%
 
 
