@@ -72,6 +72,8 @@ public class DataRetriever {
 			if (connection == null) {
 				String DB_URL = "jdbc:mysql://192.168.20.221:3306/monDB"
 						+ "?useLegacyDatetimeCode=false&serverTimezone=UTC";
+				// Als er geen verbinding kan worden gemaakt, stop er dan na 2 seconde.
+				DriverManager.setLoginTimeout(2);
 				connection = DriverManager.getConnection(DB_URL, "monitor", "sfcou%345");
 				// Als het langer dan een seconde duurt, stop er dan mee
 				connection.setNetworkTimeout(new Executor() {
