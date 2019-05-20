@@ -31,8 +31,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,6 +42,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 
 import me.team4.moniwerp.design.TabDesign;
 import me.team4.moniwerp.monitor.TabMonitor;
@@ -119,8 +126,6 @@ public class Window extends JFrame implements ComponentListener {
 
 		// Build the first menu.
 		JMenu menu1 = new JMenu("Bestand");
-		menu1.setMnemonic(KeyEvent.VK_A);
-		menu1.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
 		menuBar.add(menu1);
 
 		// Create menu1 items
@@ -135,8 +140,6 @@ public class Window extends JFrame implements ComponentListener {
 
 		// Build the second menu.
 		JMenu menu2 = new JMenu("Optimaliseer");
-		menu2.setMnemonic(KeyEvent.VK_A);
-		menu2.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
 		menuBar.add(menu2);
 
 		// Create menu2 items
@@ -144,6 +147,16 @@ public class Window extends JFrame implements ComponentListener {
 
 		// Add menu items to menu2
 		menu2.add(m4);
+
+		// Build the second menu.
+		JMenu menu3 = new JMenu("Netwerk testen");
+		menuBar.add(menu3);
+
+		// Create menu3 items
+		JMenuItem m5 = new JMenuItem("Netwerk testen");
+
+		// Add menu items to menu4
+		menu3.add(m5);
 
 		this.setJMenuBar(menuBar);
 
@@ -163,7 +176,6 @@ public class Window extends JFrame implements ComponentListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectedTab.onMenuButton(BUTTON_OPEN);
-
 
 			}
 
@@ -189,6 +201,116 @@ public class Window extends JFrame implements ComponentListener {
 
 		});
 
+		m5.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Maak een venster aan om het resultaat in weer te geven.
+				JFrame resultFrame = new JFrame("Nettest resultaten");
+				resultFrame.setSize(500, 800);
+				// In een textpane voegen wij het resultaat toe.
+				JTextPane textPane = new JTextPane();
+				// Je mag de text niet aanpassen.
+				textPane.setEditable(false);
+				// Een monospace font want dat is mooier.
+				textPane.setFont(new Font("Consolas", Font.PLAIN, 14));
+				// Dark theme
+				textPane.setBackground(new Color(40, 40, 40));
+				// Je moet kunnen scrollen als dat nodig is.
+				JScrollPane sp = new JScrollPane(textPane);
+				resultFrame.add(sp);
+				// Zet er alvast in dat het aan het laden is.
+				textPane.setText("Loading...");
+				// Plaats het venster in het midden van het scherm.
+				resultFrame.setLocationRelativeTo(null);
+				// Geef het venster weer.
+				resultFrame.setVisible(true);
+
+				// Maak wat stijlen aan voor color codes.
+				Style greenStyle = textPane.addStyle("green", null);
+				StyleConstants.setForeground(greenStyle, new Color(40, 230, 40));
+				Style redStyle = textPane.addStyle("red", null);
+				StyleConstants.setForeground(redStyle, new Color(230, 40, 40));
+				Style normalStyle = textPane.addStyle("red", null);
+				StyleConstants.setForeground(normalStyle, new Color(230, 230, 230));
+
+				// Als het venster van grootte verandert, willen wij ook de textgrootte
+				// aanpassen.
+				textPane.addComponentListener(new ComponentListener() {
+
+					@Override
+					public void componentResized(ComponentEvent e) {
+						textPane.setFont(new Font("Consolas", Font.PLAIN, textPane.getWidth() / 36));
+					}
+
+					@Override
+					public void componentMoved(ComponentEvent e) {
+					}
+
+					@Override
+					public void componentShown(ComponentEvent e) {
+					}
+
+					@Override
+					public void componentHidden(ComponentEvent e) {
+					}
+
+				});
+
+				// Zeg tegen Swing dat de code later moet worden uitgevoerd, dan heeft swing de
+				// tijd om het venster alvast weer te geven.
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						BufferedReader br = null;
+						try {
+							// Voer de test uit.
+							me.team4.nettest.MainNetTest.main(new String[] {});
+							// Lees het resultatenbestand
+							br = new BufferedReader(new FileReader(new File("./results.txt")));
+							StringBuilder sb = new StringBuilder();
+							String s = "";
+							// Maak de textpane leeg.
+							textPane.getStyledDocument().remove(0, textPane.getStyledDocument().getLength());
+							// Lees regel voor regel de text.
+							// Afhankelijk van wat in de regel staat geven wij het een bepaalde stijl.
+							while ((s = br.readLine()) != null) {
+								if (s.contains(": PASSED")) {
+									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
+											s, greenStyle);
+								} else if (s.contains(": FAILED")) {
+									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
+											s, redStyle);
+								} else {
+									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
+											s, normalStyle);
+								}
+								textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
+										"\n", normalStyle);
+							}
+							br.close();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							textPane.setText("Er is iets fout gegaan tijdens de test. Probeer het later opnieuw.");
+						} finally {
+							// Sluit de inputstream, want anders dan blijft het bestand geopent en kunnen
+							// andere programma's er niks mee doen. De testscripts kunnen dan zelfs niet
+							// meer zijn resultaten in het bestand schrijven.
+							try {
+								if (br != null)
+									br.close();
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+					}
+
+				});
+			}
+
+		});
+
 		// Maakt de knop Monitor aan.
 		butMonitor = new JButton("Monitor") {
 			/**
@@ -204,20 +326,19 @@ public class Window extends JFrame implements ComponentListener {
 				//
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Monitor", g);
 				// Als de knop is geselecteerd word er een lichtere kleur gegeven.
-				if (selectedTab == monTab){
+				if (selectedTab == monTab) {
 					g.setColor(new Color(147, 188, 255));
-				}else {
-					g.setColor(new Color(114,134,165));
+				} else {
+					g.setColor(new Color(114, 134, 165));
 				}
 				//
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
-                g.setColor(Color.black);
-                // Een berekening om de tekst te centreren in de knop.
-                int h = butMonitor.getHeight()/2;
-                int b = butMonitor.getWidth()/2;
+				g.setColor(Color.black);
+				// Een berekening om de tekst te centreren in de knop.
+				int h = butMonitor.getHeight() / 2;
+				int b = butMonitor.getWidth() / 2;
 				g.drawString("Monitor", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
 			}
-
 
 		};
 
@@ -225,7 +346,8 @@ public class Window extends JFrame implements ComponentListener {
 		butMonitor.addActionListener(new ActionListener() {
 
 			@Override
-			// Maakt selectedTab gelijk aan monTab, verwijderd alles wat is getekend en voegt monTab toe.
+			// Maakt selectedTab gelijk aan monTab, verwijderd alles wat is getekend en
+			// voegt monTab toe.
 			public void actionPerformed(ActionEvent e) {
 				selectedTab = monTab;
 				tabPanel.removeAll();
@@ -251,27 +373,28 @@ public class Window extends JFrame implements ComponentListener {
 				//
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds("Ontwerpen", g);
 				// Als de knop is geselecteerd word er een lichtere kleur gegeven.
-				if (selectedTab == designTab){
+				if (selectedTab == designTab) {
 					g.setColor(new Color(147, 188, 255));
-				}else {
-					g.setColor(new Color(114,134,165));
+				} else {
+					g.setColor(new Color(114, 134, 165));
 				}
 				//
 				g.fillRect(0, 0, g.getClipBounds().width, g.getClipBounds().height);
 				g.setColor(Color.black);
 				// Een berekening om de tekst te centreren in de knop.
-                int h = butOntwerpen.getHeight()/2;
-                int b = butOntwerpen.getWidth()/2;
+				int h = butOntwerpen.getHeight() / 2;
+				int b = butOntwerpen.getWidth() / 2;
 				g.drawString("Ontwerpen", (int) (b - textBounds.getCenterX()), (int) (h - textBounds.getCenterY()));
 
-		    }
+			}
 		};
 
 		// Voegt functies toe aan de knop Monitor.
 		butOntwerpen.addActionListener(new ActionListener() {
 
 			@Override
-			// Maakt selectedTab gelijk aan designTab, verwijderd alles wat is getekend en voegt designTab toe.
+			// Maakt selectedTab gelijk aan designTab, verwijderd alles wat is getekend en
+			// voegt designTab toe.
 			public void actionPerformed(ActionEvent e) {
 				selectedTab = designTab;
 				tabPanel.removeAll();
@@ -291,12 +414,12 @@ public class Window extends JFrame implements ComponentListener {
 	@Override
 	public void componentResized(ComponentEvent e) {
 
-		butMonitor.setPreferredSize(new Dimension(root.getWidth()/2,60));
-		butOntwerpen.setPreferredSize(new Dimension(root.getWidth()/2,60));
+		butMonitor.setPreferredSize(new Dimension(root.getWidth() / 2, 60));
+		butOntwerpen.setPreferredSize(new Dimension(root.getWidth() / 2, 60));
 
 		// Zeg tegen het tabblad dat de layout opnieuw moet worden gedaan.
-		monTab.onResizeTab(root.getWidth(), root.getHeight()-60);
-		designTab.onResizeTab(root.getWidth(), root.getHeight()-60);
+		monTab.onResizeTab(root.getWidth(), root.getHeight() - 60);
+		designTab.onResizeTab(root.getWidth(), root.getHeight() - 60);
 		// Zeg tegen AWT/Swing dat de layout is aangepast en forceer een update.
 		tabPanel.revalidate();
 	}
