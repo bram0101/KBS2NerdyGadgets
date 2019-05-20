@@ -62,16 +62,6 @@ public class NetworkTestpfSense implements NetworkTest{
 		result.addResult("ping pfSense HAproxy IPv6", NetworkUtils.ping(pfSense_6_HAproxy));
 		result.addResult("pfSense2", null);
 		
-		// Https test op pfSense voor de beschikbaarheid van de webgui en voeg resultaten toe aan log file.
-		// Is cert voor nodig kan pas aan gezet worden als dat er is.
-		//result.addResult("HTTPS pfSense IPv4", NetworkUtils.https(pfSense_4_1, ""));
-		//result.addResult("HTTPS pfSense IPv4", NetworkUtils.https(pfSense_4_2, ""));
-		//result.addResult("HTTPS pfSense IPv4", NetworkUtils.https(pfSense_4_3, ""));
-		//result.addResult("HTTPS pfSense IPv6", NetworkUtils.https(pfSense_6_1, ""));
-		//result.addResult("HTTPS pfSense IPv6", NetworkUtils.https(pfSense_6_2, ""));
-		//result.addResult("HTTPS pfSense IPv6", NetworkUtils.https(pfSense_6_3, ""));
-		//result.addResult("pfSense3", null);
-		
 		// HAproxy HTTP test die op pfSense draait en voeg resultaten toe aan log file.
 		result.addResult("HTTP pfSense HAproxy IPv4", NetworkUtils.ping(pfSense_4_HAproxy));
 		result.addResult("HTTP pfSense HAproxy IPv6", NetworkUtils.ping(pfSense_6_HAproxy));

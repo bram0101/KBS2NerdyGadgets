@@ -44,11 +44,14 @@ public class TestResult {
 	
 	public float passRatio() {
 		float r = 0;
+		int amt = 0;
 		for(Entry<String, Boolean> v : results.entrySet()) {
 			if(v.getValue() != null && v.getValue() == true)
 				r += 1.0f;
+			if(v.getValue() != null)
+				amt++;
 		}
-		return r /= results.size();
+		return r / amt;
 	}
 	
 }
