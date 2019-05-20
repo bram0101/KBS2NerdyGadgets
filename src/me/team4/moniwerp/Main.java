@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import me.team4.moniwerp.design.NetworkComponentTypes;
 import me.team4.moniwerp.io.DataRetriever;
 
 public class Main {
@@ -54,6 +55,7 @@ public class Main {
 			public void run() {
 				// Haal alvast een groot deel van de data uit de database server. Dit kan lang
 				// duren, daar is de splashscreen voor.
+				NetworkComponentTypes.load();
 				DataRetriever.getInstance().poll();
 				// Maak een venster aan en geef het weer.
 				window = new Window();
