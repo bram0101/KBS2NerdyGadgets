@@ -104,6 +104,7 @@ public class ViewportDesign extends JPanel
 		addMouseWheelListener(this);
 		addMouseMotionListener(this);
 
+		//er word geluisterd of de combinatie van ctrl en z word gebruikt
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_MASK), "undo");
 		getActionMap().put("undo", new AbstractAction() {
 
@@ -113,6 +114,7 @@ public class ViewportDesign extends JPanel
 			}
 
 		});
+		//er word geluisterd of de combinatie van ctrl en y word gebruikt
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_MASK), "redo");
 		getActionMap().put("redo", new AbstractAction() {
 
@@ -123,12 +125,14 @@ public class ViewportDesign extends JPanel
 
 		});
 		
+		//zorgt dat er om een specifieke tijd de kosten en uptime word berekend van het gehele netwerk ontwerp
 		Timer t = new Timer();
 		t.scheduleAtFixedRate(new TimerTask() {			
 			@Override
 			public void run() {
 				Calculator c = new Calculator();
 				kosten  = c.calcCosts(design);
+				//we doen het maal 100 zodat we een percentage hebben van de uptime
 				uptime = c.calcUptime(design) * 100;
 			}
 		}, 2000, 2000);
@@ -138,12 +142,16 @@ public class ViewportDesign extends JPanel
 	/**
 	 * redo knop: Je undo undo-en :)
 	 */
+	//de functie voor de redo van een aanpassing die je hebt gemaakt van het netwerk ontwerp
 	public void redo() {
 		if (redoQueue.isEmpty())
 			return;
+		// wanneer de functie word aangeroepen word de eerste record verwijderd 
 		NetworkDesign design = redoQueue.removeFirst();
+		// er word een kopie gemaakt van het huidige ontwerp en word toegevoegd aan de queue
 		NetworkDesign undoDesign = copyDesign(this.design);
 		this.design = design;
+		//een maximale aantal ban 10 onderdelen die je kan redo-en
 		undoQueue.addFirst(undoDesign);
 		if (undoQueue.size() > 10) {
 			undoQueue.removeLast();
@@ -154,12 +162,16 @@ public class ViewportDesign extends JPanel
 	/**
 	 * undo knop: een stap terug
 	 */
+	//de functie voor de undo van een aanpassing die je hebt gemaakt van het netwerk ontwerp
 	public void undo() {
 		if (undoQueue.isEmpty())
 			return;
+		// wanneer de functie word aangeroepen word de eerste record verwijderd 
 		NetworkDesign design = undoQueue.removeFirst();
+		// er word een kopie gemaakt van het huidige ontwerp en word toegevoegd aan de queue
 		NetworkDesign redoDesign = copyDesign(this.design);
 		this.design = design;
+		//een maximale aantal ban 10 onderdelen die je kan undo-en
 		redoQueue.addFirst(redoDesign);
 		if (redoQueue.size() > 10) {
 			redoQueue.removeLast();
@@ -376,17 +388,20 @@ public class ViewportDesign extends JPanel
 	public void mouseClicked(MouseEvent e) {
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
-
+		// er word gekeken of de linker klik is gedubbelklikked en of het niet op het kanvas is
 		if ((e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) && !e.isConsumed() && !isPanning) {
+			// er word gekeken of het gedubbleklikde een onbekende netwerkcomponent is
 			if (selected instanceof NetworkComponentUnknown) {
+				// er word een dialog geopent waarmee ja kan aangeven welke componenten eraan kunnen zitten
 				typeDialoog tD = new typeDialoog(frame);
 				tD.setSelected((NetworkComponentUnknown) selected);
 			} else {
+				// hij laat een dialog zien waarmee je de naam van een netwerkcomponenet kan veranderen
 				naamDialoog nD = new naamDialoog(frame);
 				nD.setSelected(selected);
 			}
 		}
-
+		// er word gekeken of er op de linker klik is gedrukt en of er het niet op het kanvas is
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (!isPanning) {
 				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
@@ -499,7 +514,7 @@ public class ViewportDesign extends JPanel
 						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
 						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale);
 					} else {
-						// Nar rechts toe
+						// Naar rechts toe
 						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
 						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale);
 
@@ -544,6 +559,7 @@ public class ViewportDesign extends JPanel
 	}
 
 	@Override
+	// 
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if (isPanning) {
