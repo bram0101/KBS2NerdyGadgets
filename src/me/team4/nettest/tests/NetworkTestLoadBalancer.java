@@ -35,10 +35,29 @@ public class NetworkTestLoadBalancer implements NetworkTest {
 
 	@Override
 	public void run(TestResult result) {
-		result.addResult("ping IPv4", NetworkUtils.ping("192.168.20.221"));
-		result.addResult("ping IPv6", NetworkUtils.ping("[FC00:0:0:20:2000:0:0:1]"));
-		result.addResult("SQL query IPv4", NetworkUtils.sql("192.168.20.221:3306", "monDB", "monitor", "sfcou%345"));
-		result.addResult("SQL query IPv6", NetworkUtils.sql("[FC00:0:0:20:2000:0:0:1]:3306", "monDB", "monitor", "sfcou%345"));
+		
+		// Variabelen IPv4.
+		String LB1_4 = "192.168.20.221";
+		String DB1_4 = "192.168.20.1:3306";
+		String DB2_4 = "192.168.20.2:3306";
+				
+		// Variabelen IPv6.
+		String LB1_6 = "[FC00:0:0:20:2000:0:0:1]:3306";
+		String DB1_6 = "[FC00:0:0:20:3000:0:0:1]:3306";
+		String DB2_6 = "[FC00:0:0:20:3000:0:0:2]:3306";
+		
+		// LoadBalancer ping test op IPv4 en IPv6 en voeg resultaten toe aan log file.
+		result.addResult("ping LB1 IPv4", NetworkUtils.ping(LB1_4));
+		result.addResult("ping LB1 IPv6", NetworkUtils.ping("[FC00:0:0:20:2000:0:0:1]"));
+		result.addResult("LB1", null);
+		
+		// LoadBalancer en Database servers SQL query test en voeg resultaten toen aan log file.
+		result.addResult("SQL query IPv4 LB1", NetworkUtils.sql(LB1_4+":3306", "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv4 DB1", NetworkUtils.sql(DB1_4, "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv4 DB2", NetworkUtils.sql(DB2_4, "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv6 LB1", NetworkUtils.sql(LB1_6, "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv6 DB1", NetworkUtils.sql(DB1_6, "monDB", "monitor", "sfcou%345"));
+		result.addResult("SQL query IPv6 DB2", NetworkUtils.sql(DB2_6, "monDB", "monitor", "sfcou%345"));
 	}
 	
 }

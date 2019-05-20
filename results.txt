@@ -1,24 +1,50 @@
-====== Starting test at 2019-05-06T12:02:36.346 ======
+====== Starting test at 2019-05-15T09:39:18.922460200 ======
 == TEST: LocalHost ==
   ping 127.0.0.1                  : PASSED
 
 == TEST: Webdirect ==
   ping W1 IPv4                    : PASSED
-  ping W1 IPv6                    : FAILED
   ping W2 IPv4                    : PASSED
+  ping W1 IPv6                    : FAILED
   ping W2 IPv6                    : FAILED
-  Index W1 IPv4                   : PASSED
-  Index W1 IPv6                   : FAILED
-  Index W2 IPv4                   : PASSED
-  Index W2 IPv6                   : FAILED
+
+  HTTP W1 IPv4                    : PASSED
+  HTTP W2 IPv4                    : PASSED
+  HTTP W1 IPv6                    : FAILED
+  HTTP W2 IPv6                    : FAILED
 
 == TEST: DB Loadbalancer ==
-  ping IPv4                       : PASSED
-  ping IPv6                       : FAILED
-  SQL query IPv4                  : PASSED
-  SQL query IPv6                  : FAILED
+  ping LB1 IPv4                   : PASSED
+  ping LB1 IPv6                   : FAILED
+
+  SQL query IPv4 LB1              : PASSED
+  SQL query IPv4 DB1              : PASSED
+  SQL query IPv4 DB2              : PASSED
+  SQL query IPv6 LB1              : FAILED
+  SQL query IPv6 DB1              : FAILED
+  SQL query IPv6 DB2              : FAILED
+
+== TEST: pfSense ==
+  ping pfSense IPv4 1             : PASSED
+  ping pfSense IPv4 2             : PASSED
+  ping pfSense IPv4 3             : PASSED
+  ping pfSense IPv6 1             : FAILED
+  ping pfSense IPv6 2             : FAILED
+  ping pfSense IPv6 3             : FAILED
+
+  ping pfSense HAproxy IPv4       : PASSED
+  ping pfSense HAproxy IPv6       : FAILED
+
+  HTTP pfSense HAproxy IPv4       : PASSED
+  HTTP pfSense HAproxy IPv6       : FAILED
+
+== TEST: DBdirect ==
+  ping DB1 IPv4                   : PASSED
+  ping DB2 IPv4                   : PASSED
+  ping DB1 IPv6                   : FAILED
+  ping DB2 IPv6                   : FAILED
 
 
-PASSED: 66%
+PASSED: 56%
 
 

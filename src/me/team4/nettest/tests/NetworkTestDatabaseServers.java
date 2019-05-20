@@ -20,38 +20,34 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package me.team4.nettest;
+package me.team4.nettest.tests;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import me.team4.nettest.NetworkTest;
+import me.team4.nettest.NetworkUtils;
+import me.team4.nettest.TestResult;
 
-public class TestResult {
+public class NetworkTestDatabaseServers implements NetworkTest{
 	
-	private HashMap<String, Boolean> results;
-	
-	public TestResult() {
-		results = new LinkedHashMap<String, Boolean>();
+	@Override
+	public String getName(){
+		return "DBdirect";
 	}
 	
-	public void addResult(String name, Boolean passed) {
-		results.put(name, passed);
+	@Override
+	public void run(TestResult result) {
+		
+		// Variabelen IPv4.
+		String DB1_4 = "192.168.20.1";
+		String DB2_4 = "192.168.20.2";
+		
+		// Variabelen IPv6.
+		String DB1_6 = "[FC00:0:0:20:3000:0:0:1]";
+		String DB2_6 = "[FC00:0:0:20:3000:0:0:2]";
+		
+		// Database servers ping tests op IPv4 en IPv6 en voeg resultaten toe aan log file.
+		result.addResult("ping DB1 IPv4", NetworkUtils.ping(DB1_4));
+		result.addResult("ping DB2 IPv4", NetworkUtils.ping(DB2_4));
+		result.addResult("ping DB1 IPv6", NetworkUtils.ping(DB1_6));
+		result.addResult("ping DB2 IPv6", NetworkUtils.ping(DB2_6));
 	}
-	
-	public HashMap<String, Boolean> getResults(){
-		return results;
-	}
-	
-	public float passRatio() {
-		float r = 0;
-		int amt = 0;
-		for(Entry<String, Boolean> v : results.entrySet()) {
-			if(v.getValue() != null && v.getValue() == true)
-				r += 1.0f;
-			if(v.getValue() != null)
-				amt++;
-		}
-		return r / amt;
-	}
-	
 }
