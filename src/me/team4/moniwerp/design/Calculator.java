@@ -77,7 +77,6 @@ public class Calculator {
 			Node n = queue.removeFirst(); // verwijder de eerste node uit de queue, (je verwerkt hem nog wel!!!)
 			for (int j = 0; j < con.size(); j++) { // kijk voor elke connectie of het de eerste is.
 				if (con.get(j).getFirst() == n.comp) {
-					System.out.println(n.comp.getNaam() + ":" + con.get(j).getSecond().getNaam());
 					if (loopCheck.contains(con.get(j).getSecond()) == false) { // kijkt of de connectie juist is, je kan
 																				// bijv. geen connectie van node 5 naar
 																				// 3 maken.
@@ -112,7 +111,10 @@ public class Calculator {
 				}
 			}
 		}
-		problemDefinition = (int[][]) problemDefinitionTemp.toArray();
+		problemDefinition = new int[1][problemDefinitionTemp.size()];
+		for(int i = 0; i < problemDefinitionTemp.size(); i++) {
+			problemDefinition[i] = problemDefinitionTemp.get(i);
+		}
 		offsetGrootte = new int[problemDefinition.length]; // Zet de offsets voor de solve, om het makkelijker te maken
 															// om de solve[] te gebruiken.
 		int i = 0;
@@ -234,6 +236,10 @@ public class Calculator {
 
 	public int[][] getProblemDefinition() {
 		return problemDefinition;
+	}
+	
+	public int[] getOffsetGrootte() {
+		return offsetGrootte;
 	}
 
 	public static class Node {
