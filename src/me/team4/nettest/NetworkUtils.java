@@ -25,9 +25,18 @@ package me.team4.nettest;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 public class NetworkUtils {
 
@@ -44,13 +53,32 @@ public class NetworkUtils {
 
 	public static boolean http(String ip, String file) {
 		try {
-			URL url = new URL("http://" + ip + "/" + file);
+			//De SSL certificaten van de webservers worden niet ondersteund, dus hiermee schakelen wij de SSL check uit.
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){ 
+                public boolean verify(String hostname, SSLSession session) { 
+                        return true; 
+                }}); 
+			SSLContext context = SSLContext.getInstance("TLS"); 
+            context.init(null, new X509TrustManager[]{new X509TrustManager(){ 
+                    public void checkClientTrusted(X509Certificate[] chain, 
+                                    String authType) throws CertificateException {} 
+                    public void checkServerTrusted(X509Certificate[] chain, 
+                                    String authType) throws CertificateException {} 
+                    public X509Certificate[] getAcceptedIssuers() { 
+                            return new X509Certificate[0]; 
+                    }}}, new SecureRandom()); 
+            HttpsURLConnection.setDefaultSSLSocketFactory( 
+                            context.getSocketFactory()); 
+            // Maak de URL
+			URL url = new URL("https://" + ip + "/" + file);
+			// Maak een verbinding.
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET"); 
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
 			con.setInstanceFollowRedirects(true); // staat redirects toe
-
+			con.connect();
+			
 			int status = con.getResponseCode();
 
 			if (status == 200) // 200 = OK

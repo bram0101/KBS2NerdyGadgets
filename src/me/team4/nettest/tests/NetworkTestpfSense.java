@@ -63,7 +63,7 @@ public class NetworkTestpfSense implements NetworkTest{
 		result.addResult("pfSense2", null);
 		
 		// HAproxy HTTP test die op pfSense draait en voeg resultaten toe aan log file.
-		result.addResult("HTTP pfSense HAproxy IPv4", NetworkUtils.ping(pfSense_4_HAproxy));
-		result.addResult("HTTP pfSense HAproxy IPv6", NetworkUtils.ping(pfSense_6_HAproxy));
+		result.addResult("HTTP pfSense HAproxy IPv4", NetworkUtils.http(pfSense_4_HAproxy, ""));
+		result.addResult("HTTP pfSense HAproxy IPv6", NetworkUtils.http(pfSense_6_HAproxy, ""));
 	}
 }

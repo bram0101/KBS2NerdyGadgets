@@ -1,11 +1,11 @@
-====== Starting test at 2019-05-20T14:19:10.043 ======
+====== Starting test at 2019-05-20T15:59:26.549 ======
 == TEST: LocalHost ==
   ping 127.0.0.1                  : PASSED
 
 == TEST: Webdirect ==
   ping W1 IPv4                    : PASSED
-  ping W2 IPv4                    : PASSED
   ping W1 IPv6                    : FAILED
+  ping W2 IPv4                    : PASSED
   ping W2 IPv6                    : FAILED
 
   HTTP W1 IPv4                    : PASSED
@@ -46,3 +46,5 @@
 
 
 PASSED: 60%
+
+
