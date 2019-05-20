@@ -37,9 +37,9 @@ public class NetworkComponentTypes {
 	 */
 	public static NetworkComponentType[] getTypes() {
 		return new NetworkComponentType[] {
-				new NetworkComponentType("Database", 1000, 0.9F),
-				new NetworkComponentType("Webserver", 1500, 5.9F),
-				new NetworkComponentType("pfSense", 2000, 10.9F),
+				new NetworkComponentType("Database", 1000, 0.95F),
+				new NetworkComponentType("Webserver", 1500, 0.9F),
+				new NetworkComponentType("pfSense", 2000, 0.9F),
 		};
 	}
 	/**

@@ -36,6 +36,7 @@ public class Calculator {
 	private Node firstNode;
 	private int[][] problemDefinition;
 	private int[] offsetGrootte;
+	private int minComponents = 1;
 
 	public void buildNodeNetwork(NetworkDesign design) {
 		byte id = 0;
@@ -54,10 +55,10 @@ public class Calculator {
 			} // Dit is dus de eerste node
 			if (found == true) {
 				// Kijk of het Netwerkcomponent bekend is.
-				if (comp instanceof NetworkComponentUnknown) {
+				if (comp.get(i) instanceof NetworkComponentUnknown) {
 
 					firstNode = new Node(comp.get(i), id);
-					NetworkComponentUnknown compunknown = (NetworkComponentUnknown) comp;
+					NetworkComponentUnknown compunknown = (NetworkComponentUnknown) comp.get(i);
 					int[] types = new int[compunknown.GetComponentTypes().size()];
 					for (int j = 0; j < types.length; j++)
 						types[j] = compunknown.GetComponentTypes().get(j);
@@ -81,11 +82,11 @@ public class Calculator {
 																				// bijv. geen connectie van node 5 naar
 																				// 3 maken.
 
-						if (comp instanceof NetworkComponentUnknown) {
+						if (con.get(j).getSecond() instanceof NetworkComponentUnknown) {
 							// als het component onbekend is, voeg hem toe aan types array, zodat deze later
 							// verwerkt kunnen worden.
 							Node o = new Node(con.get(j).getSecond(), id);
-							NetworkComponentUnknown compunknown = (NetworkComponentUnknown) comp;
+							NetworkComponentUnknown compunknown = (NetworkComponentUnknown) con.get(j).getSecond();
 							int[] types = new int[compunknown.GetComponentTypes().size()];
 
 							for (int k = 0; k < types.length; k++)
@@ -111,7 +112,7 @@ public class Calculator {
 				}
 			}
 		}
-		problemDefinition = new int[1][problemDefinitionTemp.size()];
+		problemDefinition = new int[problemDefinitionTemp.size()][1];
 		for(int i = 0; i < problemDefinitionTemp.size(); i++) {
 			problemDefinition[i] = problemDefinitionTemp.get(i);
 		}
@@ -194,7 +195,7 @@ public class Calculator {
 				k += solve[offsetGrootte[i] + j]; // kijk hoeveel componenten er in problemdefinition staan en gooi deze
 													// in "k"
 			}
-			if (k < 2)
+			if (k < minComponents)
 				return 0F; // als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
 							// return 0
 		}
@@ -240,6 +241,10 @@ public class Calculator {
 	
 	public int[] getOffsetGrootte() {
 		return offsetGrootte;
+	}
+
+	public void setMinComponents(int minComponents) {
+		this.minComponents = minComponents;
 	}
 
 	public static class Node {

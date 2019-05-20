@@ -41,16 +41,19 @@ public class MoniWerpTest {
 		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.8F, 40, 55);
 		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9F, 40, 65);
 		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.99999F, 40, 40);
-		NetworkComponent db1 = new NetworkComponentUnknown("DB1", "Database server", 1000, 0.9F, 80, 35, Arrays.asList(1));
-		design.getComponents().add(pfSense);
-		design.getComponents().add(w1);
-		design.getComponents().add(w2);
-		design.getComponents().add(lb);
+		NetworkComponent ws1 = new NetworkComponentUnknown("DB1", "Database server", 1000, 0.9F, 80, 35, Arrays.asList(1));
+		NetworkComponent db1 = new NetworkComponentUnknown("DB1", "Database server", 1000, 0.9F, 80, 35, Arrays.asList(0));
+		//design.getComponents().add(pfSense);
+		//design.getComponents().add(w1);
+		//design.getComponents().add(w2);
+		//design.getComponents().add(lb);
 		design.getComponents().add(db1);
-		design.getConnections().add(new NetworkConnection(pfSense, w1));
-		design.getConnections().add(new NetworkConnection(pfSense, w2));
-		design.getConnections().add(new NetworkConnection(pfSense, lb));
-		design.getConnections().add(new NetworkConnection(lb, db1));
+		design.getComponents().add(ws1);
+		//design.getConnections().add(new NetworkConnection(pfSense, w1));
+		//design.getConnections().add(new NetworkConnection(pfSense, w2));
+		//design.getConnections().add(new NetworkConnection(pfSense, lb));
+		//design.getConnections().add(new NetworkConnection(lb, db1));
+		design.getConnections().add(new NetworkConnection(ws1, db1));
 		design.calcBounds();
 		
 		Calculator calc = new Calculator();
@@ -58,10 +61,11 @@ public class MoniWerpTest {
 		CulledHierarchy ch = new CulledHierarchy();
 		for(int[] l : calc.getProblemDefinition()) {
 			for(int i : l) {
-				
+				System.out.println(NetworkComponentTypes.getTypes()[i].getName());
 			}
+			System.out.println();
 		}
-		byte[] solve = ch.execute(calc.getProblemDefinition(), calc, 0.9999F);
+		byte[] solve = ch.execute(calc.getProblemDefinition(), calc, 0.999F);
 		
 		System.out.println("Kosten: " + calc.calcCosts(solve));
 		System.out.println("Uptime: " + calc.calcUptime(solve));
