@@ -121,8 +121,8 @@ public class TabDesign extends JPanel implements Tab {
 	public void onResizeTab(int width, int height) {
 		// Geef de componenten hun nieuwe grootte.
 		setPreferredSize(new Dimension(width, height));
-		toolbar.setPreferredSize(new Dimension(96, height));
-		viewport.setPreferredSize(new Dimension(width - 96, height));
-		toolbar.onResize(96, height);
+		toolbar.setPreferredSize(new Dimension(144, height));
+		viewport.setPreferredSize(new Dimension(width - 144, height));
+		toolbar.onResize(144, height);
 	}
 }
