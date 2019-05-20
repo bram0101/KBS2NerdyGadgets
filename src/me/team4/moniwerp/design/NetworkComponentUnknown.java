@@ -22,23 +22,18 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
-/**
- * Optimaliseert het huidige ontwerp door middel van CulledHierarchy
- */
-public class Optimizer {
+import java.util.List;
 
-	/**
-	 * Zorgt ervoor dat CulledHierarchy het beste ontwerp kan gebruiken
-	 * 
-	 * @param ontwerp: Het huidige ontwerp
-	 */
-	private byte[] bestSolve;
-	public void optimize(NetworkDesign ontwerp) {
-		Calculator c = new Calculator();
-		c.buildNodeNetwork(ontwerp);
-
-		CulledHierarchy ch = new CulledHierarchy();
-		
-		bestSolve = ch.execute(c.getProblemDefinition(), c, 0.9999F);
-		}
+public class NetworkComponentUnknown extends NetworkComponent{
+	
+	private List<Integer> ComponentTypes;
+	
+	public NetworkComponentUnknown(String naam, String type, int costs, float uptime, int xLoc, int yLoc, List ComponentTypes) {
+		super(naam, type, costs, uptime, xLoc, yLoc);
+		this.ComponentTypes = ComponentTypes;
+	}
+	
+	public List<Integer> GetComponentTypes(){
+		return ComponentTypes;
+	}
 }

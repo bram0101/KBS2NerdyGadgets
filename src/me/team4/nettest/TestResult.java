@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,22 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 public class TestResult {
-	
+
 	private HashMap<String, Boolean> results;
-	
+
 	public TestResult() {
 		results = new LinkedHashMap<String, Boolean>();
 	}
-	
+
 	public void addResult(String name, Boolean passed) {
 		results.put(name, passed);
 	}
-	
+
 	public HashMap<String, Boolean> getResults(){
 		return results;
 	}
-	
-	public float passRatio() {
+
+	public float passRatio() { // zet de waarde om in een percentage
 		float r = 0;
 		int amt = 0;
 		for(Entry<String, Boolean> v : results.entrySet()) {
@@ -53,5 +53,5 @@ public class TestResult {
 		}
 		return r / amt;
 	}
-	
+
 }

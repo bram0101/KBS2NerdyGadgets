@@ -34,7 +34,7 @@ public class NetworkUtils {
 	public static boolean ping(String ip) {
 		try {
 			InetAddress inet = InetAddress.getByName(ip);
-			if (inet.isReachable(5000))
+			if (inet.isReachable(5000)) // kijkt of er binnen 5 seconden reactie is
 				return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -46,14 +46,14 @@ public class NetworkUtils {
 		try {
 			URL url = new URL("http://" + ip + "/" + file);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
+			con.setRequestMethod("GET"); 
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);
-			con.setInstanceFollowRedirects(true);
+			con.setInstanceFollowRedirects(true); // staat redirects toe
 
 			int status = con.getResponseCode();
 
-			if (status == 200)
+			if (status == 200) // 200 = OK
 				return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();

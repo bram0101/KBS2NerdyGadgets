@@ -35,7 +35,7 @@ public class NetworkTestLocalHost implements NetworkTest{
 
 	@Override
 	public void run(TestResult result) {
-		result.addResult("ping 127.0.0.1", NetworkUtils.ping("127.0.0.1"));
+		result.addResult("ping 127.0.0.1", NetworkUtils.ping("127.0.0.1")); //ping localhost
 	}
 
 }

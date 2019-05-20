@@ -22,15 +22,57 @@ SOFTWARE.
 */
 package test.me.team4.moniwerp;
 
-import me.team4.moniwerp.io.DataRetriever;
+import java.util.Arrays;
+
+import me.team4.moniwerp.design.Calculator;
+import me.team4.moniwerp.design.CulledHierarchy;
+import me.team4.moniwerp.design.NetworkComponent;
+import me.team4.moniwerp.design.NetworkComponentTypes;
+import me.team4.moniwerp.design.NetworkComponentUnknown;
+import me.team4.moniwerp.design.NetworkConnection;
+import me.team4.moniwerp.design.NetworkDesign;
 
 public class MoniWerpTest {
 	
 	public static void main(String[] args) {
-		DataRetriever.getInstance().poll();
+		NetworkDesign design = new NetworkDesign();
+		// In dit geval hardcoded een ontwerp
+		NetworkComponent pfSense = new NetworkComponent("pfSense", "firewall", 1000, 0.99999F, 0, 50);
+		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.8F, 40, 55);
+		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9F, 40, 65);
+		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.99999F, 40, 40);
+		NetworkComponent ws1 = new NetworkComponentUnknown("DB1", "Database server", 1000, 0.9F, 80, 35, Arrays.asList(1));
+		NetworkComponent db1 = new NetworkComponentUnknown("DB1", "Database server", 1000, 0.9F, 80, 35, Arrays.asList(0));
+		//design.getComponents().add(pfSense);
+		//design.getComponents().add(w1);
+		//design.getComponents().add(w2);
+		//design.getComponents().add(lb);
+		design.getComponents().add(db1);
+		design.getComponents().add(ws1);
+		//design.getConnections().add(new NetworkConnection(pfSense, w1));
+		//design.getConnections().add(new NetworkConnection(pfSense, w2));
+		//design.getConnections().add(new NetworkConnection(pfSense, lb));
+		//design.getConnections().add(new NetworkConnection(lb, db1));
+		design.getConnections().add(new NetworkConnection(ws1, db1));
+		design.calcBounds();
 		
+		Calculator calc = new Calculator();
+		calc.buildNodeNetwork(design);
+		CulledHierarchy ch = new CulledHierarchy();
+		for(int[] l : calc.getProblemDefinition()) {
+			for(int i : l) {
+				System.out.println(NetworkComponentTypes.getTypes()[i].getName());
+			}
+			System.out.println();
+		}
+		byte[] solve = ch.execute(calc.getProblemDefinition(), calc, 0.999F);
 		
-		System.out.println(DataRetriever.getInstance().getDataForComponent("W1").peekFirst().getUptime());
+		System.out.println("Kosten: " + calc.calcCosts(solve));
+		System.out.println("Uptime: " + calc.calcUptime(solve));
+		for (int i = 0; i < calc.getProblemDefinition().length; i++) {
+			for (int j = 0; j < calc.getProblemDefinition()[i].length; j++) {
+				System.out.println(NetworkComponentTypes.getTypes()[calc.getProblemDefinition()[i][j]].getName() + ": " + solve[calc.getOffsetGrootte()[i] + j]);
+			}	
+		}
 	}
-	
 }
