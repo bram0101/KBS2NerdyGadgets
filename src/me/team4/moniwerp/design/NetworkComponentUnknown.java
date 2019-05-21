@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,14 @@ package me.team4.moniwerp.design;
 import java.util.List;
 
 public class NetworkComponentUnknown extends NetworkComponent{
-	
+
 	private List<Integer> ComponentTypes;
-	
+
 	public NetworkComponentUnknown(String naam, String type, int costs, float uptime, int xLoc, int yLoc, List ComponentTypes) {
 		super(naam, type, costs, uptime, xLoc, yLoc);
 		this.ComponentTypes = ComponentTypes;
 	}
-	
+
 	public List<Integer> GetComponentTypes(){
 		return ComponentTypes;
 	}

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ import javax.swing.JToggleButton;
 public class Toolbar extends JPanel implements ActionListener {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -99,7 +99,7 @@ public class Toolbar extends JPanel implements ActionListener {
 
 	/**
 	 * Het netwwerkcomponenttype dat geselecteerd is
-	 * 
+	 *
 	 * @return selected
 	 */
 	public NetworkComponentType getSelected() {
@@ -108,7 +108,7 @@ public class Toolbar extends JPanel implements ActionListener {
 
 	/**
 	 * Of de connectiontool gebruikt wordt
-	 * 
+	 *
 	 * @return ConnectionTool
 	 */
 	public boolean useConnectiontool() {
@@ -132,7 +132,7 @@ public class Toolbar extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// Check voor elke knop
 		for (JToggleButton button : buttons) {
-			// Heb je hier niet op geklikt, zet hem dan uit, zodat er maar één knop tegelijk
+			// Heb je hier niet op geklikt, zet hem dan uit, zodat er maar ï¿½ï¿½n knop tegelijk
 			// aan kan.
 			if (e.getSource() != button) {
 				button.setSelected(false);

@@ -1,6 +1,6 @@
 /*MIT License
 
-Copyright (c) 2019 Bram Stout, Dylan Rüsch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
+Copyright (c) 2019 Bram Stout, Dylan Rï¿½sch, Fiene Botha, Roland Regtop, Sven Reijne, Syb van Gurp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -115,6 +115,14 @@ public class TabDesign extends JPanel implements Tab {
 			// Zeg tegen de viewport dat wij het ontwerp willen laten optimalizeren
 			viewport.optimize();
 		}
+	}
+
+	public Toolbar getToolbar() {
+		return toolbar;
+	}
+
+	public ViewportDesign getViewportDesign() {
+		return viewport;
 	}
 
 	@Override
