@@ -70,6 +70,8 @@ public class TabDesign extends JPanel implements Tab {
 			// verbindingen te legen
 			viewport.getNetworkDesign().getComponents().clear();
 			viewport.getNetworkDesign().getConnections().clear();
+			NetworkComponent internetComponent = new NetworkComponent("INTERNET", "INTERNET", 0, 1D, 10, 10);
+			viewport.getNetworkDesign().getComponents().add(internetComponent);
 		}
 		if (buttonID == Window.BUTTON_OPEN) {
 			// Create a file chooser
@@ -103,7 +105,12 @@ public class TabDesign extends JPanel implements Tab {
 			// Open FilesChooser en sla het geselecteerd bestand op
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				try {
-					DataOutputStream dis = new DataOutputStream(new FileOutputStream(Of.getSelectedFile()));
+					String fileName = Of.getSelectedFile().getAbsolutePath();
+					if(!fileName.endsWith(".mwd"))
+						fileName = fileName + ".mwd";
+					else if(!fileName.endsWith(".MWD"))
+						fileName = fileName + ".MWD";
+					DataOutputStream dis = new DataOutputStream(new FileOutputStream(fileName));
 					viewport.getNetworkDesign().save(dis);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();

@@ -57,9 +57,10 @@ public class NetworkComponentTypes {
 	 * @param name
 	 */
 	public static NetworkComponentType getTypes(String name) {
-		// kijkt of de naam van de type gelijk is aan dar gene wat we zoeken, als die niks vindt dar returned die null
-		for (NetworkComponentType element: types) {
-			if(element.getName().equals(name)) {
+		// kijkt of de naam van de type gelijk is aan dar gene wat we zoeken, als die
+		// niks vindt dar returned die null
+		for (NetworkComponentType element : types) {
+			if (element.getName().equals(name)) {
 				return element;
 			}
 		}
@@ -75,16 +76,16 @@ public class NetworkComponentTypes {
 		// 1. een xml file: componenttypes.xml
 		File f = new File("./componenttypes.xml");
 		try {
-			//kijkt of het bestand wel bestaat, als het zo is return:
+			// kijkt of het bestand wel bestaat, als het zo is return:
 			if (f.exists()) {
 				System.out.println("File f exists");
 			} else {
-			//als het niet zo is return:
+				// als het niet zo is return:
 				System.out.println("File f not found");
 				return;
 			}
 
-			//lees het bestand
+			// lees het bestand
 			// 2. Instantiate XML file: DOM parser laadt het hele XML document in de
 			// memory en beschouwd elk XML tag als een element.
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -95,35 +96,38 @@ public class NetworkComponentTypes {
 			Element e = doc.getDocumentElement();
 			NodeList nodeList = e.getChildNodes();
 
-			//Arraylist van type netwerkcomponenttype
+			// Arraylist van type netwerkcomponenttype
 			ArrayList<NetworkComponentType> netwerkComponentType = new ArrayList<NetworkComponentType>();
 
-			//ga door elk element in het xml bestand en haal de data daaruit en voeg het toe aan het bestand.
+			// Voeg een internet component toe voor als eerste node.
+			netwerkComponentType.add(new NetworkComponentType("INTERNET", 0, 1F));
+
+			// ga door elk element in het xml bestand en haal de data daaruit en voeg het
+			// toe aan het bestand.
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node n = nodeList.item(i);
-				//The node is an Element.
+				// The node is an Element.
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 
-					//een nieuwe instantie van netwerkcomponenttype maken met 3 gegevens (name, costs, uptime)
+					// een nieuwe instantie van netwerkcomponenttype maken met 3 gegevens (name,
+					// costs, uptime)
 					NetworkComponentType nct = new NetworkComponentType(
 							//
 							n.getAttributes().getNamedItem("name").getNodeValue(),
 							Integer.parseInt(n.getAttributes().getNamedItem("costs").getNodeValue()),
-							Float.parseFloat(n.getAttributes().getNamedItem("uptime").getNodeValue()));
+							Double.parseDouble(n.getAttributes().getNamedItem("uptime").getNodeValue()));
 
-					//nct toevoegen aan de arraylist
+					// nct toevoegen aan de arraylist
 					netwerkComponentType.add(nct);
 
 				}
 			}
 
-			//zet een arraylist om naar een array
+			// zet een arraylist om naar een array
 			NetworkComponentTypes.types = new NetworkComponentType[netwerkComponentType.size()];
-			for(int i = 0; i < netwerkComponentType.size(); i++) {
+			for (int i = 0; i < netwerkComponentType.size(); i++) {
 				NetworkComponentTypes.types[i] = netwerkComponentType.get(i);
 			}
-
-
 
 			// voeg elk type toe aan de variabele types
 		} catch (Exception e) {

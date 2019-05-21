@@ -22,58 +22,57 @@ SOFTWARE.
 */
 package me.team4.moniwerp.design;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
-public class typeDialoog extends JDialog implements ActionListener {
+import me.team4.moniwerp.Main;
+
+public class optimizerDialoog extends JDialog implements ActionListener {
+	private JTextField naam;
 	private JButton ok, cancel;
 	private JLabel titel;
-	private NetworkComponentUnknown selected;
-	private JCheckBox[] checkboxes;
+	private String inputNaam;
+	private NetworkDesign design;
 
-	// Maak een dialoog voor het aangeven van de type componten van een onbekend
-	// component
-	public typeDialoog(JFrame frame) {
+	// Maak een dialoog voor het veranderen van de naam
+	public optimizerDialoog(JFrame frame) {
 		super(frame);
 		
-		setSize(300, 150);
+		setSize(300, 100);
+		setLayout(new FlowLayout());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		JPanel root = new JPanel();
-		titel = new JLabel("Voer het type in voor het onbekende component");
+		naam = new JTextField(5);
 		JPanel buttonPanel = new JPanel();
 		ok = new JButton("OK");
 		cancel = new JButton("Cancel");
+		titel = new JLabel("Minimale uptime (0.0 tot 1.0):");
+		naam.setText("0.9999");
 
+		// maak de layout van de Dialoog
 		root.add(titel);
-		// Maak checkboxes voor de type componenten
-		int i = 0;
-		checkboxes = new JCheckBox[NetworkComponentTypes.getTypes().length];
-		for (NetworkComponentType type : NetworkComponentTypes.getTypes()) {
-			checkboxes[i] = new JCheckBox(type.getName());
-			root.add(checkboxes[i]);
-			i++;
-		}
-		// Maak een layout voor het dialoog
+		root.add(naam);
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 		root.add(buttonPanel);
-
 		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
-
 		add(root);
 
 		pack();
 
 		setVisible(true);
+
 		// maak een listener die kijkt of er op een knop is gedrukt
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
@@ -83,28 +82,46 @@ public class typeDialoog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// Kijk of er op de OK knop is gedrukt
 		if (e.getSource() == ok) {
-			selected.GetComponentTypes().clear();
-			for (int i = 0; i < checkboxes.length; i++) {
-				if (checkboxes[i].isSelected()) {
-					selected.GetComponentTypes().add(i);
+			try {
+				// De input van de textfield word omgezet in een variable
+				inputNaam = naam.getText().trim();
+				// Kijk of de input niet leeg is
+				if (!inputNaam.isEmpty()) {
+					double minUptime = Double.parseDouble(inputNaam);
+					
+					optimizerDialoog dialog = this;
+					
+					naam.setEditable(false);
+					ok.setEnabled(false);
+					cancel.setEnabled(false);
+					
+					SwingUtilities.invokeLater(new Runnable() {
+
+						@Override
+						public void run() {
+							Optimizer optimizer = new Optimizer();
+							optimizer.optimize(design, minUptime);
+							Main.getWindow().getDesignTab().getViewportDesign().repaint();
+							dialog.dispose();
+						}
+						
+					});
+					
 				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-			dispose();
 			// Kijk of er op de Cancel knop is gedrukt
 		} else {
 			dispose();
 		}
 	}
 
-	public NetworkComponent getSelected() {
-		return selected;
+	public String getinputNaam() {
+		return inputNaam;
 	}
-
-	public void setSelected(NetworkComponentUnknown s) {
-		this.selected = s;
-		// Er word een checkbox gemaakt per component types
-		for (Integer i : selected.GetComponentTypes()) {
-			checkboxes[i].setSelected(true);
-		}
+	
+	public void setDesign(NetworkDesign design) {
+		this.design = design;
 	}
 }

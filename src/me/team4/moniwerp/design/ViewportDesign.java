@@ -71,30 +71,14 @@ public class ViewportDesign extends JPanel
 	private boolean isPanning;
 	private NetworkComponent connFirst = null;
 	private int kosten;
-	private float uptime;
+	private double uptime;
 
 	public ViewportDesign() {
 		// Maak een nieuw design instantie.
 		design = new NetworkDesign();
 		// In dit geval hardcoded een ontwerp
-		NetworkComponent pfSense = new NetworkComponent("pfSense", "firewall", 1000, 0.9999F, 0, 50);
-		NetworkComponent w1 = new NetworkComponent("W1", "Webserver", 1000, 0.9999F, 40, 55);
-		NetworkComponent w2 = new NetworkComponent("W2", "Webserver", 1000, 0.9999F, 40, 65);
-		NetworkComponent lb = new NetworkComponent("LB1", "Loadbalancer", 1000, 0.9999F, 40, 40);
-		NetworkComponent db1 = new NetworkComponent("DB1", "Database server", 1000, 0.9999F, 80, 35);
-		NetworkComponent db2 = new NetworkComponentUnknown("DB2", "Database server", 1000, 0.9999F, 80, 45,
-				new ArrayList<Integer>());
-		design.getComponents().add(pfSense);
-		design.getComponents().add(w1);
-		design.getComponents().add(w2);
-		design.getComponents().add(lb);
-		design.getComponents().add(db1);
-		design.getComponents().add(db2);
-		design.getConnections().add(new NetworkConnection(pfSense, w1));
-		design.getConnections().add(new NetworkConnection(pfSense, w2));
-		design.getConnections().add(new NetworkConnection(pfSense, lb));
-		design.getConnections().add(new NetworkConnection(lb, db1));
-		design.getConnections().add(new NetworkConnection(lb, db2));
+		NetworkComponent internetComponent = new NetworkComponent("INTERNET", "INTERNET", 0, 1D, 10, 10);
+		design.getComponents().add(internetComponent);
 		design.calcBounds();
 
 		// We willen kunnen kijken wanneer je er op klikt zodat we een component kunnen
@@ -201,8 +185,7 @@ public class ViewportDesign extends JPanel
 		// Wij willen het canvas verschuiven en schalen zodat hij het venster opvult.
 		float xOffset = panningX - 10; // -10 is padding
 		float yOffset = panningY - 10;
-		// Zet de font. Dit doen wij voor de grootte.
-		g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * scale)));
+		
 
 		// Ga langs elk netwerkcomponent en teken het
 		for (NetworkComponent comp : design.getComponents()) {
@@ -213,15 +196,23 @@ public class ViewportDesign extends JPanel
 				if (comp instanceof NetworkComponentUnknown) {
 					g.setColor(new Color(150, 255, 200));
 				} else {
-					// Hij is geselecteerd dus een lichtere blauw.
-					g.setColor(new Color(150, 200, 255));
+					if (comp.getType().equals("INTERNET")) {
+						g.setColor(new Color(220, 220, 220));
+					} else {
+						// Hij is geselecteerd dus een lichtere blauw.
+						g.setColor(new Color(150, 200, 255));
+					}
 				}
 			} else {
 				if (comp instanceof NetworkComponentUnknown) {
 					g.setColor(new Color(100, 255, 150));
 				} else {
-					// Hij is niet geselecteerd dus een normale blauw
-					g.setColor(new Color(100, 150, 255));
+					if (comp.getType().equals("INTERNET")) {
+						g.setColor(new Color(200, 200, 200));
+					} else {
+						// Hij is niet geselecteerd dus een normale blauw
+						g.setColor(new Color(100, 150, 255));
+					}
 				}
 			}
 
@@ -249,11 +240,20 @@ public class ViewportDesign extends JPanel
 				g.drawLine((int) (x1 + (5 / 3 * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)),
 						(int) (x1 + ((20 - 5 / 3) * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)));
 			} else {
+				// Zet de font. Dit doen wij voor de grootte.
+				g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * scale)));
 				// Hiermee vragen wij de grootte van de text op in pixels. Dan kunnen wij het
 				// centreren.
 				Rectangle2D textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
 				// Teken de text. Pak de pixel locatie van het midden van het component en haal
 				// de helft van de grootte van de textbounds eraf.
+
+				if(textBounds.getWidth() >= 16 * scale) {
+					float textScale = (float) ((16 * scale) / textBounds.getWidth());
+					// Zet de font. Dit doen wij voor de grootte.
+					g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * scale * textScale)));
+					textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+				}
 				g.drawString(comp.getNaam(),
 						(int) ((comp.getxLoc() - xOffset) * scale + 10.0 * scale - textBounds.getCenterX()),
 						(int) ((comp.getyLoc() - yOffset) * scale + 2.5 * scale - textBounds.getCenterY()));
@@ -276,7 +276,7 @@ public class ViewportDesign extends JPanel
 			// lijntje naar rechts, links, boven of onderen toe moet
 			float xDiff = con.getSecond().getxLoc() - con.getFirst().getxLoc();
 			float yDiff = con.getSecond().getyLoc() - con.getFirst().getyLoc();
-			if (xDiff > Math.abs(yDiff)) {
+			if (xDiff >= Math.abs(yDiff)) {
 				// Naar rechts toe
 				// Eerste component + breedte van component (20 * scale) voor de rechterkant van
 				// het component
@@ -293,7 +293,7 @@ public class ViewportDesign extends JPanel
 
 				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (20 * scale);
 				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
-			} else if (yDiff > Math.abs(xDiff)) {
+			} else if (yDiff >= Math.abs(xDiff)) {
 				// Naar onderen toe
 				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
 				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (5 * scale);
@@ -319,9 +319,9 @@ public class ViewportDesign extends JPanel
 		g.setFont(new Font("Arial", Font.PLAIN, 15));
 		// Maak een gedeelte voor de kosten en uptime van het gehele ontwerp
 		g.setColor(new Color(220, 220, 220));
-		g.fillRect(1, 1, 125, 40);
+		g.fillRect(1, 1, 250, 40);
 		g.setColor(Color.black);
-		g.drawRect(0, 0, 125, 40);
+		g.drawRect(0, 0, 250, 40);
 		g.drawString("Kosten: $" + kosten, 5, 15);
 		g.drawString("Uptime:" + uptime + "%", 5, 30);
 		repaint();
@@ -339,7 +339,8 @@ public class ViewportDesign extends JPanel
 	 * van CulledHierarchys
 	 */
 	public void optimize() {
-		// TODO
+		optimizerDialoog dialog = new optimizerDialoog(Main.getWindow());
+		dialog.setDesign(design);
 	}
 
 	@Override
@@ -412,7 +413,6 @@ public class ViewportDesign extends JPanel
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			// Kijk of er niet op het kanvas is gedrukt
 			if (!isPanning) {
-				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
 				// Kijk of de verbindings tool is geselecteerd
 				if (Main.getWindow().getDesignTab().getToolbar().useConnectiontool()) {
 					// Maak een verbinding
@@ -426,28 +426,32 @@ public class ViewportDesign extends JPanel
 						design.getConnections().add(conn);
 					}
 					repaint();
-				} else {
-					connFirst = null;
-					// Maak een nieuw component
-					float xOffset = panningX - 10; // -10 is padding
-					float yOffset = panningY - 10;
-					int xLoc = (int) (prevMouseX / scale + xOffset);
-					int yLoc = (int) (prevMouseY / scale + yOffset);
-					NetworkComponent comp = null;
-					if (type.getName().equals("Unknown")) {
-						comp = new NetworkComponentUnknown(type.getName(), type.getName(), type.getCosts(),
-								type.getUptime(), xLoc, yLoc, new ArrayList<Integer>());
-					} else {
-						comp = new NetworkComponent(type.getName(), type.getName(), type.getCosts(), type.getUptime(),
-								xLoc, yLoc);
-					}
-					addHistory();
-					design.getComponents().add(comp);
-					repaint();
 				}
+			} else if (!Main.getWindow().getDesignTab().getToolbar().useConnectiontool()) {
+				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
+				connFirst = null;
+				// Maak een nieuw component
+				float xOffset = panningX - 10; // -10 is padding
+				float yOffset = panningY - 10;
+				int xLoc = (int) (prevMouseX / scale + xOffset);
+				int yLoc = (int) (prevMouseY / scale + yOffset);
+				NetworkComponent comp = null;
+				if (type.getName().equals("Unknown")) {
+					comp = new NetworkComponentUnknown(type.getName(), type.getName(), type.getCosts(),
+							type.getUptime(), xLoc, yLoc, new ArrayList<Integer>());
+				} else {
+					comp = new NetworkComponent(type.getName(), type.getName(), type.getCosts(), type.getUptime(), xLoc,
+							yLoc);
+				}
+				addHistory();
+				design.getComponents().add(comp);
+				repaint();
+
 			}
 		}
-		if (e.getButton() == MouseEvent.BUTTON3) {
+		if (e.getButton() == MouseEvent.BUTTON3)
+
+		{
 			// Er is geklikt. Wij kijken nu bij elk component de muis in de rechthoek zit.
 			// Dit is hetzelfde als bij het tekenen. Wij moeten alle componenten verschuiven
 			// en schalen.
@@ -600,8 +604,6 @@ public class ViewportDesign extends JPanel
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	// Er word een copy gemaakt van het netwerktekening
@@ -649,18 +651,14 @@ public class ViewportDesign extends JPanel
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	public NetworkComponent getSelected() {

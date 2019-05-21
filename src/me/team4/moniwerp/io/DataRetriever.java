@@ -49,11 +49,15 @@ public class DataRetriever {
 	 */
 	private HashMap<String, Boolean> statusCache;
 
+	private HashMap<String, Float> uptimeCache = new HashMap<String, Float>();
+	
 	private Connection connection;
 
 	private HashMap<Integer, String> naamConversie = new HashMap<Integer, String>();
+	
 
 	private long lastTimestamp;
+	private int uptimeCacheCounter = 60;
 
 	private DataRetriever() {
 		// initialiseer de beide hashmaps
@@ -83,7 +87,7 @@ public class DataRetriever {
 						command.run();
 					}
 
-				}, 1000);
+				}, 5000);
 
 				// Maakt een SQL statement mogelijk
 				Statement stmt = connection.createStatement();
@@ -153,6 +157,20 @@ public class DataRetriever {
 					statusCache.put(e.getKey(), false);
 				}
 			}
+			
+			uptimeCacheCounter++;
+			if(uptimeCacheCounter >= 60) {
+				uptimeCacheCounter = 0;
+				rs = statement.executeQuery("Select ComponentID, MIN(timestamp) as min, COUNT(ComponentID) as count From Netwerk group by ComponentID;");
+				while (rs.next()) {
+					int compID = rs.getInt("ComponentID");
+					long minTime = rs.getLong("min");
+					double count = (double) rs.getLong("count");
+					double timeDiff = (double) ((lastTimestamp - 2) - minTime);
+					double uptimeVal = Math.max(Math.min(count / timeDiff, 1D), 0D);
+					uptimeCache.put(naamConversie.get(compID), (float) uptimeVal);
+				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			try {
@@ -199,6 +217,12 @@ public class DataRetriever {
 			return true;
 		}
 		return statusCache.get(name);
+	}
+	
+	public float getUptimeForComponent(String name) {
+		if(!uptimeCache.containsKey(name))
+			return 0F;
+		return uptimeCache.get(name);
 	}
 
 	/**

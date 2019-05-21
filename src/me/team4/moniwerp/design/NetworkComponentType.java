@@ -38,19 +38,18 @@ public class NetworkComponentType {
 	/**
 	 * De uptime van het NetworkComponentType
 	 */
-	private float uptime;
+	private double uptime;
 	/**
 	 * Een constructor die een NetworkComponentType aanmaakt met de gegeven parameters
 	 * @param name
 	 * @param costs
 	 * @param uptime
 	 */
-	public NetworkComponentType(String name, int costs, float uptime) {
+	public NetworkComponentType(String name, int costs, double uptime) {
 		this.name = name;
 		this.costs = costs;
 		this.uptime =uptime;
 	}
-	//TODO
 	
 	/**
 	 * Een getter voor de naam
@@ -72,7 +71,7 @@ public class NetworkComponentType {
 	 * Een getter voor de uptime
 	 * @return uptime
 	 */
-	public float getUptime() {
+	public double getUptime() {
 		return uptime;
 	}
 }

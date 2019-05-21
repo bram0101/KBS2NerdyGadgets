@@ -43,7 +43,7 @@ public class NetworkComponent implements Selectable {
 	/**
 	 * De theoretische beschikbaarheid
 	 */
-	private float uptime;
+	private double uptime;
 	/**
 	 * De x coördinaat van het component op het canvas.
 	 */
@@ -63,7 +63,7 @@ public class NetworkComponent implements Selectable {
 	 * @param xLoc De x coördinaat van het component op het canvas
 	 * @param yLoc De y coördinaat van het component op het canvas
 	 */
-	public NetworkComponent(String naam, String type, int costs, float uptime, int xLoc, int yLoc) {
+	public NetworkComponent(String naam, String type, int costs, double uptime, int xLoc, int yLoc) {
 		this.naam = naam;
 		this.type = type;
 		this.costs = costs;
@@ -96,7 +96,7 @@ public class NetworkComponent implements Selectable {
 	/**
 	 * @param uptime the uptime to set
 	 */
-	public void setUptime(float uptime) {
+	public void setUptime(double uptime) {
 		this.uptime = uptime;
 	}
 
@@ -138,7 +138,7 @@ public class NetworkComponent implements Selectable {
 	/**
 	 * De theoretische beschikbaarheid
 	 */
-	public float getUptime() {
+	public double getUptime() {
 		return uptime;
 	}
 	

@@ -28,7 +28,7 @@ public class NetworkComponentUnknown extends NetworkComponent{
 
 	private List<Integer> ComponentTypes;
 
-	public NetworkComponentUnknown(String naam, String type, int costs, float uptime, int xLoc, int yLoc, List ComponentTypes) {
+	public NetworkComponentUnknown(String naam, String type, int costs, double uptime, int xLoc, int yLoc, List<Integer> ComponentTypes) {
 		super(naam, type, costs, uptime, xLoc, yLoc);
 		this.ComponentTypes = ComponentTypes;
 	}

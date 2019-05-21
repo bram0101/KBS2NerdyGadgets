@@ -57,6 +57,10 @@ public class InfoList extends JPanel implements MouseListener {
 	private String selectedComponent;
 
 	// Lijst van alle variabelen.
+	private JPanel JPuptimePercent;
+	private JLabel valUptimePercent;
+	private JLabel uptimePercent;
+
 	private JPanel JPuptime;
 	private JLabel valUptime;
 	private JLabel uptime;
@@ -95,6 +99,21 @@ public class InfoList extends JPanel implements MouseListener {
 
 		// Layout is FlowLayout.
 		this.setLayout(new FlowLayout());
+
+		// Maak panel JPuptime
+		JPuptimePercent = new JPanel();
+		JPuptimePercent.setLayout(new BorderLayout());
+		// Voeg JPuptime panel toe aan panel infoList
+		this.add(JPuptimePercent);
+
+		// Maak labels voor JPuptime.
+		uptimePercent = new JLabel("    Uptime %: ");
+		uptimePercent.setPreferredSize(new Dimension(120, 20));
+		valUptimePercent = new JLabel();
+
+		// Voeg labels toe aan JPuptime.
+		JPuptimePercent.add(uptimePercent, BorderLayout.WEST);
+		JPuptimePercent.add(valUptimePercent, BorderLayout.CENTER);
 
 		// Maak panel JPuptime
 		JPuptime = new JPanel();
@@ -292,12 +311,14 @@ public class InfoList extends JPanel implements MouseListener {
 		if (data != null) {
 			if (DataRetriever.getInstance().getStatusForComponent(getSelectedComponent())) {
 				DecimalFormat numberFormat = new DecimalFormat("#.##");
+				DecimalFormat numberFormatPercent = new DecimalFormat("#.#####");
 				long timeActive = (System.currentTimeMillis() / 1000L - data.getUptime());
 				long days = timeActive / (24 * 60 * 60);
 				long hours = (timeActive / (60 * 60)) % 24;
 				long minutes = (timeActive / 60) % 60;
 				long seconds = (timeActive) % 60;
 
+				valUptimePercent.setText(numberFormatPercent.format(DataRetriever.getInstance().getUptimeForComponent(getSelectedComponent()) * 100D) + "%");
 				valUptime.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
 				cpuvalue.setText(Math.round(data.getCpu() * 100.0) + "%");
 				ramvalue.setText(numberFormat.format(data.getRamUsed()) + " GB / "
@@ -308,6 +329,7 @@ public class InfoList extends JPanel implements MouseListener {
 				bytesSendvalue.setText(data.getBytesSent() + " Bytes");
 				bytesReceivedvalue.setText(data.getBytesReceived() + " Bytes");
 			} else {
+				valUptimePercent.setText("0%");
 				valUptime.setText("OFFLINE");
 				cpuvalue.setText(Math.round(0 * 100.0) + "%");
 				ramvalue.setText("0.00 GB / " + "0.00 GB");
@@ -317,6 +339,7 @@ public class InfoList extends JPanel implements MouseListener {
 				bytesReceivedvalue.setText(0 + " Bytes");
 			}
 		} else {
+			valUptimePercent.setText("0%");
 			valUptime.setText(0 + ":" + 0 + ":" + 0 + ":" + 0);
 			cpuvalue.setText(Math.round(0 * 100.0) + "%");
 			ramvalue.setText("0.00 GB / " + "0.00 GB");
@@ -331,6 +354,7 @@ public class InfoList extends JPanel implements MouseListener {
 	public void onResizeComponent(int width, int height) {
 		int size = width / 22;
 		Font font = new Font("Arial", Font.PLAIN, size);
+		JPuptimePercent.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPuptime.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPcpu.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPram.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
@@ -338,6 +362,7 @@ public class InfoList extends JPanel implements MouseListener {
 		JPdiskBusyTime.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPbytesSend.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
 		JPbytesReceived.setPreferredSize(new Dimension(width, (int) (size * 1.5)));
+		valUptimePercent.setFont(font);
 		valUptime.setFont(font);
 		cpuvalue.setFont(font);
 		ramvalue.setFont(font);
@@ -345,6 +370,7 @@ public class InfoList extends JPanel implements MouseListener {
 		diskBusyTimevalue.setFont(font);
 		bytesSendvalue.setFont(font);
 		bytesReceivedvalue.setFont(font);
+		uptimePercent.setFont(font);
 		uptime.setFont(font);
 		cpu.setFont(font);
 		ram.setFont(font);
@@ -352,6 +378,7 @@ public class InfoList extends JPanel implements MouseListener {
 		diskBusyTime.setFont(font);
 		bytesSend.setFont(font);
 		bytesReceived.setFont(font);
+		uptimePercent.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
 		uptime.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
 		cpu.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));
 		ram.setPreferredSize(new Dimension((int) (width / 2.5), (int) (size * 1.5)));

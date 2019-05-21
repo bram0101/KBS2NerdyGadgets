@@ -36,7 +36,7 @@ public class Calculator {
 	private Node firstNode;
 	private int[][] problemDefinition;
 	private int[] offsetGrootte;
-	private int minComponents = 1;
+	private int minComponents = 2;
 
 	public void buildNodeNetwork(NetworkDesign design) {
 		byte id = 0;
@@ -62,6 +62,9 @@ public class Calculator {
 					int[] types = new int[compunknown.GetComponentTypes().size()];
 					for (int j = 0; j < types.length; j++)
 						types[j] = compunknown.GetComponentTypes().get(j);
+					if(types.length == 0) {
+						firstNode = null;
+					}
 					problemDefinitionTemp.add(types); // hier voegt hij alle componenten toe die op de plaats van de
 														// onbekende node kunnen.
 					id++;
@@ -71,49 +74,52 @@ public class Calculator {
 				break;
 			}
 		}
-		HashSet<NetworkComponent> loopCheck = new HashSet<NetworkComponent>();
+
 		LinkedList<Node> queue = new LinkedList<Node>();
 		queue.add(firstNode); // voeg de eerste node toe aan de queue
+		int iterationCounter = 0;
 		while (queue.isEmpty() == false) {
+			iterationCounter++;
+			if (iterationCounter >= 10000) { // Als er ergens een loop zit, stopt hij nooit, dus hiermee stoppen wij als
+											// hij te lang doorgaat.
+				firstNode = null;
+				break;
+			}
 			Node n = queue.removeFirst(); // verwijder de eerste node uit de queue, (je verwerkt hem nog wel!!!)
 			for (int j = 0; j < con.size(); j++) { // kijk voor elke connectie of het de eerste is.
 				if (con.get(j).getFirst() == n.comp) {
-					if (loopCheck.contains(con.get(j).getSecond()) == false) { // kijkt of de connectie juist is, je kan
-																				// bijv. geen connectie van node 5 naar
-																				// 3 maken.
 
-						if (con.get(j).getSecond() instanceof NetworkComponentUnknown) {
-							// als het component onbekend is, voeg hem toe aan types array, zodat deze later
-							// verwerkt kunnen worden.
-							Node o = new Node(con.get(j).getSecond(), id);
-							NetworkComponentUnknown compunknown = (NetworkComponentUnknown) con.get(j).getSecond();
-							int[] types = new int[compunknown.GetComponentTypes().size()];
+					if (con.get(j).getSecond() instanceof NetworkComponentUnknown) {
+						// als het component onbekend is, voeg hem toe aan types array, zodat deze later
+						// verwerkt kunnen worden.
+						Node o = new Node(con.get(j).getSecond(), id);
+						NetworkComponentUnknown compunknown = (NetworkComponentUnknown) con.get(j).getSecond();
+						int[] types = new int[compunknown.GetComponentTypes().size()];
 
-							for (int k = 0; k < types.length; k++)
-								types[k] = compunknown.GetComponentTypes().get(k); // zet de gegevens van compunkown
-																					// over naar types, om het zo in een
-																					// array te plaatsen. Dit is nodig
-																					// omdat problemDefinition ook een
-																					// array is.
-
-							problemDefinitionTemp.add(types);
-							id++;
-							queue.add(o);
-							n.getNodes().add(o);
-							loopCheck.add(con.get(j).getSecond());
-						} else {
-							// Het component is bekend, zet het ID op -1.
-							Node o = new Node(con.get(j).getSecond(), (byte) -1);
-							queue.add(o);
-							n.getNodes().add(o);
-							loopCheck.add(con.get(j).getSecond());
+						for (int k = 0; k < types.length; k++)
+							types[k] = compunknown.GetComponentTypes().get(k); // zet de gegevens van compunkown
+																				// over naar types, om het zo in een
+																				// array te plaatsen. Dit is nodig
+																				// omdat problemDefinition ook een
+																				// array is.
+						if(types.length == 0) {
+							firstNode = null;
 						}
+						problemDefinitionTemp.add(types);
+						id++;
+						queue.add(o);
+						n.getNodes().add(o);
+					} else {
+						// Het component is bekend, zet het ID op -1.
+						Node o = new Node(con.get(j).getSecond(), (byte) -1);
+						queue.add(o);
+						n.getNodes().add(o);
 					}
 				}
 			}
 		}
 		problemDefinition = new int[problemDefinitionTemp.size()][1];
-		for(int i = 0; i < problemDefinitionTemp.size(); i++) {
+		for (int i = 0; i < problemDefinitionTemp.size(); i++) {
 			problemDefinition[i] = problemDefinitionTemp.get(i);
 		}
 		offsetGrootte = new int[problemDefinition.length]; // Zet de offsets voor de solve, om het makkelijker te maken
@@ -125,7 +131,7 @@ public class Calculator {
 		}
 	}
 
-	private float getUptime(Node n) {
+	private double getUptime(Node n) {
 		// Deze functie wordt gebruikt als het ontwerp uit alleen "bekende" componenten
 		// bestaat.
 		if (n.getNodes().size() == 0) { // Dit is de laatste node, er is geen berekening meer mogelijk dus returnt hij
@@ -135,11 +141,11 @@ public class Calculator {
 			return n.getComp().getUptime() * getUptime(n.getNodes().get(0)); // Er komt één connectie uit een node, dus
 																				// kan het sequentieel worden berekend.
 		} else {
-			float v = 1;
+			double v = 1D;
 			for (int j = 0; j < n.getNodes().size(); j++) {
-				v *= 1 - getUptime(n.getNodes().get(j)); // berekend de uptime van meerdere componenten (parallel)
+				v *= 1D - getUptime(n.getNodes().get(j)); // berekend de uptime van meerdere componenten (parallel)
 			}
-			return (1 - v) * n.getComp().getUptime();
+			return (1D - v) * n.getComp().getUptime();
 		}
 	}
 
@@ -150,22 +156,29 @@ public class Calculator {
 	 * @return uptime in seconden
 	 */
 
-	public float calcUptime(NetworkDesign ontwerp) {
+	public double calcUptime(NetworkDesign ontwerp) {
+		// Als er geen componenten zijn, is de uptime natuurlijk 0%. Om een
+		// nullpointerexception te voorkomen.
+		if (ontwerp.getComponents().isEmpty())
+			return 0D;
 		buildNodeNetwork(ontwerp);
+		if(firstNode == null) {
+			return 0D;
+		}
 		return getUptime(firstNode);
 	}
 
-	private float getUptime(Node n, byte solve[]) {
+	private double getUptime(Node n, byte solve[]) {
 		// Deze functie wordt gebruikt als er 1 of meer onbekende nodes in het ontwerp
 		// zitten. De onbekende nodes worden later "berekend" door de CulledHierarchy.
-		float uptime = n.getComp().getUptime();
+		double uptime = n.getComp().getUptime();
 		if (n.GetID() >= 0) { // kijkt hier of het een onbekend component is.
-			float v = 1;
+			double v = 1;
 			for (int i = 0; i < problemDefinition[n.GetID()].length; i++) {
 				v *= Math.pow(1.0f - NetworkComponentTypes.getTypes()[problemDefinition[n.GetID()][i]].getUptime(),
 						solve[offsetGrootte[n.GetID()] + i]); // Berekend de uptime van de mogelijke componenten
 			}
-			uptime = 1.0f - v;
+			uptime = 1D - v;
 		}
 		if (n.getNodes().size() == 0) {
 			return uptime; // Hij is bij de laatste node gekomen, is dus klaar en returnt de uptime
@@ -173,12 +186,12 @@ public class Calculator {
 												// berekend.
 			return uptime * getUptime(n.getNodes().get(0), solve);
 		} else {
-			float v = 1;// hier komt er uit een node meer connecties, dus worden de uptime hiervan
-						// parallel berekend.
+			double v = 1D;// hier komt er uit een node meer connecties, dus worden de uptime hiervan
+							// parallel berekend.
 			for (int j = 0; j < n.getNodes().size(); j++) {
-				v *= 1 - getUptime(n.getNodes().get(j), solve);
+				v *= 1D - getUptime(n.getNodes().get(j), solve);
 			}
-			return (1 - v) * uptime;
+			return (1D - v) * uptime;
 		}
 	}
 
@@ -188,7 +201,9 @@ public class Calculator {
 	 * @param solve   De huidige (mogelijke) oplossing
 	 * @return uptime in seconden
 	 */
-	public float calcUptime(byte solve[]) {
+	public double calcUptime(byte solve[]) {
+		if(firstNode == null)
+			return 0D;
 		for (int i = 0; i < problemDefinition.length; i++) {
 			int k = 0;
 			for (int j = 0; j < problemDefinition[i].length; j++) {
@@ -196,7 +211,7 @@ public class Calculator {
 													// in "k"
 			}
 			if (k < minComponents)
-				return 0F; // als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
+				return 0D; // als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
 							// return 0
 		}
 		return getUptime(firstNode, solve);
@@ -207,7 +222,12 @@ public class Calculator {
 	 * @param design huidige kosten van het ontwerp
 	 * @return costs
 	 */
-	public int calcCosts(NetworkDesign design) { // berekend de kosten van het netwerkdesign
+	public int calcCosts(NetworkDesign design) {
+		// Als er geen componenten zijn, zijn de kosten natuurlijk 0. Om een
+		// nullpointerexception te voorkomen.
+		if (design.getComponents().isEmpty())
+			return 0;
+		// berekend de kosten van het netwerkdesign
 		List<NetworkComponent> comps = design.getComponents();
 		int costs = 0;
 		for (int i = 0; i < comps.size(); i++) {// Bij elk component worden de kosten bij de variabele "costs"
@@ -217,7 +237,7 @@ public class Calculator {
 
 		return costs;
 	}
-	
+
 	/**
 	 * 
 	 * @param problem Het huidige probleem
@@ -225,20 +245,23 @@ public class Calculator {
 	 * @return kosten
 	 */
 	public int calcCosts(byte solve[]) {
+		if(firstNode == null)
+			return 0;
 		int costs = 0;
 		for (int i = 0; i < problemDefinition.length; i++) {
 			for (int j = 0; j < problemDefinition[i].length; j++) {
-				costs += NetworkComponentTypes.getTypes()[problemDefinition[i][j]].getCosts() * solve[offsetGrootte[i] + j];;
-			}	
+				costs += NetworkComponentTypes.getTypes()[problemDefinition[i][j]].getCosts()
+						* solve[offsetGrootte[i] + j];
+				;
+			}
 		}
 		return costs;
 	}
 
-
 	public int[][] getProblemDefinition() {
 		return problemDefinition;
 	}
-	
+
 	public int[] getOffsetGrootte() {
 		return offsetGrootte;
 	}
@@ -247,6 +270,10 @@ public class Calculator {
 		this.minComponents = minComponents;
 	}
 
+	public Node getFirstNode() {
+		return firstNode;
+	}
+	
 	public static class Node {
 
 		private NetworkComponent comp; // Uit welk netwerkcomponent de node bestaat

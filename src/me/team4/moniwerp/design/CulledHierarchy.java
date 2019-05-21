@@ -32,7 +32,7 @@ public class CulledHierarchy {
 	 * @param probleem de beschikbaarheid
 	 * @return de meest geschikte infrastructuur
 	 */
-	public byte[] execute(int[][] problem, Calculator calculator, float minimumUptime) {
+	public byte[] execute(int[][] problem, Calculator calculator, double minimumUptime) {
 		// Met bestSolve houden wij bij wat de beste oplossing is. Het is nu
 		// geinitialiseerd naar een oplossing met de hoogste kosten en geen echte solve.
 		// Hiermee hoef je geen rekening te houden met dat bestSolve null kan zijn (want
@@ -63,7 +63,7 @@ public class CulledHierarchy {
 		// De huidige empty list.
 		boolean[] currentEmptyList = null;
 		// Uptime
-		float uptime = 0F;
+		double uptime = 0F;
 		// Random int variabel
 		int i = 0;
 		// Random boolean variabel
@@ -92,7 +92,7 @@ public class CulledHierarchy {
 		bestCosts = calculator.calcCosts(currentComponentsList);
 
 		// Bereken de score voor deze solve.
-		float perfRef = uptime / bestCosts;
+		double perfRef = uptime / bestCosts;
 
 		// Voeg de eerste paar nodes toe.
 		// -1 als component id betekent geen component. Deze zit niet in de lijst van
@@ -137,7 +137,7 @@ public class CulledHierarchy {
 				// Minimum is twee componenten per onbekende, dus daar komt die 2 vandaan.
 				if (currentNode.depth >= listAmount * 2) {
 					// Score moet minimaal 1% van referentie score zijn
-					if ((uptime / currentNode.cost) < perfRef * 0.01F)
+					if ((uptime / currentNode.cost) < perfRef * 0.01D)
 						continue;
 				}
 

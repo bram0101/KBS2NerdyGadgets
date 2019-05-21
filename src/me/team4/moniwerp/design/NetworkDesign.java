@@ -124,7 +124,7 @@ public class NetworkDesign {
 	public void save(DataOutputStream dos) {
 		try {
 			dos.writeInt(0x4d574400); // magic number voor het formaat MWD
-			dos.writeByte(0x01); // versienummer
+			dos.writeByte(0x02); // versienummer
 			dos.writeInt(minX);
 			dos.writeInt(minY);
 			dos.writeInt(maxX);
@@ -140,9 +140,16 @@ public class NetworkDesign {
 				dos.writeUTF(comp.getNaam());
 				dos.writeUTF(comp.getType());
 				dos.writeInt(comp.getCosts());
-				dos.writeFloat(comp.getUptime());
+				dos.writeDouble(comp.getUptime());
 				dos.writeInt(comp.getxLoc());
 				dos.writeInt(comp.getyLoc());
+				if (comp instanceof NetworkComponentUnknown) {
+					NetworkComponentUnknown compU = (NetworkComponentUnknown) comp;
+					dos.writeInt(compU.GetComponentTypes().size());
+					for (int i = 0; i < compU.GetComponentTypes().size(); i++) {
+						dos.writeInt(compU.GetComponentTypes().get(i));
+					}
+				}
 
 				// vult de hashmap met het ID en het componentobject
 				idConv.put(comp, id);
@@ -179,7 +186,7 @@ public class NetworkDesign {
 				throw new IOException("Bestand is niet het goede formaat");
 			}
 			// check of versienummer klopt
-			if (dis.readByte() != 0x01) {
+			if (dis.readByte() != 0x02) {
 				throw new IOException("Incorrect versienummer");
 			}
 			// leegt de lijst
@@ -201,10 +208,20 @@ public class NetworkDesign {
 				String naam = dis.readUTF();
 				String type = dis.readUTF();
 				int costs = dis.readInt();
-				float uptime = dis.readFloat();
+				double uptime = dis.readDouble();
 				int xLoc = dis.readInt();
 				int yLoc = dis.readInt();
-				NetworkComponent comp = new NetworkComponent(naam, type, costs, uptime, xLoc, yLoc);
+				NetworkComponent comp = null;
+				if (type.equals("Unknown")) {
+					List<Integer> compList = new ArrayList<Integer>();
+					int compListSize = dis.readInt();
+					for (int j = 0; j < compListSize; j++) {
+						compList.add(dis.readInt());
+					}
+					comp = new NetworkComponentUnknown(naam, type, costs, uptime, xLoc, yLoc, compList);
+				} else {
+					comp = new NetworkComponent(naam, type, costs, uptime, xLoc, yLoc);
+				}
 				idConv.put(id, comp);
 				components.add(comp);
 			}
@@ -246,5 +263,5 @@ public class NetworkDesign {
 	public List<NetworkConnection> getConnections() {
 		return connections;
 	}
-	
+
 }

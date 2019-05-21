@@ -44,6 +44,8 @@ public class naamDialoog extends JDialog implements ActionListener {
 
 	// Maak een dialoog voor het veranderen van de naam
 	public naamDialoog(JFrame frame) {
+		super(frame);
+		
 		setSize(300, 100);
 		setLayout(new FlowLayout());
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -82,7 +84,7 @@ public class naamDialoog extends JDialog implements ActionListener {
 				// De input van de textfield word omgezet in een variable
 				inputNaam = naam.getText().trim();
 				// Kijk of de input niet leeg is
-				if (!inputNaam.isEmpty()) {
+				if (!inputNaam.isEmpty() || selected.getType().equals("INTERNET")) {
 					// Verander de naam van het geselecteerde component
 					selected.setNaam(inputNaam);
 				}
@@ -107,5 +109,6 @@ public class naamDialoog extends JDialog implements ActionListener {
 
 	public void setSelected(NetworkComponent s) {
 		this.selected = s;
+		naam.setText(s.getNaam());
 	}
 }

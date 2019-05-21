@@ -132,8 +132,7 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 		float widthScale = ((float) g.getClipBounds().width) / (design.getBounds()[2] - design.getBounds()[0]);
 		float heightScale = ((float) g.getClipBounds().height) / (design.getBounds()[3] - design.getBounds()[1]);
 		float sizeScale = Math.min(widthScale, heightScale);
-		// Zet de font. Dit doen wij voor de grootte.
-		g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * sizeScale)));
+		
 
 		// Ga langs elk netwerkcomponent en teken het
 		for (NetworkComponent comp : design.getComponents()) {
@@ -171,9 +170,17 @@ public class ViewportNetwork extends JPanel implements MouseListener {
 					(int) (20 * sizeScale), (int) (5 * sizeScale));
 			// Zet de kleur voor de tekst
 			g.setColor(Color.black);
+			// Zet de font. Dit doen wij voor de grootte.
+			g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * sizeScale)));
 			// Hiermee vragen wij de grootte van de text op in pixels. Dan kunnen wij het
 			// centreren.
 			Rectangle2D textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+			if(textBounds.getWidth() >= 18 * sizeScale) {
+				float textScale = (float) ((18 * sizeScale) / textBounds.getWidth());
+				// Zet de font. Dit doen wij voor de grootte.
+				g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * sizeScale * textScale)));
+				textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+			}
 			// Teken de text. Pak de pixel locatie van het midden van het component en haal
 			// de helft van de grootte van de textbounds eraf.
 			g.drawString(comp.getNaam(),
