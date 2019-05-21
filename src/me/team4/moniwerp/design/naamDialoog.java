@@ -42,6 +42,7 @@ public class naamDialoog extends JDialog implements ActionListener {
 	private String inputNaam;
 	private NetworkComponent selected;
 
+	// Maak een dialoog voor het veranderen van de naam
 	public naamDialoog(JFrame frame) {
 		setSize(300, 100);
 		setLayout(new FlowLayout());
@@ -55,6 +56,7 @@ public class naamDialoog extends JDialog implements ActionListener {
 		cancel = new JButton("Cancel");
 		titel = new JLabel("Voer een naam in voor het geselecteerde component");
 
+		// maak de layout van de Dialoog
 		root.add(titel);
 		root.add(naam);
 		buttonPanel.add(ok);
@@ -67,17 +69,21 @@ public class naamDialoog extends JDialog implements ActionListener {
 
 		setVisible(true);
 
+		// maak een listener die kijkt of er op een knop is gedrukt
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Kijk of er op de OK knop is gedrukt
 		if (e.getSource() == ok) {
 			try {
-
+				// De input van de textfield word omgezet in een variable
 				inputNaam = naam.getText().trim();
+				// Kijk of de input niet leeg is
 				if (!inputNaam.isEmpty()) {
+					// Verander de naam van het geselecteerde component
 					selected.setNaam(inputNaam);
 				}
 				Main.getWindow().getDesignTab().getViewportDesign().repaint();
@@ -85,6 +91,7 @@ public class naamDialoog extends JDialog implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			// Kijk of er op de Cancel knop is gedrukt
 		} else {
 			dispose();
 		}

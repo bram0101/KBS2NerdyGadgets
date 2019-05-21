@@ -38,6 +38,8 @@ public class typeDialoog extends JDialog implements ActionListener {
 	private NetworkComponentUnknown selected;
 	private JCheckBox[] checkboxes;
 
+	// Maak een dialoog voor het aangeven van de type componten van een onbekend
+	// component
 	public typeDialoog(JFrame frame) {
 		setSize(300, 150);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -50,7 +52,7 @@ public class typeDialoog extends JDialog implements ActionListener {
 		cancel = new JButton("Cancel");
 
 		root.add(titel);
-
+		// Maak checkboxes voor de type componenten
 		int i = 0;
 		checkboxes = new JCheckBox[NetworkComponentTypes.getTypes().length];
 		for (NetworkComponentType type : NetworkComponentTypes.getTypes()) {
@@ -58,7 +60,7 @@ public class typeDialoog extends JDialog implements ActionListener {
 			root.add(checkboxes[i]);
 			i++;
 		}
-
+		// Maak een layout voor het dialoog
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 		root.add(buttonPanel);
@@ -70,13 +72,14 @@ public class typeDialoog extends JDialog implements ActionListener {
 		pack();
 
 		setVisible(true);
-
+		// maak een listener die kijkt of er op een knop is gedrukt
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Kijk of er op de OK knop is gedrukt
 		if (e.getSource() == ok) {
 			selected.GetComponentTypes().clear();
 			for (int i = 0; i < checkboxes.length; i++) {
@@ -85,6 +88,7 @@ public class typeDialoog extends JDialog implements ActionListener {
 				}
 			}
 			dispose();
+			// Kijk of er op de Cancel knop is gedrukt
 		} else {
 			dispose();
 		}
@@ -96,6 +100,7 @@ public class typeDialoog extends JDialog implements ActionListener {
 
 	public void setSelected(NetworkComponentUnknown s) {
 		this.selected = s;
+		// Er word een checkbox gemaakt per component types
 		for (Integer i : selected.GetComponentTypes()) {
 			checkboxes[i].setSelected(true);
 		}

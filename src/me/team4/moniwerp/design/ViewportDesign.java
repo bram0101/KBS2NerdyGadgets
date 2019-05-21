@@ -104,7 +104,7 @@ public class ViewportDesign extends JPanel
 		addMouseWheelListener(this);
 		addMouseMotionListener(this);
 
-		//er word geluisterd of de combinatie van ctrl en z word gebruikt
+		// er word geluisterd of de combinatie van ctrl en z word gebruikt
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Z', KeyEvent.CTRL_MASK), "undo");
 		getActionMap().put("undo", new AbstractAction() {
 
@@ -114,7 +114,7 @@ public class ViewportDesign extends JPanel
 			}
 
 		});
-		//er word geluisterd of de combinatie van ctrl en y word gebruikt
+		// er word geluisterd of de combinatie van ctrl en y word gebruikt
 		getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('Y', KeyEvent.CTRL_MASK), "redo");
 		getActionMap().put("redo", new AbstractAction() {
 
@@ -124,15 +124,16 @@ public class ViewportDesign extends JPanel
 			}
 
 		});
-		
-		//zorgt dat er om een specifieke tijd de kosten en uptime word berekend van het gehele netwerk ontwerp
+
+		// zorgt dat er om een specifieke tijd de kosten en uptime word berekend van het
+		// gehele netwerk ontwerp
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(new TimerTask() {			
+		t.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				Calculator c = new Calculator();
-				kosten  = c.calcCosts(design);
-				//we doen het maal 100 zodat we een percentage hebben van de uptime
+				kosten = c.calcCosts(design);
+				// we doen het maal 100 zodat we een percentage hebben van de uptime
 				uptime = c.calcUptime(design) * 100;
 			}
 		}, 2000, 2000);
@@ -142,16 +143,17 @@ public class ViewportDesign extends JPanel
 	/**
 	 * redo knop: Je undo undo-en :)
 	 */
-	//de functie voor de redo van een aanpassing die je hebt gemaakt van het netwerk ontwerp
+	// de functie voor de redo van een aanpassing die je hebt gemaakt van het
+	// netwerk ontwerp
 	public void redo() {
 		if (redoQueue.isEmpty())
 			return;
-		// wanneer de functie word aangeroepen word de eerste record verwijderd 
+		// wanneer de functie word aangeroepen word de eerste record verwijderd
 		NetworkDesign design = redoQueue.removeFirst();
-		// er word een kopie gemaakt van het huidige ontwerp en word toegevoegd aan de queue
+		// De kopie van het netwerk ontwerp word toegevoeg aan redo
 		NetworkDesign undoDesign = copyDesign(this.design);
 		this.design = design;
-		//een maximale aantal ban 10 onderdelen die je kan redo-en
+		// een maximale aantal ban 10 onderdelen die je kan redo-en
 		undoQueue.addFirst(undoDesign);
 		if (undoQueue.size() > 10) {
 			undoQueue.removeLast();
@@ -162,16 +164,17 @@ public class ViewportDesign extends JPanel
 	/**
 	 * undo knop: een stap terug
 	 */
-	//de functie voor de undo van een aanpassing die je hebt gemaakt van het netwerk ontwerp
+	// de functie voor de undo van een aanpassing die je hebt gemaakt van het
+	// netwerk ontwerp
 	public void undo() {
 		if (undoQueue.isEmpty())
 			return;
-		// wanneer de functie word aangeroepen word de eerste record verwijderd 
+		// wanneer de functie word aangeroepen word de eerste record verwijderd
 		NetworkDesign design = undoQueue.removeFirst();
-		// er word een kopie gemaakt van het huidige ontwerp en word toegevoegd aan de queue
+		// Het kopie van het netwerk ontwerp word toegevoeg aan undo
 		NetworkDesign redoDesign = copyDesign(this.design);
 		this.design = design;
-		//een maximale aantal ban 10 onderdelen die je kan undo-en
+		// een maximale aantal ban 10 onderdelen die je kan undo-en
 		redoQueue.addFirst(redoDesign);
 		if (redoQueue.size() > 10) {
 			redoQueue.removeLast();
@@ -314,12 +317,13 @@ public class ViewportDesign extends JPanel
 			g.fillRect((int) (x2 - (1 * scale)), (int) (y2 - (1 * scale)), (int) (2 * scale), (int) (2 * scale));
 		}
 		g.setFont(new Font("Arial", Font.PLAIN, 15));
+		// Maak een gedeelte voor de kosten en uptime van het gehele ontwerp
 		g.setColor(new Color(220, 220, 220));
 		g.fillRect(1, 1, 125, 40);
 		g.setColor(Color.black);
 		g.drawRect(0, 0, 125, 40);
-		g.drawString("Kosten: $"+kosten, 5, 15);
-		g.drawString("Uptime:" + uptime+"%", 5, 30);
+		g.drawString("Kosten: $" + kosten, 5, 15);
+		g.drawString("Uptime:" + uptime + "%", 5, 30);
 		repaint();
 	}
 
@@ -388,23 +392,28 @@ public class ViewportDesign extends JPanel
 	public void mouseClicked(MouseEvent e) {
 		prevMouseX = e.getX();
 		prevMouseY = e.getY();
-		// er word gekeken of de linker klik is gedubbelklikked en of het niet op het kanvas is
+		// Kijk of er 2 keer op de linker muisknop is gebruikt en kijk of het niet op de
+		// kanvas is
 		if ((e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) && !e.isConsumed() && !isPanning) {
-			// er word gekeken of het gedubbleklikde een onbekende netwerkcomponent is
+			// Kijk of het gedubbelklikde component onbekend is
 			if (selected instanceof NetworkComponentUnknown) {
-				// er word een dialog geopent waarmee ja kan aangeven welke componenten eraan kunnen zitten
+				// Er word een dialog geopent waarmee je kan aangeven welke type componenten het
+				// onbekende component is
 				typeDialoog tD = new typeDialoog(frame);
 				tD.setSelected((NetworkComponentUnknown) selected);
 			} else {
-				// hij laat een dialog zien waarmee je de naam van een netwerkcomponenet kan veranderen
+				// Er word een dialoog weergegeven waarmee je de naam van een component kan
+				// veranderen
 				naamDialoog nD = new naamDialoog(frame);
 				nD.setSelected(selected);
 			}
 		}
-		// er word gekeken of er op de linker klik is gedrukt en of er het niet op het kanvas is
+		// Kijk of er op de linkermuisknop is gedrukt
 		if (e.getButton() == MouseEvent.BUTTON1) {
+			// Kijk of er niet op het kanvas is gedrukt
 			if (!isPanning) {
 				NetworkComponentType type = Main.getWindow().getDesignTab().getToolbar().getSelected();
+				// Kijk of de verbindings tool is geselecteerd
 				if (Main.getWindow().getDesignTab().getToolbar().useConnectiontool()) {
 					// Maak een verbinding
 					if (connFirst == null) {
@@ -412,6 +421,7 @@ public class ViewportDesign extends JPanel
 					} else if (connFirst != selected) {
 						NetworkConnection conn = new NetworkConnection(connFirst, selected);
 						connFirst = null;
+						// Voeg het ontwerp toe aan de geschiedenis
 						addHistory();
 						design.getConnections().add(conn);
 					}
@@ -462,17 +472,23 @@ public class ViewportDesign extends JPanel
 					break;
 				}
 			}
+			// Kijk of er een component verwijderd moet worden
 			if (compRem != null) {
+				// Voeg het ontwerp toe aan de geschiedenis
 				addHistory();
+				// Verwijder het component
 				design.getComponents().remove(compRem);
 				Iterator<NetworkConnection> it = design.getConnections().iterator();
+				// Kijk of er nog waardes in de iterator staan
 				while (it.hasNext()) {
 					NetworkConnection conn = it.next();
+					// Alle connecties worden verwijderd voor het verwijderde component
 					if (conn.getFirst() == compRem || conn.getSecond() == compRem)
 						it.remove();
 				}
 				repaint();
 			} else {
+				// Er is niks dat verwijderd moet worden
 				NetworkConnection connRem = null;
 				// Ga langs elke connectie en teken die.
 				for (NetworkConnection con : design.getConnections()) {
@@ -534,9 +550,11 @@ public class ViewportDesign extends JPanel
 						break;
 					}
 				}
-
+				// Kijken of er een connectie verwijderd moet worden
 				if (connRem != null) {
+					// voeg het netwerk ontwerp toe aan de geschiedenis
 					addHistory();
+					// verwijder de connectie
 					design.getConnections().remove(connRem);
 					repaint();
 				}
@@ -547,7 +565,8 @@ public class ViewportDesign extends JPanel
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
+		// er word een schaal gemaakt voor het vergroten en verkleinen van het netwerk
+		// ontwerp aan de hand van de scroll knop
 		scale += e.getPreciseWheelRotation();
 		if (scale < 1) {
 			scale = 1;
@@ -559,13 +578,16 @@ public class ViewportDesign extends JPanel
 	}
 
 	@Override
-	// 
+	// de functie voor het verslepen van netwerk componenten binnen het kanvas
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+		// Kijk of de muis op het kanvas geselecteerd is
 		if (isPanning) {
+			// Het verslepen van het kanvas
 			panningX -= (e.getX() - prevMouseX) / scale;
 			panningY -= (e.getY() - prevMouseY) / scale;
+			// Kijk of een netwerkcomponent is geselecteerd
 		} else {
+			// Het verslepen van het netwerkcomponent
 			prevCompX += (e.getX() - prevMouseX) / scale;
 			prevCompY += (e.getY() - prevMouseY) / scale;
 			selected.setxLoc((int) prevCompX);
@@ -582,34 +604,45 @@ public class ViewportDesign extends JPanel
 
 	}
 
+	// Er word een copy gemaakt van het netwerktekening
 	private NetworkDesign copyDesign(NetworkDesign design) {
 		NetworkDesign designCopy = new NetworkDesign();
 		HashMap<NetworkComponent, NetworkComponent> compConv = new HashMap<NetworkComponent, NetworkComponent>();
 		for (NetworkComponent comp : design.getComponents()) {
+			// Kijken of het netwerkcomponent onbekend is
 			if (comp instanceof NetworkComponentUnknown) {
 				NetworkComponent compCopy = new NetworkComponentUnknown(comp.getNaam(), comp.getType(), comp.getCosts(),
 						comp.getUptime(), comp.getxLoc(), comp.getyLoc(),
 						((NetworkComponentUnknown) comp).GetComponentTypes());
+				// Het onbekende netwerkcomponent toevoegen aan het kopie van het ontwerp
 				designCopy.getComponents().add(compCopy);
 				compConv.put(comp, compCopy);
 			} else {
+				// de netwerkcomponenten worden aan het kopie toegevoegd
 				NetworkComponent compCopy = new NetworkComponent(comp.getNaam(), comp.getType(), comp.getCosts(),
 						comp.getUptime(), comp.getxLoc(), comp.getyLoc());
+				// Het netwerkcomponent toevoegen aan het kopie van het ontwerp
 				designCopy.getComponents().add(compCopy);
 				compConv.put(comp, compCopy);
 			}
 
 		}
+		// de verbindingen tussen de netwerkcomponenten worden aan het copy toegevoegd
 		for (NetworkConnection conn : design.getConnections()) {
 			NetworkConnection connCopy = new NetworkConnection(compConv.get(conn.getFirst()),
 					compConv.get(conn.getSecond()));
+			// De verbindingen tussen de netwerkcomponenten toevoegen aan het kopie van het
+			// ontwerp
 			designCopy.getConnections().add(connCopy);
 		}
 		return designCopy;
 	}
 
+	// het copy van de netwerktekening word aan een geschiedenis toegevoeg
 	public void addHistory() {
 		undoQueue.addFirst(copyDesign(design));
+		// als er meer dan 10 versies van het netwrek in de geschiedenis staan word het
+		// laatste ontwerp verwijderd
 		if (undoQueue.size() > 10)
 			undoQueue.removeLast();
 	}
