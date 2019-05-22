@@ -115,8 +115,8 @@ public class NetworkUtils {
 			// Maak een verbinding.
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET"); 
-			con.setConnectTimeout(500);
-			con.setReadTimeout(500);
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
 			con.setInstanceFollowRedirects(true); // staat redirects toe
 			con.connect();
 			

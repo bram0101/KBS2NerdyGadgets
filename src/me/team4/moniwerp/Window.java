@@ -210,7 +210,7 @@ public class Window extends JFrame implements ComponentListener {
 			public void actionPerformed(ActionEvent e) {
 				// Maak een venster aan om het resultaat in weer te geven.
 				JFrame resultFrame = new JFrame("Nettest resultaten");
-				resultFrame.setSize(500, 800);
+				resultFrame.setSize(500, 960);
 				// In een textpane voegen wij het resultaat toe.
 				JTextPane textPane = new JTextPane();
 				// Je mag de text niet aanpassen.

@@ -85,8 +85,6 @@ public class MainNetTest {
 
 			pw.println();
 			pw.println("PASSED: " + ((int) (ratio / amt * 100F)) + "%"); // de totale percentage
-			pw.println();
-			pw.println();
 			pw.flush(); // zet de gegevens daadwerkelijk naar de results.txt
 			pw.close(); // netjes afsluiten
 
