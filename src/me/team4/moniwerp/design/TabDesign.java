@@ -106,11 +106,10 @@ public class TabDesign extends JPanel implements Tab {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				try {
 					String fileName = Of.getSelectedFile().getAbsolutePath();
-					if(!fileName.endsWith(".mwd"))
+					if(!fileName.endsWith(".mwd") && !fileName.endsWith(".MWD"))
 						fileName = fileName + ".mwd";
-					else if(!fileName.endsWith(".MWD"))
-						fileName = fileName + ".MWD";
 					DataOutputStream dis = new DataOutputStream(new FileOutputStream(fileName));
+					viewport.getNetworkDesign().calcBounds();
 					viewport.getNetworkDesign().save(dis);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
