@@ -44,6 +44,16 @@ public class Optimizer {
 	}
 
 	public void optimize(NetworkDesign ontwerp, double minimumUptime) {
+		boolean check = false;
+		for(NetworkComponent comp : ontwerp.getComponents()) {
+			if(comp instanceof NetworkComponentUnknown) {
+				check = true;
+				break;
+			}
+		}
+		if(!check)
+			return;
+		
 		c.buildNodeNetwork(ontwerp);
 		
 		if(c.getFirstNode() == null)

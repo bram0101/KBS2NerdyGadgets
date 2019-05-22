@@ -189,6 +189,11 @@ public class ViewportDesign extends JPanel
 
 		// Ga langs elk netwerkcomponent en teken het
 		for (NetworkComponent comp : design.getComponents()) {
+			int blockWidth = 20;
+			int blockHeight = 5;
+			if(comp.getType().equals("SERIE") || comp.getNaam().isEmpty()) {
+				blockWidth = 5;
+			}
 			// Hij staat aan, dus blauw.
 			if (comp == connFirst) {
 				g.setColor(new Color(150, 255, 255));
@@ -196,7 +201,7 @@ public class ViewportDesign extends JPanel
 				if (comp instanceof NetworkComponentUnknown) {
 					g.setColor(new Color(150, 255, 200));
 				} else {
-					if (comp.getType().equals("INTERNET")) {
+					if (comp.getType().equals("INTERNET") || comp.getType().equals("SERIE")) {
 						g.setColor(new Color(220, 220, 220));
 					} else {
 						// Hij is geselecteerd dus een lichtere blauw.
@@ -207,7 +212,7 @@ public class ViewportDesign extends JPanel
 				if (comp instanceof NetworkComponentUnknown) {
 					g.setColor(new Color(100, 255, 150));
 				} else {
-					if (comp.getType().equals("INTERNET")) {
+					if (comp.getType().equals("INTERNET") || comp.getType().equals("SERIE")) {
 						g.setColor(new Color(200, 200, 200));
 					} else {
 						// Hij is niet geselecteerd dus een normale blauw
@@ -218,7 +223,7 @@ public class ViewportDesign extends JPanel
 
 			// Vul de rechthoek. Dit is de basis van een component.
 			g.fillRect((int) ((comp.getxLoc() - xOffset) * scale), (int) ((comp.getyLoc() - yOffset) * scale),
-					(int) (20 * scale), (int) (5 * scale));
+					(int) (blockWidth * scale), (int) (blockHeight * scale));
 			// Zet de kleur voor de border (randje) dat om de rechthoek wordt getekent.
 			if (comp == selected) {
 				g.setColor(Color.LIGHT_GRAY);
@@ -227,7 +232,7 @@ public class ViewportDesign extends JPanel
 			}
 			// Teken de border
 			g.drawRect((int) ((comp.getxLoc() - xOffset) * scale), (int) ((comp.getyLoc() - yOffset) * scale),
-					(int) (20 * scale), (int) (5 * scale));
+					(int) (blockWidth * scale), (int) (blockHeight * scale));
 			// Zet de kleur voor de tekst
 			g.setColor(Color.black);
 			if (comp instanceof NetworkComponentUnknown) {
@@ -236,15 +241,19 @@ public class ViewportDesign extends JPanel
 				int y1 = (int) ((comp.getyLoc() - yOffset) * scale);
 
 				g.drawLine((int) (x1 + (5 / 3 * scale)), (int) (y1 + (5 / 3F * scale)),
-						(int) (x1 + ((20 - 5 / 3) * scale)), (int) (y1 + (5 / 3F * scale)));
+						(int) (x1 + ((blockWidth - 5 / 3) * scale)), (int) (y1 + (blockHeight / 3F * scale)));
 				g.drawLine((int) (x1 + (5 / 3 * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)),
-						(int) (x1 + ((20 - 5 / 3) * scale)), (int) (y1 + ((5 - 5 / 3F) * scale)));
+						(int) (x1 + ((blockWidth - 5 / 3) * scale)), (int) (y1 + ((blockHeight - 5 / 3F) * scale)));
 			} else {
 				// Zet de font. Dit doen wij voor de grootte.
 				g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * scale)));
 				// Hiermee vragen wij de grootte van de text op in pixels. Dan kunnen wij het
 				// centreren.
-				Rectangle2D textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+				String compNaam = comp.getNaam();
+				if(comp.getType().equals("SERIE")) {
+					compNaam = "X";
+				}
+				Rectangle2D textBounds = g.getFontMetrics().getStringBounds(compNaam, g);
 				// Teken de text. Pak de pixel locatie van het midden van het component en haal
 				// de helft van de grootte van de textbounds eraf.
 
@@ -252,15 +261,25 @@ public class ViewportDesign extends JPanel
 					float textScale = (float) ((16 * scale) / textBounds.getWidth());
 					// Zet de font. Dit doen wij voor de grootte.
 					g.setFont(new Font("Arial", Font.PLAIN, (int) (3.5 * scale * textScale)));
-					textBounds = g.getFontMetrics().getStringBounds(comp.getNaam(), g);
+					textBounds = g.getFontMetrics().getStringBounds(compNaam, g);
 				}
-				g.drawString(comp.getNaam(),
-						(int) ((comp.getxLoc() - xOffset) * scale + 10.0 * scale - textBounds.getCenterX()),
-						(int) ((comp.getyLoc() - yOffset) * scale + 2.5 * scale - textBounds.getCenterY()));
+				g.drawString(compNaam,
+						(int) ((comp.getxLoc() - xOffset) * scale + (blockWidth * 0.5) * scale - textBounds.getCenterX()),
+						(int) ((comp.getyLoc() - yOffset) * scale + (blockHeight * 0.5) * scale - textBounds.getCenterY()));
 			}
 		}
 		// Ga langs elke connectie en teken die.
 		for (NetworkConnection con : design.getConnections()) {
+			int fBlockWidth = 20;
+			int fBlockHeight = 5;
+			int sBlockWidth = 20;
+			int sBlockHeight = 5;
+			if(con.getFirst().getType().equals("SERIE") || con.getFirst().getNaam().isEmpty()) {
+				fBlockWidth = 5;
+			}
+			if(con.getSecond().getType().equals("SERIE") || con.getSecond().getNaam().isEmpty()) {
+				sBlockWidth = 5;
+			}
 			// Zet de kleur naar zwart
 			g.setColor(Color.black);
 			// Als de componenten onder elkaar zitten dan willen wij de lijn van de
@@ -280,33 +299,33 @@ public class ViewportDesign extends JPanel
 				// Naar rechts toe
 				// Eerste component + breedte van component (20 * scale) voor de rechterkant van
 				// het component
-				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (20 * scale);
+				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * scale);
 				// De + (2.5 * scale) is zodat hij in het midden zit qua hoogte.
-				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * 0.5 * scale);
 
 				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale);
-				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * 0.5 * scale);
 			} else if (xDiff < -Math.abs(yDiff)) {
 				// Naar links toe
 				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale);
-				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * 0.5 * scale);
 
-				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (20 * scale);
-				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * scale);
+				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * 0.5 * scale);
 			} else if (yDiff >= Math.abs(xDiff)) {
 				// Naar onderen toe
-				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
-				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (5 * scale);
+				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * 0.5 * scale);
+				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * scale);
 
-				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
+				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * 0.5 * scale);
 				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale);
 			} else {
 				// Naar rechts toe
-				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
+				x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * 0.5 * scale);
 				y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale);
 
-				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
-				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (5 * scale);
+				x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * 0.5 * scale);
+				y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * scale);
 			}
 			// Teken het lijntje
 			int radiusX = (int) ((x1 + x2) / 2 - 1.5 * scale + 0.5);
@@ -339,6 +358,8 @@ public class ViewportDesign extends JPanel
 	 * van CulledHierarchys
 	 */
 	public void optimize() {
+		// Voeg het ontwerp toe aan de geschiedenis
+		addHistory();
 		optimizerDialoog dialog = new optimizerDialoog(Main.getWindow());
 		dialog.setDesign(design);
 	}
@@ -357,11 +378,16 @@ public class ViewportDesign extends JPanel
 
 		// Ga langs elk component.
 		for (NetworkComponent comp : design.getComponents()) {
+			int blockWidth = 20;
+			int blockHeight = 5;
+			if(comp.getType().equals("SERIE") || comp.getNaam().isEmpty()) {
+				blockWidth = 5;
+			}
 			// Krijg de min en max locaties van de rechthoek
 			int minX = (int) ((comp.getxLoc() - xOffset) * scale);
 			int minY = (int) ((comp.getyLoc() - yOffset) * scale);
-			int maxX = minX + (int) (20 * scale);
-			int maxY = minY + (int) (5 * scale);
+			int maxX = minX + (int) (blockWidth * scale);
+			int maxY = minY + (int) (blockHeight * scale);
 			// Kijk of de muis in de rechthoek zit.
 			if (e.getX() >= minX && e.getY() >= minY && e.getX() < maxX && e.getY() < maxY) {
 				// Zet de selected variabele naar het goede component
@@ -462,11 +488,16 @@ public class ViewportDesign extends JPanel
 
 			// Ga langs elk component.
 			for (NetworkComponent comp : design.getComponents()) {
+				int blockWidth = 20;
+				int blockHeight = 5;
+				if(comp.getType().equals("SERIE") || comp.getNaam().isEmpty()) {
+					blockWidth = 5;
+				}
 				// Krijg de min en max locaties van de rechthoek
 				int minX = (int) ((comp.getxLoc() - xOffset) * scale);
 				int minY = (int) ((comp.getyLoc() - yOffset) * scale);
-				int maxX = minX + (int) (20 * scale);
-				int maxY = minY + (int) (5 * scale);
+				int maxX = minX + (int) (blockWidth * scale);
+				int maxY = minY + (int) (blockHeight * scale);
 				// Kijk of de muis in de rechthoek zit.
 				if (e.getX() >= minX && e.getY() >= minY && e.getX() < maxX && e.getY() < maxY) {
 					// Zet de selected variabele naar het goede component
@@ -496,6 +527,16 @@ public class ViewportDesign extends JPanel
 				NetworkConnection connRem = null;
 				// Ga langs elke connectie en teken die.
 				for (NetworkConnection con : design.getConnections()) {
+					int fBlockWidth = 20;
+					int fBlockHeight = 5;
+					int sBlockWidth = 20;
+					int sBlockHeight = 5;
+					if(con.getFirst().getType().equals("SERIE") || con.getFirst().getNaam().isEmpty()) {
+						fBlockWidth = 5;
+					}
+					if(con.getSecond().getType().equals("SERIE") || con.getSecond().getNaam().isEmpty()) {
+						sBlockWidth = 5;
+					}
 					// Als de componenten onder elkaar zitten dan willen wij de lijn van de
 					// onderkant naar de bovenkant laten gaan. Zitten de componenten naast elkaar,
 					// dan willen wij dat de lijn naar de zijkanten gaan. x1, y1, x2 en y2 zijn de
@@ -509,37 +550,37 @@ public class ViewportDesign extends JPanel
 					// lijntje naar rechts, links, boven of onderen toe moet
 					float xDiff = con.getSecond().getxLoc() - con.getFirst().getxLoc();
 					float yDiff = con.getSecond().getyLoc() - con.getFirst().getyLoc();
-					if (xDiff > Math.abs(yDiff)) {
+					if (xDiff >= Math.abs(yDiff)) {
 						// Naar rechts toe
 						// Eerste component + breedte van component (20 * scale) voor de rechterkant van
 						// het component
-						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (20 * scale);
+						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * scale);
 						// De + (2.5 * scale) is zodat hij in het midden zit qua hoogte.
-						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * 0.5 * scale);
 
 						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale);
-						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * 0.5 * scale);
 					} else if (xDiff < -Math.abs(yDiff)) {
 						// Naar links toe
 						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale);
-						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
+						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * 0.5 * scale);
 
-						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (20 * scale);
-						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (2.5 * scale);
-					} else if (yDiff > Math.abs(xDiff)) {
+						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * scale);
+						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * 0.5 * scale);
+					} else if (yDiff >= Math.abs(xDiff)) {
 						// Naar onderen toe
-						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
-						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (5 * scale);
+						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * 0.5 * scale);
+						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale) + (int) (fBlockHeight * scale);
 
-						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
+						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * 0.5 * scale);
 						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale);
 					} else {
 						// Naar rechts toe
-						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (10 * scale);
+						x1 = (int) ((con.getFirst().getxLoc() - xOffset) * scale) + (int) (fBlockWidth * 0.5 * scale);
 						y1 = (int) ((con.getFirst().getyLoc() - yOffset) * scale);
 
-						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (10 * scale);
-						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (5 * scale);
+						x2 = (int) ((con.getSecond().getxLoc() - xOffset) * scale) + (int) (sBlockWidth * 0.5 * scale);
+						y2 = (int) ((con.getSecond().getyLoc() - yOffset) * scale) + (int) (sBlockHeight * scale);
 					}
 					// Teken het lijntje
 					int minX = (int) ((x1 + x2) / 2 - 1.5 * scale + 0.5);

@@ -101,6 +101,8 @@ public class NetworkComponentTypes {
 
 			// Voeg een internet component toe voor als eerste node.
 			netwerkComponentType.add(new NetworkComponentType("INTERNET", 0, 1F));
+			// Voeg een internet component toe voor als eerste node.
+			netwerkComponentType.add(new NetworkComponentType("SERIE", 0, 1F));
 
 			// ga door elk element in het xml bestand en haal de data daaruit en voeg het
 			// toe aan het bestand.

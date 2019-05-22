@@ -140,7 +140,7 @@ public class Toolbar extends JPanel implements ActionListener {
 				button.setSelected(true); // Voorkom deselectie
 				// Als de knop een onbekende is, moeten wij een speciale type toevoegen.
 				if (button.getText().equals("Onbekende")) {
-					selected = new NetworkComponentType("Unknown", 0, 0);
+					selected = new NetworkComponentType("Unknown", 0, 1);
 				} else {
 					selected = NetworkComponentTypes.getTypes(button.getText());
 				}

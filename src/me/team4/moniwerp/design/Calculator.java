@@ -140,6 +140,12 @@ public class Calculator {
 		} else if (n.getNodes().size() == 1) {
 			return n.getComp().getUptime() * getUptime(n.getNodes().get(0)); // Er komt één connectie uit een node, dus
 																				// kan het sequentieel worden berekend.
+		} else if(n.getComp().getType().equals("SERIE")){
+			double v = 1D;
+			for(int j = 0; j < n.getNodes().size(); j++) {
+				v *= getUptime(n.getNodes().get(j));
+			}
+			return v;
 		} else {
 			double v = 1D;
 			for (int j = 0; j < n.getNodes().size(); j++) {
@@ -185,6 +191,12 @@ public class Calculator {
 		} else if (n.getNodes().size() == 1) { // er komt één connectie uit een node, deze uptime kan sequentieel worden
 												// berekend.
 			return uptime * getUptime(n.getNodes().get(0), solve);
+		} else if(n.getComp().getType().equals("SERIE")){
+			double v = 1D;
+			for(int j = 0; j < n.getNodes().size(); j++) {
+				v *= getUptime(n.getNodes().get(j), solve);
+			}
+			return v;
 		} else {
 			double v = 1D;// hier komt er uit een node meer connecties, dus worden de uptime hiervan
 							// parallel berekend.
