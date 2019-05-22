@@ -27,10 +27,12 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Map.Entry;
 
+import me.team4.nettest.tests.NetworkTestDatabaseIntegrity;
 import me.team4.nettest.tests.NetworkTestDatabaseServers;
 import me.team4.nettest.tests.NetworkTestLoadBalancer;
 import me.team4.nettest.tests.NetworkTestLocalHost;
 import me.team4.nettest.tests.NetworkTestWeb;
+import me.team4.nettest.tests.NetworkTestWebStress;
 import me.team4.nettest.tests.NetworkTestpfSense;
 
 
@@ -42,7 +44,9 @@ public class MainNetTest {
 				new NetworkTestWeb(),
 				new NetworkTestLoadBalancer(),
 				new NetworkTestpfSense(),
-				new NetworkTestDatabaseServers()
+				new NetworkTestDatabaseServers(),
+				new NetworkTestWebStress(),
+				new NetworkTestDatabaseIntegrity()
 		};
 
 		try {
@@ -76,6 +80,7 @@ public class MainNetTest {
 					pw.println();
 				}
 				pw.println();
+				pw.flush();
 			}
 
 			pw.println();

@@ -30,7 +30,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.AbstractMap;
+import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -50,7 +53,7 @@ public class NetworkUtils {
 		}
 		return false;
 	}
-
+	
 	public static boolean http(String ip, String file) {
 		try {
 			//De SSL certificaten van de webservers worden niet ondersteund, dus hiermee schakelen wij de SSL check uit.
@@ -74,8 +77,8 @@ public class NetworkUtils {
 			// Maak een verbinding.
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET"); 
-			con.setConnectTimeout(5000);
-			con.setReadTimeout(5000);
+			con.setConnectTimeout(500);
+			con.setReadTimeout(500);
 			con.setInstanceFollowRedirects(true); // staat redirects toe
 			con.connect();
 			
@@ -88,19 +91,38 @@ public class NetworkUtils {
 		}
 		return false;
 	}
-	
-	public static boolean https(String ip, String file) {
-		try {
-			URL url = new URL("https://" + ip + "/" + file);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
-			con.setConnectTimeout(5000);
-			con.setReadTimeout(5000);
-			con.setInstanceFollowRedirects(true);
 
+	public static boolean httpStress(String ip, String file) {
+		try {
+			//De SSL certificaten van de webservers worden niet ondersteund, dus hiermee schakelen wij de SSL check uit.
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){ 
+                public boolean verify(String hostname, SSLSession session) { 
+                        return true; 
+                }}); 
+			SSLContext context = SSLContext.getInstance("TLS"); 
+            context.init(null, new X509TrustManager[]{new X509TrustManager(){ 
+                    public void checkClientTrusted(X509Certificate[] chain, 
+                                    String authType) throws CertificateException {} 
+                    public void checkServerTrusted(X509Certificate[] chain, 
+                                    String authType) throws CertificateException {} 
+                    public X509Certificate[] getAcceptedIssuers() { 
+                            return new X509Certificate[0]; 
+                    }}}, new SecureRandom()); 
+            HttpsURLConnection.setDefaultSSLSocketFactory( 
+                            context.getSocketFactory()); 
+            // Maak de URL
+			URL url = new URL("https://" + ip + "/" + file);
+			// Maak een verbinding.
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET"); 
+			con.setConnectTimeout(500);
+			con.setReadTimeout(500);
+			con.setInstanceFollowRedirects(true); // staat redirects toe
+			con.connect();
+			
 			int status = con.getResponseCode();
 
-			if (status == 200)
+			if (status == 200) // 200 = OK
 				return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -121,6 +143,20 @@ public class NetworkUtils {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static Entry<Connection,ResultSet> sqlQuery(String query, String ip, String database, String user, String pass) {
+		try {
+			String DB_URL = "jdbc:mysql://" + ip + "/" + database + "?useLegacyDatetimeCode=false&serverTimezone=UTC";
+			Connection connection = DriverManager.getConnection(DB_URL, user, pass);
+			Statement stmt = connection.createStatement();
+			ResultSet set = stmt.executeQuery(query);
+			
+			return new AbstractMap.SimpleEntry<Connection, ResultSet>(connection, set);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 }

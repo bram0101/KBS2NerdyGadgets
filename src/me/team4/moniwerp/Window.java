@@ -35,6 +35,8 @@ import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 
@@ -219,8 +222,6 @@ public class Window extends JFrame implements ComponentListener {
 				// Je moet kunnen scrollen als dat nodig is.
 				JScrollPane sp = new JScrollPane(textPane);
 				resultFrame.add(sp);
-				// Zet er alvast in dat het aan het laden is.
-				textPane.setText("Loading...");
 				// Plaats het venster in het midden van het scherm.
 				resultFrame.setLocationRelativeTo(null);
 				// Geef het venster weer.
@@ -231,8 +232,16 @@ public class Window extends JFrame implements ComponentListener {
 				StyleConstants.setForeground(greenStyle, new Color(40, 230, 40));
 				Style redStyle = textPane.addStyle("red", null);
 				StyleConstants.setForeground(redStyle, new Color(230, 40, 40));
-				Style normalStyle = textPane.addStyle("red", null);
+				Style normalStyle = textPane.addStyle("normal", null);
 				StyleConstants.setForeground(normalStyle, new Color(230, 230, 230));
+
+				// Zet er alvast in dat het aan het laden is.
+				try {
+					textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(), "Loading...",
+							normalStyle);
+				} catch (BadLocationException e1) {
+					e1.printStackTrace();
+				}
 
 				// Als het venster van grootte verandert, willen wij ook de textgrootte
 				// aanpassen.
@@ -265,44 +274,71 @@ public class Window extends JFrame implements ComponentListener {
 					public void run() {
 						BufferedReader br = null;
 						try {
-							// Voer de test uit.
-							me.team4.nettest.MainNetTest.main(new String[] {});
-							// Lees het resultatenbestand
-							br = new BufferedReader(new FileReader(new File("./results.txt")));
-							StringBuilder sb = new StringBuilder();
-							String s = "";
-							// Maak de textpane leeg.
-							textPane.getStyledDocument().remove(0, textPane.getStyledDocument().getLength());
-							// Lees regel voor regel de text.
-							// Afhankelijk van wat in de regel staat geven wij het een bepaalde stijl.
-							while ((s = br.readLine()) != null) {
-								if (s.contains(": PASSED")) {
-									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
-											s, greenStyle);
-								} else if (s.contains(": FAILED")) {
-									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
-											s, redStyle);
-								} else {
-									textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
-											s, normalStyle);
+							Thread testThread = new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									// Voer de test uit.
+									me.team4.nettest.MainNetTest.main(new String[] {});
 								}
-								textPane.getStyledDocument().insertString(textPane.getStyledDocument().getLength(),
-										"\n", normalStyle);
-							}
-							br.close();
+
+							});
+							testThread.start();
+							Timer timer = new Timer();
+							TimerTask task = new TimerTask() {
+
+								@Override
+								public void run() {
+									BufferedReader br = null;
+									try {
+										// Lees het resultatenbestand
+										br = new BufferedReader(new FileReader(new File("./results.txt")));
+										StringBuilder sb = new StringBuilder();
+										String s = "";
+										// Maak de textpane leeg.
+										textPane.getStyledDocument().remove(0,
+												textPane.getStyledDocument().getLength());
+										// Lees regel voor regel de text.
+										// Afhankelijk van wat in de regel staat geven wij het een bepaalde stijl.
+										while ((s = br.readLine()) != null) {
+											if (s.contains(": PASSED")) {
+												textPane.getStyledDocument().insertString(
+														textPane.getStyledDocument().getLength(), s, greenStyle);
+											} else if (s.contains(": FAILED")) {
+												textPane.getStyledDocument().insertString(
+														textPane.getStyledDocument().getLength(), s, redStyle);
+											} else {
+												textPane.getStyledDocument().insertString(
+														textPane.getStyledDocument().getLength(), s, normalStyle);
+											}
+											textPane.getStyledDocument().insertString(
+													textPane.getStyledDocument().getLength(), "\n", normalStyle);
+										}
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									} finally {
+										// Sluit de inputstream, want anders dan blijft het bestand geopent en kunnen
+										// andere programma's er niks mee doen. De testscripts kunnen dan zelfs niet
+										// meer zijn resultaten in het bestand schrijven.
+										try {
+											if (br != null)
+												br.close();
+										} catch (Exception ex) {
+											ex.printStackTrace();
+										}
+									}
+									if(!testThread.isAlive()) {
+										this.cancel();
+									}
+								}
+
+							};
+							
+							timer.scheduleAtFixedRate(task, 1000, 1000);
+
 						} catch (Exception ex) {
 							ex.printStackTrace();
 							textPane.setText("Er is iets fout gegaan tijdens de test. Probeer het later opnieuw.");
-						} finally {
-							// Sluit de inputstream, want anders dan blijft het bestand geopent en kunnen
-							// andere programma's er niks mee doen. De testscripts kunnen dan zelfs niet
-							// meer zijn resultaten in het bestand schrijven.
-							try {
-								if (br != null)
-									br.close();
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
 						}
 					}
 
