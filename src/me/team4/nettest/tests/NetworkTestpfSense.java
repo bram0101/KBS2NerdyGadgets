@@ -40,13 +40,13 @@ public class NetworkTestpfSense implements NetworkTest{
 		String pfSense_4_1 = "192.168.10.254";
 		String pfSense_4_2 = "192.168.20.254";
 		String pfSense_4_3 = "192.168.30.254";
-		String pfSense_4_HAproxy = "192.168.10.221";
+		String pfSense_4_HAproxy = "192.168.40.221";
 		
 		// Variabelen IPv6.
 		String pfSense_6_1 = "[FC00:0:0:10:1000:0:0:1]";
 		String pfSense_6_2 = "[FC00:0:0:20:1000:0:0:1]";
 		String pfSense_6_3 = "[FC00:0:0:30:1000:0:0:1]";		
-		String pfSense_6_HAproxy = "[FC00:0:0:10:2000:0:0:1]";
+		String pfSense_6_HAproxy = "[FC00:0:0:40:2000:0:0:1]";
 		
 		// pfSense ping tests op IPv4 en IPv6 en voeg resultaten toe aan log file.
 		result.addResult("ping pfSense IPv4 1", NetworkUtils.ping(pfSense_4_1));
