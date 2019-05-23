@@ -44,79 +44,99 @@ public class Optimizer {
 	}
 
 	public void optimize(NetworkDesign ontwerp, double minimumUptime) {
+		// Check of er wel onbekendes in zitten.
 		boolean check = false;
-		for(NetworkComponent comp : ontwerp.getComponents()) {
-			if(comp instanceof NetworkComponentUnknown) {
+		for (NetworkComponent comp : ontwerp.getComponents()) {
+			if (comp instanceof NetworkComponentUnknown) {
 				check = true;
 				break;
 			}
 		}
-		if(!check)
+		// Geen onbekendes, stop dan nu.
+		if (!check)
 			return;
-		
+
+		// Bouw het node netwerk op. Nodig voor uptime berekenen.
 		c.buildNodeNetwork(ontwerp);
-		
-		if(c.getFirstNode() == null)
+
+		// Als er geen begin in het netwerk is, stop dan.
+		if (c.getFirstNode() == null)
 			return;
-		
+
 		CulledHierarchy ch = new CulledHierarchy();
 
+		// Voer het algoritme uit
 		solve = ch.execute(c.getProblemDefinition(), c, minimumUptime);
 
-		for (int i = 0; i < c.getProblemDefinition().length; i++) {
-			for (int j = 0; j < c.getProblemDefinition()[i].length; j++) {
-				System.out.println(NetworkComponentTypes.getTypes()[c.getProblemDefinition()[i][j]].getName() + ": "
-						+ solve[c.getOffsetGrootte()[i] + j]);
-			}
-		}
-
+		// Vervang de onbekende componenten met de echte componenten die het algoritme
+		// heeft berekend.
 		replaceComponents(ontwerp, c.getFirstNode());
 	}
 
 	private void replaceComponents(NetworkDesign design, Calculator.Node node) {
+		// Is het een onbekende?
 		if (node.GetID() >= 0) {
+			// Haal alle ingaande en uitgaande connecties op en sla ze op in deze lijsten
 			List<NetworkComponent> inConnections = new ArrayList<NetworkComponent>();
 			List<NetworkComponent> outConnections = new ArrayList<NetworkComponent>();
-			
+
 			Iterator<NetworkConnection> connections = design.getConnections().iterator();
 			NetworkConnection conn = null;
-			while(connections.hasNext()) {
+			// Voor elke connectie
+			while (connections.hasNext()) {
 				conn = connections.next();
-				if(conn.getFirst() == node.getComp()) {
+				// Is dit een uitgaande connectie?
+				if (conn.getFirst() == node.getComp()) {
+					// voeg het toe aan de lijst
 					outConnections.add(conn.getSecond());
+					// haal de connectie weg
 					connections.remove();
 				}
-				if(conn.getSecond() == node.getComp()) {
+				// Is dit een ingaande connectie?
+				if (conn.getSecond() == node.getComp()) {
+					// voeg het toe aan de lijst
 					inConnections.add(conn.getFirst());
+					// haal de connectie weg
 					connections.remove();
 				}
 			}
-			
+
+			// Kijk hoeveel componenten worden toegevoegd, zodat wij ze verticaal kunnen
+			// centreren.
 			int k = 0;
 			for (int j = 0; j < c.getProblemDefinition()[node.GetID()].length; j++) {
 				k += solve[c.getOffsetGrootte()[node.GetID()] + j];
 			}
 
 			int offset = -k / 2 * 7;
+			// Ga langs elk mogelijke type voor de onbekende
 			for (int j = 0; j < c.getProblemDefinition()[node.GetID()].length; j++) {
+				// Kijk hoeveel componenten van dat type wij moeten toevoegen.
 				int amt = solve[c.getOffsetGrootte()[node.GetID()] + j];
+				// Haal de data van het type op.
 				NetworkComponentType type = NetworkComponentTypes.getTypes()[c.getProblemDefinition()[node.GetID()][j]];
+				// Loop het aantal van amt
 				for (int m = 0; m < amt; m++) {
+					// Maak een nieuw component aan
 					NetworkComponent newComp = new NetworkComponent(type.getName(), type.getName(), type.getCosts(),
 							type.getUptime(), node.getComp().getxLoc(), node.getComp().getyLoc() + offset);
+					// Voeg het toe aan het ontwerp
 					design.getComponents().add(newComp);
-					for(NetworkComponent inComp : inConnections) {
+					// Voeg de verbindingen toe.
+					for (NetworkComponent inComp : inConnections) {
 						design.getConnections().add(new NetworkConnection(inComp, newComp));
 					}
-					for(NetworkComponent outComp : outConnections) {
+					for (NetworkComponent outComp : outConnections) {
 						design.getConnections().add(new NetworkConnection(newComp, outComp));
 					}
 					offset += 7;
 				}
 			}
-			if(design.getComponents().contains(node.getComp()))
+			// Haal de onbekende component uit het ontwerp
+			if (design.getComponents().contains(node.getComp()))
 				design.getComponents().remove(node.getComp());
 		}
+		// Voor alle nodes die er verbonden aan zijn, doe dit opnieuw.
 		for (int i = 0; i < node.getNodes().size(); i++) {
 			replaceComponents(design, node.getNodes().get(i));
 		}

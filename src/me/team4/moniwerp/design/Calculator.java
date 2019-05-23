@@ -23,7 +23,6 @@ SOFTWARE.
 package me.team4.moniwerp.design;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,12 +37,24 @@ public class Calculator {
 	private int[] offsetGrootte;
 	private int minComponents = 2;
 
+	/**
+	 * Bouw een nieuwe representatie van het netwerkontwerp, om beter de uptime te
+	 * kunnen berekenen.
+	 * 
+	 * @param design
+	 */
 	public void buildNodeNetwork(NetworkDesign design) {
 		byte id = 0;
-		List<int[]> problemDefinitionTemp = new ArrayList(); // Hier staan de componenten in die op de plaats van een
-																// "onbekende" node kunnen staan.
-		List<NetworkComponent> comp = design.getComponents(); // stop alle componenten uit het ontwerp in een lijst
-		List<NetworkConnection> con = design.getConnections(); // stop alle connecties uit het ontwerp in een lijst
+		// Hier staan de componenten in die op de plaats van een
+		// "onbekende" node kunnen staan.
+		List<int[]> problemDefinitionTemp = new ArrayList<int[]>();
+		// stop alle componenten uit het ontwerp in een lijst
+		List<NetworkComponent> comp = design.getComponents();
+		// stop alle connecties uit het ontwerp in een lijst
+		List<NetworkConnection> con = design.getConnections();
+
+		// Probeer de eerste node in de netwerkontwerp te vinden.
+		// De eerste node heeft geen inkomende connecties.
 		for (int i = 0; i < comp.size(); i++) {
 			boolean found = true;
 			// loop om eerste node te vinden
@@ -62,7 +73,7 @@ public class Calculator {
 					int[] types = new int[compunknown.GetComponentTypes().size()];
 					for (int j = 0; j < types.length; j++)
 						types[j] = compunknown.GetComponentTypes().get(j);
-					if(types.length == 0) {
+					if (types.length == 0) {
 						firstNode = null;
 					}
 					problemDefinitionTemp.add(types); // hier voegt hij alle componenten toe die op de plaats van de
@@ -80,13 +91,16 @@ public class Calculator {
 		int iterationCounter = 0;
 		while (queue.isEmpty() == false) {
 			iterationCounter++;
-			if (iterationCounter >= 10000) { // Als er ergens een loop zit, stopt hij nooit, dus hiermee stoppen wij als
-											// hij te lang doorgaat.
+			// Als er ergens een loop zit, stopt hij nooit, dus hiermee stoppen wij als
+			// hij te lang doorgaat.
+			if (iterationCounter >= 10000) {
 				firstNode = null;
 				break;
 			}
-			Node n = queue.removeFirst(); // verwijder de eerste node uit de queue, (je verwerkt hem nog wel!!!)
-			for (int j = 0; j < con.size(); j++) { // kijk voor elke connectie of het de eerste is.
+			// verwijder de eerste node uit de queue, (je verwerkt hem nog wel!!!)
+			Node n = queue.removeFirst();
+			// kijk voor elke connectie of het de eerste is.
+			for (int j = 0; j < con.size(); j++) {
 				if (con.get(j).getFirst() == n.comp) {
 
 					if (con.get(j).getSecond() instanceof NetworkComponentUnknown) {
@@ -97,12 +111,13 @@ public class Calculator {
 						int[] types = new int[compunknown.GetComponentTypes().size()];
 
 						for (int k = 0; k < types.length; k++)
-							types[k] = compunknown.GetComponentTypes().get(k); // zet de gegevens van compunkown
-																				// over naar types, om het zo in een
-																				// array te plaatsen. Dit is nodig
-																				// omdat problemDefinition ook een
-																				// array is.
-						if(types.length == 0) {
+							// zet de gegevens van compunkown
+							// over naar types, om het zo in een
+							// array te plaatsen. Dit is nodig
+							// omdat problemDefinition ook een
+							// array is.
+							types[k] = compunknown.GetComponentTypes().get(k);
+						if (types.length == 0) {
 							firstNode = null;
 						}
 						problemDefinitionTemp.add(types);
@@ -122,8 +137,9 @@ public class Calculator {
 		for (int i = 0; i < problemDefinitionTemp.size(); i++) {
 			problemDefinition[i] = problemDefinitionTemp.get(i);
 		}
-		offsetGrootte = new int[problemDefinition.length]; // Zet de offsets voor de solve, om het makkelijker te maken
-															// om de solve[] te gebruiken.
+		// Zet de offsets voor de solve, om het makkelijker te maken
+		// om de solve[] te gebruiken.
+		offsetGrootte = new int[problemDefinition.length]; 
 		int i = 0;
 		for (int j = 0; j < problemDefinition.length; j++) {
 			offsetGrootte[j] = i;
@@ -134,22 +150,25 @@ public class Calculator {
 	private double getUptime(Node n) {
 		// Deze functie wordt gebruikt als het ontwerp uit alleen "bekende" componenten
 		// bestaat.
-		if (n.getNodes().size() == 0) { // Dit is de laatste node, er is geen berekening meer mogelijk dus returnt hij
-										// de uptime
+		// Dit is de laatste node, er is geen berekening meer mogelijk dus returnt hij
+		// de uptime
+		if (n.getNodes().size() == 0) { 
 			return n.getComp().getUptime();
 		} else if (n.getNodes().size() == 1) {
-			return n.getComp().getUptime() * getUptime(n.getNodes().get(0)); // Er komt één connectie uit een node, dus
-																				// kan het sequentieel worden berekend.
-		} else if(n.getComp().getType().equals("SERIE")){
+			// Er komt één connectie uit een node, dus
+			// kan het sequentieel worden berekend.
+			return n.getComp().getUptime() * getUptime(n.getNodes().get(0)); 
+		} else if (n.getComp().getType().equals("SERIE")) {
 			double v = 1D;
-			for(int j = 0; j < n.getNodes().size(); j++) {
+			for (int j = 0; j < n.getNodes().size(); j++) {
 				v *= getUptime(n.getNodes().get(j));
 			}
 			return v;
 		} else {
 			double v = 1D;
 			for (int j = 0; j < n.getNodes().size(); j++) {
-				v *= 1D - getUptime(n.getNodes().get(j)); // berekend de uptime van meerdere componenten (parallel)
+				// berekend de uptime van meerdere componenten (parallel)
+				v *= 1D - getUptime(n.getNodes().get(j)); 
 			}
 			return (1D - v) * n.getComp().getUptime();
 		}
@@ -168,7 +187,7 @@ public class Calculator {
 		if (ontwerp.getComponents().isEmpty())
 			return 0D;
 		buildNodeNetwork(ontwerp);
-		if(firstNode == null) {
+		if (firstNode == null) {
 			return 0D;
 		}
 		return getUptime(firstNode);
@@ -181,25 +200,29 @@ public class Calculator {
 		if (n.GetID() >= 0) { // kijkt hier of het een onbekend component is.
 			double v = 1;
 			for (int i = 0; i < problemDefinition[n.GetID()].length; i++) {
+				// Berekend de uptime van de mogelijke componenten
 				v *= Math.pow(1.0f - NetworkComponentTypes.getTypes()[problemDefinition[n.GetID()][i]].getUptime(),
-						solve[offsetGrootte[n.GetID()] + i]); // Berekend de uptime van de mogelijke componenten
+						solve[offsetGrootte[n.GetID()] + i]); 
 			}
 			uptime = 1D - v;
 		}
 		if (n.getNodes().size() == 0) {
-			return uptime; // Hij is bij de laatste node gekomen, is dus klaar en returnt de uptime
-		} else if (n.getNodes().size() == 1) { // er komt één connectie uit een node, deze uptime kan sequentieel worden
-												// berekend.
+			// Hij is bij de laatste node gekomen, is dus klaar en returnt de uptime
+			return uptime; 
+		} else if (n.getNodes().size() == 1) { 
+			// er komt één connectie uit een node, deze uptime kan sequentieel worden
+			// berekend.
 			return uptime * getUptime(n.getNodes().get(0), solve);
-		} else if(n.getComp().getType().equals("SERIE")){
+		} else if (n.getComp().getType().equals("SERIE")) {
 			double v = 1D;
-			for(int j = 0; j < n.getNodes().size(); j++) {
+			for (int j = 0; j < n.getNodes().size(); j++) {
 				v *= getUptime(n.getNodes().get(j), solve);
 			}
 			return v;
 		} else {
-			double v = 1D;// hier komt er uit een node meer connecties, dus worden de uptime hiervan
-							// parallel berekend.
+			// hier komt er uit een node meer connecties, dus worden de uptime hiervan
+			// parallel berekend.
+			double v = 1D;
 			for (int j = 0; j < n.getNodes().size(); j++) {
 				v *= 1D - getUptime(n.getNodes().get(j), solve);
 			}
@@ -214,17 +237,20 @@ public class Calculator {
 	 * @return uptime in seconden
 	 */
 	public double calcUptime(byte solve[]) {
-		if(firstNode == null)
+		if (firstNode == null)
 			return 0D;
 		for (int i = 0; i < problemDefinition.length; i++) {
 			int k = 0;
 			for (int j = 0; j < problemDefinition[i].length; j++) {
-				k += solve[offsetGrootte[i] + j]; // kijk hoeveel componenten er in problemdefinition staan en gooi deze
-													// in "k"
+				// kijk hoeveel componenten er in problemdefinition staan en gooi deze
+				// in "k"
+				k += solve[offsetGrootte[i] + j]; 
 			}
-			if (k < minComponents)
-				return 0D; // als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
-							// return 0
+			if (k < minComponents) {
+				// als er minder dan 2 componenten in staan is het netwerk niet redundant, dus
+				// return 0
+				return 0D; 
+			}
 		}
 		return getUptime(firstNode, solve);
 	}
@@ -242,8 +268,9 @@ public class Calculator {
 		// berekend de kosten van het netwerkdesign
 		List<NetworkComponent> comps = design.getComponents();
 		int costs = 0;
-		for (int i = 0; i < comps.size(); i++) {// Bij elk component worden de kosten bij de variabele "costs"
-												// toegevoegd.
+		// Bij elk component worden de kosten bij de variabele "costs"
+		// toegevoegd.
+		for (int i = 0; i < comps.size(); i++) {
 			costs += comps.get(i).getCosts();
 		}
 
@@ -257,14 +284,13 @@ public class Calculator {
 	 * @return kosten
 	 */
 	public int calcCosts(byte solve[]) {
-		if(firstNode == null)
+		if (firstNode == null)
 			return 0;
 		int costs = 0;
 		for (int i = 0; i < problemDefinition.length; i++) {
 			for (int j = 0; j < problemDefinition[i].length; j++) {
 				costs += NetworkComponentTypes.getTypes()[problemDefinition[i][j]].getCosts()
 						* solve[offsetGrootte[i] + j];
-				;
 			}
 		}
 		return costs;
@@ -285,7 +311,7 @@ public class Calculator {
 	public Node getFirstNode() {
 		return firstNode;
 	}
-	
+
 	public static class Node {
 
 		private NetworkComponent comp; // Uit welk netwerkcomponent de node bestaat

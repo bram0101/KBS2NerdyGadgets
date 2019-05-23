@@ -60,11 +60,12 @@ public class Toolbar extends JPanel implements ActionListener {
 		// Stel de layout in
 		setLayout(new BorderLayout());
 
-		// In deze panel zitten alle componenttypes
+		// In deze panel zitten alle knoppen met componenttypes
 		componentPanel = new JPanel();
 		componentPanel.setLayout(new BoxLayout(componentPanel, BoxLayout.Y_AXIS));
 
 		// Een lijstje voor de knoppen, dan kunnen wij er later bij.
+		// +1 voor de knop "Onbekende"
 		buttons = new JToggleButton[NetworkComponentTypes.getTypes().length + 1];
 
 		// Ga langs elk type en voeg daar een knop vor toe.
@@ -132,7 +133,7 @@ public class Toolbar extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// Check voor elke knop
 		for (JToggleButton button : buttons) {
-			// Heb je hier niet op geklikt, zet hem dan uit, zodat er maar ï¿½ï¿½n knop tegelijk
+			// Heb je hier niet op geklikt, zet hem dan uit, zodat er maar één knop tegelijk
 			// aan kan.
 			if (e.getSource() != button) {
 				button.setSelected(false);

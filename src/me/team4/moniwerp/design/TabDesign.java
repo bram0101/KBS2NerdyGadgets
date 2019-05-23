@@ -29,6 +29,7 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -84,11 +85,20 @@ public class TabDesign extends JPanel implements Tab {
 			// If statement returnVal
 			// Open FilesChooser en laad geselecteerd bestand
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				DataInputStream dis = null;
 				try {
-					DataInputStream dis = new DataInputStream(new FileInputStream(Of.getSelectedFile()));
+					dis = new DataInputStream(new FileInputStream(Of.getSelectedFile()));
 					viewport.getNetworkDesign().load(dis);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
+				} finally {
+					if (dis != null) {
+						try {
+							dis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 				// Sluit de FileChooser af zonder verdere acties.
 			}
@@ -104,15 +114,30 @@ public class TabDesign extends JPanel implements Tab {
 			// If statement returnVal
 			// Open FilesChooser en sla het geselecteerd bestand op
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				DataOutputStream dis = null;
 				try {
+					// Krijg het bestandspad
 					String fileName = Of.getSelectedFile().getAbsolutePath();
-					if(!fileName.endsWith(".mwd") && !fileName.endsWith(".MWD"))
+					// Als de extensie nog niet is toegevoegd, voeg die toe.
+					if (!fileName.endsWith(".mwd") && !fileName.endsWith(".MWD"))
 						fileName = fileName + ".mwd";
-					DataOutputStream dis = new DataOutputStream(new FileOutputStream(fileName));
+					// Maak een outputstream
+					dis = new DataOutputStream(new FileOutputStream(fileName));
+					// Bereken de bounds van het ontwerp.
 					viewport.getNetworkDesign().calcBounds();
+					// Sla het op
 					viewport.getNetworkDesign().save(dis);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
+				} finally {
+					// Zorg dat de outputstream wel is afgesloten
+					if (dis != null) {
+						try {
+							dis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 				// Sluit de FileChooser af zonder verdere acties.
 			}

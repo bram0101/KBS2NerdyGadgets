@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -90,7 +91,7 @@ public class TabMonitor extends JPanel implements Tab {
 
 	@Override
 	public void onMenuButton(int buttonID) {
-		if(buttonID == Window.BUTTON_OPEN) {
+		if (buttonID == Window.BUTTON_OPEN) {
 			// Create a file chooser
 			final JFileChooser Of = new JFileChooser();
 			Of.setFileFilter(new FileNameExtensionFilter("Moniwerp Design", "mwd"));
@@ -101,16 +102,25 @@ public class TabMonitor extends JPanel implements Tab {
 			// If statement returnVal
 			// Open FilesChooser en laad geselecteerd bestand
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				DataInputStream dis = null;
 				try {
-					DataInputStream dis = new DataInputStream(new FileInputStream(Of.getSelectedFile()));
+					dis = new DataInputStream(new FileInputStream(Of.getSelectedFile()));
 					viewportNetwork.getNetworkDesign().load(dis);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
+				} finally {
+					if (dis != null) {
+						try {
+							dis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
-			// Sluit de FileChooser af zonder verdere acties.
+				// Sluit de FileChooser af zonder verdere acties.
 			} else if (returnVal == JFileChooser.CANCEL_OPTION) {
 
-			// Sluit de FileChooser af zonder verdere acties.
+				// Sluit de FileChooser af zonder verdere acties.
 			} else if (returnVal == JFileChooser.ERROR_OPTION) {
 
 			}
@@ -121,10 +131,10 @@ public class TabMonitor extends JPanel implements Tab {
 	public void onResizeTab(int width, int height) {
 		// Geef de componenten hun nieuwe grootte.
 		setPreferredSize(new Dimension(width, height));
-		infoList.setPreferredSize(new Dimension(width/3, height));
-		viewportNetwork.setPreferredSize(new Dimension(width-width/3,height-height/3));
-		viewportGraph.setPreferredSize(new Dimension(width-width/3,height/3));
-		infoList.onResizeComponent(width/3, height);
+		infoList.setPreferredSize(new Dimension(width / 3, height));
+		viewportNetwork.setPreferredSize(new Dimension(width - width / 3, height - height / 3));
+		viewportGraph.setPreferredSize(new Dimension(width - width / 3, height / 3));
+		infoList.onResizeComponent(width / 3, height);
 	}
 
 	public InfoList getInfoList() {
