@@ -30,8 +30,8 @@ import me.team4.nettest.TestResult;
 
 public class NetworkTestWebStress implements NetworkTest {
 
-	private static final int testAmount = 20;
-	private static final int threadAmount = 20;
+	private static final int testAmount = 10;
+	private static final int threadAmount = 10;
 	private static AtomicInteger counter = new AtomicInteger(0);
 	
 	@Override
