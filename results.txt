@@ -1,4 +1,4 @@
-====== Starting test at 2019-05-23T11:40:13.315 ======
+====== Starting test at 2019-05-24T10:12:19.525 ======
 == TEST: LocalHost ==
   ping 127.0.0.1                  : PASSED
 
@@ -45,12 +45,12 @@
   ping DB2 IPv6                   : FAILED
 
 == TEST: Web Stresstest ==
-  W1                              : FAILED
-  W2                              : FAILED
-  HA_proxy                        : FAILED
+  W1                              : PASSED
+  W2                              : PASSED
+  HA_proxy                        : PASSED
 
 == TEST: DB integrity ==
   Integrity                       : PASSED
 
 
-PASSED: 57%
+PASSED: 71%

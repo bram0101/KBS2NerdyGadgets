@@ -120,7 +120,7 @@ public class DataRetriever {
 			// aanroepen welke tabel gebruik wordt
 
 			ResultSet rs = statement.executeQuery(
-					"select * from Netwerk where timestamp > " + (lastTimestamp - 2) + "  order by timestamp;");
+					"select * from Netwerk where timestamp > " + (lastTimestamp - 8) + "  order by timestamp;");
 			while (rs.next()) {
 				// haal de gegevens uit de database op
 				timestamp = rs.getLong("timestamp");
@@ -148,7 +148,7 @@ public class DataRetriever {
 			// kijkt of het apparaat aan staat aan de hand van de timestamp
 			for (Entry<String, LinkedList<MonitorData>> e : cache.entrySet()) {
 				if (!e.getValue().isEmpty()) {
-					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 3) {
+					if (e.getValue().peekFirst().getTimestamp() >= lastTimestamp - 10) {
 						statusCache.put(e.getKey(), true);
 					} else {
 						statusCache.put(e.getKey(), false);
